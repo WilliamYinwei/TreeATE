@@ -1,0 +1,79 @@
+{
+	"Parameter": {
+		"TEMP": "",
+		"Temp2": "abcdefg"
+	},
+	"Desc": "demo",
+	"Ver": "1.1.0",
+	"TestSuite": [{
+			"Name": "suite1",
+			"Parameter": {
+				"Name1": "2",
+				"Name2": "TEMP"
+			},
+			"Desc": "suite1描述",
+			"TestCase": [{
+					"Name": "test1",
+					"Parameter": {
+						"Name1": "1",
+						"Name2": "TEMP1"
+					},
+					"Desc": "描述1"
+				},
+				{
+					"Name": "test2",
+					"Parameter": {
+						"Name1": "1",
+						"Name2": "TEMP2"
+					},
+					"Desc": "描述2"
+				}
+			]
+		},
+		{
+			"Name": "suite2",
+			"Parameter": {
+				"Name1": "2",
+				"Name2": "TEMP"
+			},
+			"Desc": "suite2描述",
+			"TestCase": [
+				{
+					"Name": "test2",
+					"Parameter": {
+						"Name1": "1",
+						"Name2": "TEMP2"
+					},
+					"Desc": "描述2"
+				},
+				{
+					"Name": "test1",
+					"Parameter": {
+						"Name1": "1",
+						"Name2": "TEMP1"
+					},
+					"Desc": "描述1"
+				}
+			]
+		}
+	],
+	"Name": "testdemo",
+	"Public": {
+		"Parameter": [{
+				"Value": "123",
+				"Desc": "asd",
+				"Name": "Gabc"
+			},
+			{
+				"Value": "22.3",
+				"Desc": "ss",
+				"Name": "Ga11"
+			}
+		],
+		"Models": [
+        {
+            "Com": "Sleep.ts",
+            "Obj": "aa"
+        }]
+	}
+}

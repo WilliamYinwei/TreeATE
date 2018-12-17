@@ -1,0 +1,65 @@
+{
+    "BarCodeReg": "abc\\d{1}",
+    "Desc": "It's demo gogo",
+    "GUIPlugins": [
+        {
+            "Com": "",
+            "Name": ""
+        }
+    ],
+    "Instance": [
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo1",
+            "Parameter": [
+                {
+                    "Desc": "asdsd",
+                    "Name": "Gabc",
+                    "Value": "999"
+                },
+                {
+                    "Desc": "sssfad",
+                    "Name": "Ga11",
+                    "Value": "2223"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo2",
+            "Parameter": [
+                {
+                    "Desc": "asd",
+                    "Name": "Gabc",
+                    "Value": "12556323"
+                },
+                {
+                    "Desc": "ssfdsdf",
+                    "Name": "Ga11",
+                    "Value": "22234.3"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo3",
+            "Parameter": [
+                {
+                    "Desc": "asdas",
+                    "Name": "Gabc",
+                    "Value": "3333"
+                },
+                {
+                    "Desc": "ssdfgd",
+                    "Name": "Ga11",
+                    "Value": "1322.3"
+                }
+            ]
+        }
+    ],
+    "LoopCount": 1,
+    "Name": "TestDemos",
+    "Ver": "1.0.0",
+    "failedToStop": false,
+    "stoppedForLoop": false
+}
