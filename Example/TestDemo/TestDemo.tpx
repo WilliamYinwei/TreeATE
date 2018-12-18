@@ -3,6 +3,10 @@
     "Desc": "It's demo gogo",
     "GUIPlugins": [
         {
+            "Com": "GUI_TA_MsgBox.dll",
+            "Name": "msg"
+        },
+        {
             "Com": "",
             "Name": ""
         }

@@ -49,7 +49,7 @@ bool OutputMgr::OpenOutput(QString& strErr)
 
     QSettings cfgOut(m_appStrPath + "/Config/OutputCfg.ini", QSettings::IniFormat);
     cfgOut.beginGroup("Output");
-    QString outExName = m_appStrPath + "/" + cfgOut.value("Model").toString();
+    QString outExName = m_appStrPath + "/libs/" + cfgOut.value("Model").toString();
     cfgOut.endGroup();
 
     QFileInfo infoFile(outExName);
@@ -136,7 +136,6 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
             tpr.m_nCount = obj["count"].toInt();
             tpr.m_strPath = strLongName;
             tpr.m_strName = obj["name"].toString();
-            tpr.m_strSelFlag = obj["name"].toString();
             tpr.m_strBarcode = obj["barcode"].toString();
             tpr.m_strStation = obj["station"].toString();
             tpr.m_tStart = QDateTime::fromString(obj["time"].toString());

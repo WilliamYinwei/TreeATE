@@ -1,27 +1,30 @@
 ///
-/// @brief         Let's test result output and save the local with file.
+/// @brief         demo of the output to database model
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
-/// @license       GNU GPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// @license       GNU LGPL
+///
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OUTPUTLOCAL_H
-#define OUTPUTLOCAL_H
+#ifndef LOCALSQLITE_H
+#define LOCALSQLITE_H
 
-#include "ioutput.h"
-#include <QFile>
+#include "localsqlite_global.h"
+
+#include "../../Src/TestEngine/ioutput.h"
+
 #include <QSqlDatabase>
 
-class OutputLocal : public IOutput
+class LOCALSQLITESHARED_EXPORT LocalSqlite : public IOutput
 {
-public:
-    OutputLocal();
 
 public:
+    LocalSqlite();
+    ~LocalSqlite();
+
     virtual bool OpenOutput();
     virtual void CloseOutput();
     virtual bool Save(const QString &strFileName);
@@ -38,10 +41,9 @@ public:
     virtual bool OutputDetailRst(const TestResult& tdr, const QString& strPathParent);
 
 private:
-    QTextStream         m_out;
-    QFile               m_fRst;
-    QSqlDatabase        m_dbSqlite;
+    QSqlDatabase m_dbSqlite;
     QMap<QString, int>  m_mpPath;
+    bool         m_bOK;
 };
 
-#endif // OUTPUTLOCAL_H
+#endif // LOCALSQLITE_H

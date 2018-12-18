@@ -96,7 +96,6 @@ public:
     virtual ~TestSuiteRst(){}
 
 public:
-    QString m_strSelFlag;       // units of the selected to test
     unsigned int m_nCount;      // Count of these test case
 };
 

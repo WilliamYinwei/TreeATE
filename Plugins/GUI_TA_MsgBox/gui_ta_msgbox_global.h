@@ -1,0 +1,12 @@
+#ifndef GUI_TA_MSGBOX_GLOBAL_H
+#define GUI_TA_MSGBOX_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(GUI_TA_MSGBOX_LIBRARY)
+#  define GUI_TA_MSGBOXSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define GUI_TA_MSGBOXSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // GUI_TA_MSGBOX_GLOBAL_H

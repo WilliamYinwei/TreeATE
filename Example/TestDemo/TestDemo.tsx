@@ -1,6 +1,7 @@
 function setup_testdemo()
 {
 	__ate.OutputError("setup_testdemo");
+	ta.BandObj("msg")
 
 	var ret = __ate.GetProjectName();
 	__ate.OutputError("GetProjectName:" + ret);
@@ -46,7 +47,7 @@ function teardown_suite2()
 function test_test1()
 {
 	__ate.OutputError("test_test1");
-	var ret = "hello";
+	var ret = ta.MsgBox("images/treeate.png", "hello", 0, 5000);
 	__ate.OutputError(ret);
 	__ate.OutputRst(Name2, Gabc, ret);
 	return 1;
@@ -55,8 +56,10 @@ function test_test1()
 function test_test2()
 {
 	__ate.OutputError("test_test2");
-	var ret = 100;
+	var ret = ta.AsyncMsgBox("images/login.jpg", "AsyncMsgBox", 0, 5000);
+	__ate.OutputError(ret);
 	sleep(2000);
 	__ate.OutputRst(Name2, Gabc, ret);
+	ta.CloseAsyncMsgBox(ret);
 	return 0;
 }

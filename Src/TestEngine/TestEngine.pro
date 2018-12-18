@@ -1,4 +1,4 @@
-QT += core script
+QT += core script sql
 QT -= gui
 
 CONFIG += c++11
