@@ -1,3 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    TestEngine
+    TestEngine \
+    TreeATE \
+    TreeResults \
+    TreeATEDev

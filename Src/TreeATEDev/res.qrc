@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ATE.ico</file>
+        <file>new.png</file>
+        <file>open.png</file>
+        <file>save.png</file>
+        <file>input.png</file>
+        <file>output.png</file>
+    </qresource>
+</RCC>

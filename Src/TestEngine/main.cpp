@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
     else if(parser.isSet(listOption))
     {
         utMgr.printUnitToStd();
-        // Do nothing that failed to upload the test result of history to server.
+        // Upload the test result of history to server when list the test items.
         (void)rstMgr.UploadResultToSvr();
         return TA_LIST_OK;
     }

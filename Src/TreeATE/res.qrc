@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>code.png</file>
+        <file>loading.png</file>
+        <file>modify.png</file>
+        <file>ng.png</file>
+        <file>ok.png</file>
+        <file>pause.png</file>
+        <file>exce.png</file>
+        <file>ATE.ico</file>
+        <file>running.gif</file>
+        <file>login.jpg</file>
+        <file>add.png</file>
+        <file>minus.png</file>
+        <file>play.png</file>
+    </qresource>
+</RCC>
