@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
         /*login dlgLogin(&w);
         dlgLogin.SetHost(w.GetHostAddress());
         if(dlgLogin.exec() == QDialog::Accepted)
-        {
+        {*/
             w.showMaximized();
-            w.SetCurrUser(dlgLogin.m_strUser);
+            /*w.SetCurrUser(dlgLogin.m_strUser);
             w.setFocus();*/
             iRet = a.exec();
         //}

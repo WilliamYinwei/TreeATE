@@ -28,6 +28,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class QLineEdit;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -105,7 +107,8 @@ private:
     QLabel*         m_labelPath;
     QLabel*         m_labelUser;
     QLabel*         m_labelTime;
-    class QLineEdit* m_leTotalSN;
+    QLabel*         m_labelStationName;
+    QLineEdit*      m_leTotalSN;
     QTimer*         m_pTimer;
     QThread*        m_pThreadTimer;
     QString         m_strUser;

@@ -14,6 +14,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QVariant>
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +25,8 @@ class QTableView;
 class QListView;
 class QTreeView;
 class TestUnitsModel;
+class QStandardItemModel;
+class QFileSystemModel;
 
 class MainWindow : public QMainWindow
 {
@@ -32,6 +35,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    bool openProjectFile(const QString& strPrjFile);
 
 private slots:
     void on_action_About_triggered();
@@ -43,10 +48,13 @@ private slots:
 private:
     Ui::MainWindow *ui;
     TaScriptEdit*   m_scriptEdit;
-    QTableView*     m_tvModels;
+    QTreeView*      m_tvModelsView;
+    QFileSystemModel* m_fileSysModel;
     QListView*      m_lvFunction;
     QTreeView*      m_tvTestItems;
     TestUnitsModel* m_pUnitModel;
+    QStandardItemModel*    m_tmPublicPara;
+    QVariant        m_vaPrj;
 };
 
 #endif // MAINWINDOW_H

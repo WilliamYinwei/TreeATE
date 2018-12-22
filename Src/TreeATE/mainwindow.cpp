@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // statusBar
     m_labelPath = new QLabel(tr("Path of test project"), this);
     m_labelUser = new QLabel(tr("User name"), this);
-    m_labelTime = new QLabel(tr("Current Time"), this);
+    m_labelTime = new QLabel(tr("Current Time"), this);    
     statusBar()->addWidget(m_labelPath, 1);
     statusBar()->addPermanentWidget(m_labelUser, 1);
     statusBar()->addPermanentWidget(m_labelTime, 0);
@@ -86,6 +86,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mainToolBar->addWidget(labelSN);
     ui->mainToolBar->addWidget(m_leTotalSN);
+    const QString strStyleFontLine("font: 18pt;");
+    m_labelStationName = new QLabel(ui->mainToolBar);
+    m_labelStationName->setStyleSheet(strStyleFontLine);
+    m_labelStationName->setToolTip(tr("Line and station name."));
+    ui->mainToolBar->addWidget(m_labelStationName);
 
     m_pPluginsMgr = new PluginsMgr(this);
 
@@ -609,6 +614,9 @@ void MainWindow::on_actionSys_options_triggered()
         if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
             return;
 
+        m_labelStationName->setText(varMapNew["LineName"].toString() + " - "
+                + varMapNew["Station"].toString());
+
         m_vaSysCfg = varMapNew;
         QJsonDocument jsonDocCfg = QJsonDocument::fromVariant(m_vaSysCfg);
         QTextStream out(&file);
@@ -638,6 +646,9 @@ void MainWindow::openSysCfg()
     }
 
     m_vaSysCfg = jsonDocCfg.toVariant();
+    QVariantMap vmSysCfg = m_vaSysCfg.toMap();
+    m_labelStationName->setText(vmSysCfg["LineName"].toString() + " - "
+            + vmSysCfg["Station"].toString());
 
     file.close();
 }
@@ -719,7 +730,12 @@ void MainWindow::on_barcode_returnPressed()
 void MainWindow::on_action_Edit_triggered()
 {
     if(m_pEditWin) {
-        m_pEditWin->start("TreeATEDev.exe");
+        QStringList lstPara;
+        QString strPath = m_labelPath->text();
+        if(!strPath.isEmpty()) {
+            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file
+        }
+        m_pEditWin->start("TreeATEDev.exe", lstPara);
         if(!m_pEditWin->waitForStarted(3000))
         {
             QMessageBox::warning(this, "Warning", m_pEditWin->errorString());

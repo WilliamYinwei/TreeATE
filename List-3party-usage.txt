@@ -1,0 +1,2 @@
+Qt 5.7.0				https://www.qt.io/	
+QScintilla_gpl-2.10.3	https://riverbankcomputing.com/software/qscintilla/download
