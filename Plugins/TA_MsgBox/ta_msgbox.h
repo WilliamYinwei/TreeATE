@@ -27,7 +27,7 @@ public:
 public slots:
     bool BandObj(const QString& obj);
     QString MsgBox(const QString& strPic, const QString& strMsg, const int type, const int mSec);
-    QString AsyncMsgBox(const QString& strPic, const QString& strMsg, const int type, const int mSec);
+    int AsyncMsgBox(const QString& strPic, const QString& strMsg, const int type, const int mSec);
     QString CloseAsyncMsgBox(int nMsgBoxId);
 
 protected:

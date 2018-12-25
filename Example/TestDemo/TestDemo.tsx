@@ -1,7 +1,7 @@
 function setup_testdemo()
 {
 	__ate.OutputError("setup_testdemo");
-	ta.BandObj("msg")
+	ta.BandObj("msg");     
 
 	var ret = __ate.GetProjectName();
 	__ate.OutputError("GetProjectName:" + ret);
@@ -22,7 +22,7 @@ function setup_suite1()
 }
 
 function teardown_suite1()
-{
+{    
 	__ate.OutputError("teardown_suite1");
 	var ret = __ate.GetWorkLine();
 	__ate.OutputError("GetWorkLine:" + ret);

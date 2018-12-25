@@ -29,10 +29,9 @@ public:
 
     void SetScriptData(const QString& strData);
     QsciScintilla* GetScriptEdit();
-
-signals:
-
-public slots:
+    void SetShow(bool bShow);
+    void AddSciApis(const QStringList& lstApis);
+    void ClearApis();
 
 private:
     QsciScintilla*  m_textEdit;

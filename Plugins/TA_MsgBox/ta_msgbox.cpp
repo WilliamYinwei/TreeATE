@@ -70,13 +70,13 @@ QString TA_MsgBox::MsgBox(const QString& strPic, const QString& strMsg,
     return cmdProcess(strCmd, mSec);
 }
 
-QString TA_MsgBox::AsyncMsgBox(const QString& strPic, const QString& strMsg,
+int TA_MsgBox::AsyncMsgBox(const QString& strPic, const QString& strMsg,
                                const int type, const int mSec)
 {
     QString strCmd = "return " + m_strObj + ".AsyncMsgBox('" + strPic + "', '" + strMsg + "', "
             + QString::number(type) + ", " + QString::number(mSec) + ")";
 
-    return cmdProcess(strCmd, mSec);;
+    return cmdProcess(strCmd, mSec).toInt();
 }
 
 QString TA_MsgBox::CloseAsyncMsgBox(int nMsgBoxId)

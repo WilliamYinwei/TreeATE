@@ -58,6 +58,10 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="actionShrink_items_Ctrl"/>
+    <addaction name="actionSpread_items_Ctrl"/>
+    <addaction name="separator"/>
+    <addaction name="actionWindows"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -65,7 +69,13 @@
     </property>
     <addaction name="action_About"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+   </widget>
    <addaction name="menuProject"/>
+   <addaction name="menu_Edit"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -87,43 +97,6 @@
    <addaction name="action_Export"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget_pro">
-   <property name="minimumSize">
-    <size>
-     <width>200</width>
-     <height>74</height>
-    </size>
-   </property>
-   <property name="windowTitle">
-    <string>Property</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_pro">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_pro">
-       <item>
-        <widget class="QTableView" name="tableView"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidget_model">
    <property name="windowTitle">
     <string>Project files</string>
@@ -159,6 +132,9 @@
    <property name="text">
     <string>&amp;New...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_Open">
    <property name="icon">
@@ -168,6 +144,9 @@
    <property name="text">
     <string>&amp;Open...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="action_Save">
    <property name="icon">
@@ -176,6 +155,9 @@
    </property>
    <property name="text">
     <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionClose">
@@ -204,6 +186,29 @@
    </property>
    <property name="text">
     <string>&amp;Export...</string>
+   </property>
+  </action>
+  <action name="actionShrink_items_Ctrl">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Shrink items (Ctrl+-)</string>
+   </property>
+  </action>
+  <action name="actionSpread_items_Ctrl">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/add.png</normaloff>:/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Spread items (Ctrl+=)</string>
+   </property>
+  </action>
+  <action name="actionWindows">
+   <property name="text">
+    <string>Windows</string>
    </property>
   </action>
  </widget>

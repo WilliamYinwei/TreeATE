@@ -15,5 +15,6 @@
 #define TA_STATUS_EXCE  "Exce"
 #define TA_STATUS_FAIL  "Fail"
 #define TA_STATUS_PASS  "Pass"
+#define TA_STATUS_UNLOAD    "Unload"
 
 #endif // TADEFINE_H

@@ -1,7 +1,7 @@
 {
 	"Parameter": {
-		"TEMP": "",
-		"Temp2": "abcdefg"
+		"Name1": "gfedcba",
+		"Name2": "abcdefg"
 	},
 	"Desc": "demo",
 	"Ver": "1.1.0",

@@ -19,13 +19,15 @@ SOURCES += main.cpp\
     tascriptedit.cpp \
     aboutdlg.cpp \
     testunitsmodel.cpp \
-    testunititem.cpp
+    testunititem.cpp \
+    tapropertymgr.cpp
 
 HEADERS  += mainwindow.h \
     tascriptedit.h \
     aboutdlg.h \
     testunitsmodel.h \
-    testunititem.h
+    testunititem.h \
+    tapropertymgr.h
 
 FORMS    += mainwindow.ui \
     aboutdlg.ui

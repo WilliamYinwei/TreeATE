@@ -21,7 +21,8 @@ TaScriptEdit::TaScriptEdit(QWidget *parent)
 {
     m_lexerJavaScript = new QsciLexerJavaScript();
     m_textEdit = new QsciScintilla(parent);
-    m_textEdit->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+    m_sciApis = new QsciAPIs(m_lexerJavaScript);
+    m_textEdit->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
 
     m_textEdit->setIndentationWidth(4);
     m_textEdit->setIndentationGuides(true);
@@ -42,7 +43,6 @@ TaScriptEdit::TaScriptEdit(QWidget *parent)
     m_textEdit->setMarginLineNumbers(0, true);
     m_textEdit->setMarginWidth(0, 60);
     m_textEdit->callTip();
-
 }
 
 TaScriptEdit::~TaScriptEdit()
@@ -57,5 +57,30 @@ QsciScintilla* TaScriptEdit::GetScriptEdit()
 
 void TaScriptEdit::SetScriptData(const QString& strData)
 {
-    m_textEdit->setText(strData);
+    if(m_textEdit)
+        m_textEdit->setText(strData);
+}
+
+void TaScriptEdit::SetShow(bool bShow)
+{
+    if(bShow)
+        m_textEdit->show();
+    else
+        m_textEdit->hide();
+}
+
+void TaScriptEdit::AddSciApis(const QStringList& lstApis)
+{
+    if(m_sciApis) {
+        foreach (QString api, lstApis) {
+            m_sciApis->add(api);
+        }
+        m_sciApis->prepare();
+    }
+}
+
+void TaScriptEdit::ClearApis()
+{
+    if(m_sciApis)
+        m_sciApis->clear();
 }

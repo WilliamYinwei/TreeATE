@@ -6,5 +6,7 @@
         <file>save.png</file>
         <file>input.png</file>
         <file>output.png</file>
+        <file>add.png</file>
+        <file>minus.png</file>
     </qresource>
 </RCC>

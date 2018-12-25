@@ -51,12 +51,19 @@ public:
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;    
+
+    // for Test Project
     QVariant getDataForColumn(const QModelIndex &index, int column);
+    QStringList GetParaApis();
+    QVariantList GetPublicPara();
+    void SetPublicPara(const QVariantList& lstPara);
+    QVariantList GetPublicModels();
 
 private:    
     TestUnitItem *getItem(const QModelIndex &index) const;
     QVector<QVariant> getDataFromVM(const QVariantMap& vmData, bool isKey);
     TestUnitItem* m_rootUnit;
+    QVariant        m_vaPrj;
 };
 
 #endif // TESTUNITSMODEL_H

@@ -5,10 +5,6 @@
         {
             "Com": "GUI_TA_MsgBox.dll",
             "Name": "msg"
-        },
-        {
-            "Com": "",
-            "Name": ""
         }
     ],
     "Instance": [

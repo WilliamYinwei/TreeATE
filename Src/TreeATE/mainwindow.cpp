@@ -732,8 +732,9 @@ void MainWindow::on_action_Edit_triggered()
     if(m_pEditWin) {
         QStringList lstPara;
         QString strPath = m_labelPath->text();
-        if(!strPath.isEmpty()) {
-            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file
+        QFileInfo info(strPath);
+        if(info.isFile()) {
+            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file            
         }
         m_pEditWin->start("TreeATEDev.exe", lstPara);
         if(!m_pEditWin->waitForStarted(3000))

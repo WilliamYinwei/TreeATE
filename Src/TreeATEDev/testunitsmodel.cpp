@@ -237,7 +237,11 @@ bool TestUnitsModel::SetPrjData(const QVariant& data)
     if(NULL == m_rootUnit)
         return false;
 
+    m_rootUnit->removeChildren(0, 1);
+    m_rootUnit->removeColumns(2, m_rootUnit->columnCount() - 2);
+
     QVariantMap vmPrj = data.toMap();
+    m_vaPrj = vmPrj;
     QVector<QVariant> headerData = getDataFromVM(vmPrj, true);
     int oldCnt = m_rootUnit->columnCount();
     m_rootUnit->insertColumns(m_rootUnit->columnCount(), headerData.count());
@@ -289,4 +293,42 @@ QVariant TestUnitsModel::GetPrjData()
 {
     QVariant vPrj;
     return vPrj;
+}
+
+QStringList TestUnitsModel::GetParaApis()
+{
+    QStringList apis;
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    QVariantMap vmPrjPara = vmPrj["Parameter"].toMap();
+    for(QVariantMap::iterator itor = vmPrjPara.begin();
+        itor != vmPrjPara.end(); ++itor) {
+        apis << itor.key();
+    }
+
+    QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
+    QVariantList vlPublicPara = vmPrjPublic["Parameter"].toList();
+    for(int i = 0; i < vlPublicPara.count(); i++) {
+        QVariantMap vmPara = vlPublicPara.at(i).toMap();
+        apis << vmPara["Name"].toString();
+    }
+    return apis;
+}
+
+QVariantList TestUnitsModel::GetPublicPara()
+{
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
+    return vmPrjPublic["Parameter"].toList();
+}
+
+void TestUnitsModel::SetPublicPara(const QVariantList& lstPara)
+{
+
+}
+
+QVariantList TestUnitsModel::GetPublicModels()
+{
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
+    return vmPrjPublic["Models"].toList();
 }
