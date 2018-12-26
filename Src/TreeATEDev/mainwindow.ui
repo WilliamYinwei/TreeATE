@@ -73,6 +73,20 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <widget class="QMenu" name="menu_Test_Units">
+     <property name="title">
+      <string>&amp;Test Units</string>
+     </property>
+     <addaction name="actionInsert_Unit"/>
+     <addaction name="actionInsert_Parameter"/>
+     <addaction name="separator"/>
+     <addaction name="actionRemove_Unit"/>
+     <addaction name="actionRemove_Parameter"/>
+     <addaction name="separator"/>
+     <addaction name="actionAdd_Sub_Unit"/>
+    </widget>
+    <addaction name="action_Script"/>
+    <addaction name="menu_Test_Units"/>
    </widget>
    <addaction name="menuProject"/>
    <addaction name="menu_Edit"/>
@@ -190,20 +204,32 @@
   </action>
   <action name="actionShrink_items_Ctrl">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATE/res.qrc">
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
-    <string>Shrink items (Ctrl+-)</string>
+    <string>Shrink items</string>
+   </property>
+   <property name="toolTip">
+    <string>Shrink items</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
   <action name="actionSpread_items_Ctrl">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATE/res.qrc">
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
-    <string>Spread items (Ctrl+=)</string>
+    <string>Spread items</string>
+   </property>
+   <property name="toolTip">
+    <string>Spread items</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
    </property>
   </action>
   <action name="actionWindows">
@@ -211,9 +237,40 @@
     <string>Windows</string>
    </property>
   </action>
+  <action name="actionInsert_Unit">
+   <property name="text">
+    <string>Insert Unit</string>
+   </property>
+  </action>
+  <action name="actionInsert_Parameter">
+   <property name="text">
+    <string>Insert Parameter</string>
+   </property>
+  </action>
+  <action name="actionRemove_Unit">
+   <property name="text">
+    <string>Remove Unit</string>
+   </property>
+  </action>
+  <action name="actionRemove_Parameter">
+   <property name="text">
+    <string>Remove Parameter</string>
+   </property>
+  </action>
+  <action name="actionAdd_Sub_Unit">
+   <property name="text">
+    <string>Add Sub Unit</string>
+   </property>
+  </action>
+  <action name="action_Script">
+   <property name="text">
+    <string>&amp;Script</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
+  <include location="../TreeATE/res.qrc"/>
   <include location="res.qrc"/>
  </resources>
  <connections/>

@@ -58,8 +58,10 @@ public:
     QVariantList GetPublicPara();
     void SetPublicPara(const QVariantList& lstPara);
     QVariantList GetPublicModels();
+    void SetPublicModels(const QVariantList& lstModel);
 
-private:    
+private:
+    QVariantMap tranDataToVariant(TestUnitItem* item);
     TestUnitItem *getItem(const QModelIndex &index) const;
     QVector<QVariant> getDataFromVM(const QVariantMap& vmData, bool isKey);
     TestUnitItem* m_rootUnit;

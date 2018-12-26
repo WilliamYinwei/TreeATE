@@ -39,6 +39,9 @@ public:
 
     bool openProjectFile(const QString& strPrjFile);
 
+public slots:
+    void updateActions();
+
 private slots:
     void on_action_About_triggered();
 
@@ -58,7 +61,19 @@ private slots:
 
     void on_actionSpread_items_Ctrl_triggered();
 
-    void updateActions();
+    void on_actionInsert_Unit_triggered();
+
+    void on_actionInsert_Parameter_triggered();
+
+    void on_actionRemove_Unit_triggered();
+
+    void on_actionRemove_Parameter_triggered();
+
+    void on_actionAdd_Sub_Unit_triggered();
+
+    void on_customContextMenu_Requested(const QPoint&pos);
+
+    void on_editMenu_Show();
 
 private:
     Ui::MainWindow *ui;
@@ -69,6 +84,7 @@ private:
     TestUnitsModel* m_pUnitModel;
     TAPropertyMgrWidget*    m_pProMgrWidget;
     QString         m_strScriptFile;
+    QString         m_strProjectFile;
     bool            m_bChanged;
 };
 

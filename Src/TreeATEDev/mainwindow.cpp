@@ -27,6 +27,8 @@
 #include <Qsci/qsciscintilla.h>
 #include <QStandardItemModel>
 #include <QFileSystemModel>
+#include <QInputDialog>
+#include <QItemSelectionModel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,12 +37,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
 
+    connect(ui->actionClose, &QAction::triggered, qApp, &QCoreApplication::quit);
     connect(ui->menu_View, SIGNAL(aboutToShow()), this, SLOT(on_menuView_Show()));
+    connect(ui->menu_Edit, SIGNAL(aboutToShow()), this, SLOT(on_editMenu_Show()));
 
     QSplitter* splitterMain = new QSplitter(Qt::Vertical, ui->centralWidget);
     m_tvTestItems = new QTreeView(splitterMain);
+    m_tvTestItems->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tvTestItems->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_tvTestItems->setAlternatingRowColors(true);
+    m_tvTestItems->setAllColumnsShowFocus(true);
+    m_tvTestItems->setSelectionBehavior(QAbstractItemView::SelectItems);
     m_tvTestItems->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
     connect(m_tvTestItems, SIGNAL(clicked(QModelIndex)), this, SLOT(on_testitems_clicked(QModelIndex)));
+    connect(m_tvTestItems->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &MainWindow::updateActions);
+    connect(ui->menu_Test_Units, &QMenu::aboutToShow, this, &MainWindow::updateActions);
+    connect(m_tvTestItems, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(on_customContextMenu_Requested(QPoint)));
 
     m_scriptEdit = new TaScriptEdit(splitterMain);
     connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this, SLOT(on_data_changed()));
@@ -65,9 +79,11 @@ MainWindow::MainWindow(QWidget *parent) :
     splitterMain->setStretchFactor(1, 4);
 
     QStringList strHeader;
-    strHeader << "Name" << "Description";
+    strHeader << tr("Name") << tr("Description");
     m_pUnitModel = new TestUnitsModel(strHeader);
     m_tvTestItems->setModel(m_pUnitModel);
+
+    updateActions();
 }
 
 MainWindow::~MainWindow()
@@ -96,6 +112,8 @@ bool MainWindow::openProjectFile(const QString& strPrjFile)
         QMessageBox::warning(this, tr("Warning"), errStr);
         return false;
     }
+
+    m_strProjectFile = strPrjFile;
 
     QJsonParseError jsErr;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(prjFile.readAll(), &jsErr);
@@ -172,6 +190,11 @@ void MainWindow::on_menuView_Show()
     ui->actionWindows->setMenu(this->createPopupMenu());
 }
 
+void MainWindow::on_editMenu_Show()
+{
+    ui->action_Script->setMenu(m_scriptEdit->GetScriptEdit()->createStandardContextMenu());
+}
+
 void MainWindow::on_action_Save_triggered()
 {
     bool bSave = false;
@@ -190,8 +213,22 @@ void MainWindow::on_action_Save_triggered()
         bSave = true;
     }
 
-    if(m_pProMgrWidget->IsChanged()) {
-        m_pProMgrWidget->SaveData();
+    m_pUnitModel->SetPublicModels(m_pProMgrWidget->GetModels());
+    m_pUnitModel->SetPublicPara(m_pProMgrWidget->GetPublicPara());
+
+    QVariant vPrj = m_pUnitModel->GetPrjData();
+    if(vPrj.isValid()) {
+        QFile scrFile(m_strProjectFile);
+
+        if(!scrFile.open(QIODevice::WriteOnly)) {
+            QString errStr = scrFile.errorString() + ": " + m_strProjectFile;
+            QMessageBox::warning(this, tr("Warning"), errStr);
+            return;
+        }
+
+        scrFile.write(QJsonDocument::fromVariant(vPrj).toJson());
+        scrFile.close();
+        m_bChanged = false;
         bSave = true;
     }
 
@@ -216,5 +253,121 @@ void MainWindow::on_actionSpread_items_Ctrl_triggered()
 
 void MainWindow::updateActions()
 {
+    bool hasSelection = !m_tvTestItems->selectionModel()->selection().isEmpty();
+    QModelIndex& parentIndex = m_tvTestItems->selectionModel()->currentIndex().parent();
+    bool notRoot = parentIndex.isValid();
+    bool isCase = false;
+    if(notRoot) {
+        isCase = parentIndex.parent().isValid();
+    }
+    int column = m_tvTestItems->selectionModel()->currentIndex().column();
+    bool bRemovePara = column >= 2 ? true : false;
+    bool bInsertPara = column >= 1 ? true : false;
 
+    ui->actionRemove_Unit->setEnabled(hasSelection && notRoot);
+    ui->actionRemove_Parameter->setEnabled(hasSelection && bRemovePara);
+
+    bool hasCurrent = m_tvTestItems->selectionModel()->currentIndex().isValid();
+    ui->actionInsert_Unit->setEnabled(hasCurrent && notRoot);
+    ui->actionInsert_Parameter->setEnabled(hasCurrent && bInsertPara);
+    ui->actionAdd_Sub_Unit->setDisabled(isCase);
+
+    if (hasCurrent) {
+        m_tvTestItems->closePersistentEditor(m_tvTestItems->selectionModel()->currentIndex());
+
+        int row = m_tvTestItems->selectionModel()->currentIndex().row();
+        int column = m_tvTestItems->selectionModel()->currentIndex().column();
+        if (notRoot)
+            statusBar()->showMessage(tr("Position: (%1,%2)").arg(row).arg(column));
+        else
+            statusBar()->showMessage(tr("Position: (%1,%2) in top level").arg(row).arg(column));
+    }
+}
+
+void MainWindow::on_actionInsert_Unit_triggered()
+{
+    QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvTestItems->model();
+
+    if (!model->insertRow(index.row()+1, index.parent()))
+        return;
+
+    updateActions();
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        QModelIndex child = model->index(index.row()+1, column, index.parent());
+        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+    }
+}
+
+void MainWindow::on_actionInsert_Parameter_triggered()
+{
+    QString name = QInputDialog::getText(this, tr("Input"), tr("Parameter name"));
+    name = name.trimmed();
+    if(name.isEmpty())
+        return;
+
+    QAbstractItemModel *model = m_tvTestItems->model();
+    int column = m_tvTestItems->selectionModel()->currentIndex().column();
+
+    // Insert a column in the parent item.
+    bool changed = model->insertColumn(column + 1);
+    if (changed) {
+        model->setHeaderData(column + 1, Qt::Horizontal, QVariant(name), Qt::EditRole);
+    }
+
+    updateActions();
+}
+
+void MainWindow::on_actionRemove_Unit_triggered()
+{
+    QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvTestItems->model();
+    if (model->removeRow(index.row(), index.parent()))
+        updateActions();
+}
+
+void MainWindow::on_actionRemove_Parameter_triggered()
+{
+    QAbstractItemModel *model = m_tvTestItems->model();
+    int column = m_tvTestItems->selectionModel()->currentIndex().column();
+
+    // Insert columns in each child of the parent item.
+    bool changed = model->removeColumn(column);
+
+    if (changed)
+        updateActions();
+}
+
+void MainWindow::on_actionAdd_Sub_Unit_triggered()
+{
+    QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvTestItems->model();
+    index = index.sibling(index.row(), 0);
+
+    if (model->columnCount(index) == 0) {
+        if (!model->insertColumn(0, index))
+            return;
+    }
+
+    if (!model->insertRow(0, index))
+        return;
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        QModelIndex child = model->index(0, column, index);
+        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+        if (!model->headerData(column, Qt::Horizontal).isValid())
+            model->setHeaderData(column, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
+    }
+
+    m_tvTestItems->selectionModel()->setCurrentIndex(model->index(0, 0, index),
+                                            QItemSelectionModel::ClearAndSelect);
+    updateActions();
+}
+
+void MainWindow::on_customContextMenu_Requested(const QPoint& pos)
+{
+    Q_UNUSED(pos)
+    QMenu* popMenu = ui->menu_Test_Units;
+    popMenu->exec(QCursor::pos());
 }

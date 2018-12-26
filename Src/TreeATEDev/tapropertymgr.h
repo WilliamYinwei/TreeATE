@@ -22,6 +22,7 @@ class QLabel;
 class QLineEdit;
 class TaScriptEdit;
 class QSplitter;
+class QMenu;
 
 class TAPropertyMgrWidget : public QDockWidget
 {
@@ -36,11 +37,17 @@ public:
     void SetModels(const QVariantList& vlModels);
     QVariantList GetModels();
     QStringList GetAPIsFromModels();
-    bool SaveData();
-    bool IsChanged();
 
 private slots:
     void MyDataChanged();
+    void on_models_customContextMenuRequested(const QPoint&);
+    void on_parameter_customContextMenuRequested(const QPoint&);
+    void on_actionPara_Insert_clicked();
+    void on_actionModel_Insert_clicked();
+    void on_actionPara_Remove_clicked();
+    void on_actionModel_Remove_clicked();
+    void on_popMenuModel_Show();
+    void on_popMenuPara_Show();
 
 protected:
     QStringList OpenDllFunc(const QString& strFile, bool bRet = true);
@@ -57,9 +64,14 @@ private:
     QStandardItemModel* m_tmPublicPara;
     QStandardItemModel* m_tmModels;
     TaScriptEdit*       m_scriptEdit;
-    bool                m_bIsChanged;
     QStringList         m_lstApis;
     QSplitter*          m_splitter;
+    QMenu*              m_popMenuModel;
+    QMenu*              m_popMenuPara;
+    QAction*            m_actionModelInsert;
+    QAction*            m_actionModelRemove;
+    QAction*            m_actionParaInsert;
+    QAction*            m_actionParaRemove;
 };
 
 #endif // TAPROPERTYMGR_H

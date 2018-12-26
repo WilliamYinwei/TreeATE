@@ -461,7 +461,10 @@
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
-    <string>Spread items (Ctrl+=)</string>
+    <string>Spread items</string>
+   </property>
+   <property name="toolTip">
+    <string>Spread items</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+=</string>
@@ -473,7 +476,10 @@
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
-    <string>Shrink items (Ctrl+-)</string>
+    <string>Shrink items</string>
+   </property>
+   <property name="toolTip">
+    <string>Shrink items</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>

@@ -29,6 +29,7 @@
 #include <QMetaMethod>
 #include <QMetaType>
 #include <QSplitter>
+#include <QMenu>
 
 TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property", parent)
 {
@@ -52,15 +53,32 @@ TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property
     m_tmModels = new QStandardItemModel();
     m_tmModels->setColumnCount(2);
     m_tmModels->setHeaderData(0, Qt::Horizontal, tr("Object"));
-    m_tmModels->setHeaderData(1, Qt::Horizontal, tr("Component name"));
+    m_tmModels->setHeaderData(1, Qt::Horizontal, tr("Library file name"));
 
     m_tvModels = new QTableView(m_splitter);
     m_tvModels->setModel(m_tmModels);
+    m_tvModels->setContextMenuPolicy(Qt::CustomContextMenu);
     m_tvPublicPara = new QTableView(m_splitter);
     m_tvPublicPara->setModel(m_tmPublicPara);
-    connect(m_tmPublicPara, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            this, SLOT(MyDataChanged()));
+    m_tvPublicPara->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_tvModels, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(on_models_customContextMenuRequested(QPoint)));
+    connect(m_tvPublicPara, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(on_parameter_customContextMenuRequested(QPoint)));
     verticalLayout_pro->addWidget(m_splitter);
+
+    m_popMenuModel = new QMenu(this);
+    m_actionModelInsert = m_popMenuModel->addAction(QIcon(":/add.png"), "Insert");
+    m_actionModelRemove = m_popMenuModel->addAction(QIcon(":/minus.png"),"Remove");
+    m_popMenuPara = new QMenu(this);
+    m_actionParaInsert = m_popMenuPara->addAction(QIcon(":/add.png"),"Insert");
+    m_actionParaRemove = m_popMenuPara->addAction(QIcon(":/minus.png"),"Remove");
+    connect(m_actionModelInsert, SIGNAL(triggered(bool)), this, SLOT(on_actionModel_Insert_clicked()));
+    connect(m_actionModelRemove, SIGNAL(triggered(bool)), this, SLOT(on_actionModel_Remove_clicked()));
+    connect(m_actionParaInsert, SIGNAL(triggered(bool)), this, SLOT(on_actionPara_Insert_clicked()));
+    connect(m_actionParaRemove, SIGNAL(triggered(bool)), this, SLOT(on_actionPara_Remove_clicked()));
+    connect(m_popMenuModel, SIGNAL(aboutToShow()), this, SLOT(on_popMenuModel_Show()));
+    connect(m_popMenuPara, SIGNAL(aboutToShow()), this, SLOT(on_popMenuPara_Show()));
 
     m_labelImage = new QLabel(pContents);
     m_labelImage->hide();
@@ -69,6 +87,7 @@ TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property
 
     m_scriptEdit = new TaScriptEdit(pContents);
     m_scriptEdit->SetShow(false);
+    m_scriptEdit->GetScriptEdit()->setReadOnly(true);
     verticalLayout_pro->addWidget((QWidget*)m_scriptEdit->GetScriptEdit());
     connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this, SLOT(MyDataChanged()));
 }
@@ -81,6 +100,9 @@ void TAPropertyMgrWidget::SetPublicPara(const QVariantList& vlPara)
         m_tmPublicPara->setItem(i, 1, new QStandardItem(vmPara["Value"].toString()));
         m_tmPublicPara->setItem(i, 2, new QStandardItem(vmPara["Desc"].toString()));
     }
+
+    for (int column = 0; column < m_tmPublicPara->columnCount(); ++column)
+        m_tvPublicPara->resizeColumnToContents(column);
 }
 
 QVariantList TAPropertyMgrWidget::GetPublicPara()
@@ -90,15 +112,15 @@ QVariantList TAPropertyMgrWidget::GetPublicPara()
     {
         QVariantMap vm;
         QStandardItem *item = m_tmPublicPara->item(i, 0);
-        if(item) {
+        if(item && !item->text().isEmpty()) {
             vm.insert("Name", item->text());
         }
         item = m_tmPublicPara->item(i, 1);
-        if(item) {
+        if(item && !item->text().isEmpty()) {
             vm.insert("Value", item->text());
         }
         item = m_tmPublicPara->item(i, 2);
-        if(item) {
+        if(item && !item->text().isEmpty()) {
             vm.insert("Desc", item->text());
         }
         vl.append(vm);
@@ -175,11 +197,28 @@ void TAPropertyMgrWidget::SetModels(const QVariantList& vlModels)
         m_tmModels->setItem(i, 0, new QStandardItem(vmPara["Obj"].toString()));
         m_tmModels->setItem(i, 1, new QStandardItem(vmPara["Com"].toString()));
     }
+
+    for (int column = 0; column < m_tmModels->columnCount(); ++column)
+        m_tvModels->resizeColumnToContents(column);
 }
 
 QVariantList TAPropertyMgrWidget::GetModels()
 {
     QVariantList vlModels;
+    for(int i = 0; i < m_tmModels->rowCount(); i++)
+    {
+        QVariantMap vm;
+        QStandardItem *item = m_tmModels->item(i, 0);
+        if(item && !item->text().isEmpty()) {
+            vm.insert("Obj", item->text());
+        }
+        item = m_tmModels->item(i, 1);
+        if(item && !item->text().isEmpty()) {
+            vm.insert("Com", item->text());
+        }
+        vlModels.append(vm);
+    }
+
     return vlModels;
 }
 
@@ -256,20 +295,9 @@ void TAPropertyMgrWidget::OpenScriptFile(const QString& strFile)
     file.close();
 }
 
-bool TAPropertyMgrWidget::SaveData()
-{
-    m_bIsChanged = false;
-    return true;
-}
-
-bool TAPropertyMgrWidget::IsChanged()
-{
-    return m_bIsChanged;
-}
-
 void TAPropertyMgrWidget::MyDataChanged()
 {
-    m_bIsChanged = true;
+
 }
 
 QStringList TAPropertyMgrWidget::GetAPIsFromModels()
@@ -307,4 +335,72 @@ QStringList TAPropertyMgrWidget::GetAPIsFromModels()
     }
 
     return lstFunc;
+}
+
+void TAPropertyMgrWidget::on_models_customContextMenuRequested(const QPoint&)
+{
+    if(m_popMenuModel) {
+        m_popMenuModel->exec(QCursor::pos());
+    }
+}
+
+void TAPropertyMgrWidget::on_parameter_customContextMenuRequested(const QPoint&)
+{
+    if(m_popMenuPara) {
+        m_popMenuPara->exec(QCursor::pos());
+    }
+}
+
+void TAPropertyMgrWidget::on_actionPara_Insert_clicked()
+{
+    QModelIndex index = m_tvPublicPara->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvPublicPara->model();
+
+    if (!model->insertRow(index.row()+1, index.parent()))
+        return;
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        QModelIndex child = model->index(index.row()+1, column, index.parent());
+        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+    }
+}
+
+void TAPropertyMgrWidget::on_actionModel_Insert_clicked()
+{
+    QModelIndex index = m_tvModels->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvModels->model();
+
+    if (!model->insertRow(index.row()+1, index.parent()))
+        return;
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        QModelIndex child = model->index(index.row()+1, column, index.parent());
+        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+    }
+}
+
+void TAPropertyMgrWidget::on_actionPara_Remove_clicked()
+{
+    QModelIndex index = m_tvPublicPara->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvPublicPara->model();
+    model->removeRow(index.row(), index.parent());
+}
+
+void TAPropertyMgrWidget::on_actionModel_Remove_clicked()
+{
+    QModelIndex index = m_tvModels->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvModels->model();
+    model->removeRow(index.row(), index.parent());
+}
+
+void TAPropertyMgrWidget::on_popMenuModel_Show()
+{
+    bool isItem = m_tvModels->selectionModel()->currentIndex().isValid();
+    m_actionModelRemove->setEnabled(isItem);
+}
+
+void TAPropertyMgrWidget::on_popMenuPara_Show()
+{
+    bool isItem = m_tvPublicPara->selectionModel()->currentIndex().isValid();
+    m_actionParaRemove->setEnabled(isItem);
 }

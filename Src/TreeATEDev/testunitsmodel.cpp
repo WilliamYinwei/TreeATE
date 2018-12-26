@@ -291,8 +291,71 @@ bool TestUnitsModel::SetPrjData(const QVariant& data)
 
 QVariant TestUnitsModel::GetPrjData()
 {
-    QVariant vPrj;
-    return vPrj;
+    if(NULL == m_rootUnit)
+        return m_vaPrj;
+
+    QVariantMap vmPrj = m_vaPrj.toMap();
+
+    // Test Project data
+    for(int i = 0; i < m_rootUnit->childCount(); i++)
+    {
+        TestUnitItem* pPrjItem = m_rootUnit->child(i);
+        if(NULL == pPrjItem)
+            continue;
+        vmPrj.insert("Name", pPrjItem->data(0));
+        vmPrj.insert("Desc", pPrjItem->data(1));
+        vmPrj.insert("Parameter", tranDataToVariant(pPrjItem));
+
+        QVariantList vlSuite;
+        for(int j = 0; j < pPrjItem->childCount(); j++)
+        {
+            // Test Suite data
+            TestUnitItem* pSuiteItem = pPrjItem->child(j);
+            if(NULL == pSuiteItem)
+                continue;
+
+            QVariantMap vmSuite;
+            vmSuite.insert("Name", pSuiteItem->data(0));
+            vmSuite.insert("Desc", pSuiteItem->data(1));
+            vmSuite.insert("Parameter", tranDataToVariant(pSuiteItem));
+
+            QVariantList vlCase;
+            for(int k = 0; k < pSuiteItem->childCount(); k++)
+            {
+                // Test Case data
+                TestUnitItem* pCaseItem = pSuiteItem->child(k);
+                if(NULL == pCaseItem)
+                    continue;
+
+                QVariantMap vmCase;
+                vmCase.insert("Name", pCaseItem->data(0));
+                vmCase.insert("Desc", pCaseItem->data(1));
+                vmCase.insert("Parameter", tranDataToVariant(pCaseItem));
+
+                vlCase.append(vmCase);
+            }
+
+            vmSuite.insert("TestCase", vlCase);
+            vlSuite.append(vmSuite);
+        }
+
+        vmPrj.insert("TestSuite", vlSuite);
+    }
+
+    m_vaPrj = vmPrj;
+
+    return m_vaPrj;
+}
+
+QVariantMap TestUnitsModel::tranDataToVariant(TestUnitItem* item)
+{
+    QVariantMap vmPara;
+    for(int i = 2; i < item->columnCount(); i++)
+    {
+        vmPara.insert(m_rootUnit->data(i).toString(), item->data(i));
+    }
+
+    return vmPara;
 }
 
 QStringList TestUnitsModel::GetParaApis()
@@ -323,7 +386,11 @@ QVariantList TestUnitsModel::GetPublicPara()
 
 void TestUnitsModel::SetPublicPara(const QVariantList& lstPara)
 {
-
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
+    vmPrjPublic.insert("Parameter", lstPara);
+    vmPrj.insert("Public", vmPrjPublic);
+    m_vaPrj = vmPrj;
 }
 
 QVariantList TestUnitsModel::GetPublicModels()
@@ -331,4 +398,13 @@ QVariantList TestUnitsModel::GetPublicModels()
     QVariantMap vmPrj = m_vaPrj.toMap();
     QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
     return vmPrjPublic["Models"].toList();
+}
+
+void TestUnitsModel::SetPublicModels(const QVariantList& lstModel)
+{
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    QVariantMap vmPrjPublic = vmPrj["Public"].toMap();
+    vmPrjPublic.insert("Models", lstModel);
+    vmPrj.insert("Public", vmPrjPublic);
+    m_vaPrj = vmPrj;
 }
