@@ -120,3 +120,14 @@ bool TestUnitItem::setData(int column, const QVariant &value)
     m_itemData[column] = value;
     return true;
 }
+
+bool TestUnitItem::moveRow(int from, int to)
+{
+    if(from < 0 || from >= m_childItems.count())
+        return false;
+    if(to < 0 || to >= m_childItems.count())
+        return false;
+
+    m_childItems.move(from, to);
+    return true;
+}

@@ -33,6 +33,7 @@ public:
     bool removeColumns(int position, int columns);
     int childNumber() const;
     bool setData(int column, const QVariant &value);
+    bool moveRow(int from, int to);
 
 private:
     QList<TestUnitItem*> m_childItems;

@@ -23,12 +23,15 @@ class QLineEdit;
 class TaScriptEdit;
 class QSplitter;
 class QMenu;
+class QCheckBox;
+class QPushButton;
 
 class TAPropertyMgrWidget : public QDockWidget
 {
     Q_OBJECT
 public:
     explicit TAPropertyMgrWidget(QWidget *parent = 0);
+    ~TAPropertyMgrWidget();
 
     void SetProjectPath(const QString& strPrjPath);
     void SetPublicPara(const QVariantList& vlPara);
@@ -48,6 +51,8 @@ private slots:
     void on_actionModel_Remove_clicked();
     void on_popMenuModel_Show();
     void on_popMenuPara_Show();
+    void on_checkBox_allowEdit(bool bChk);
+    void on_saveButton_clicked(bool bClicked);
 
 protected:
     QStringList OpenDllFunc(const QString& strFile, bool bRet = true);
@@ -72,6 +77,9 @@ private:
     QAction*            m_actionModelRemove;
     QAction*            m_actionParaInsert;
     QAction*            m_actionParaRemove;
+    QCheckBox*          m_cbOpenEdit;
+    QPushButton*        m_saveButton;
+    QMovie*             m_moveImage;
 };
 
 #endif // TAPROPERTYMGR_H

@@ -173,6 +173,23 @@ bool TestUnitsModel::removeRows(int position, int rows, const QModelIndex &paren
     return success;
 }
 
+bool TestUnitsModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+              const QModelIndex &destinationParent, int destinationChild)
+{
+    TestUnitItem *parentItem = getItem(sourceParent);
+    if(NULL == parentItem)
+        return false;
+
+    bool success = true;
+    int dest = (destinationChild - sourceRow > 0)
+            ? destinationChild + 1 : destinationChild;
+    beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
+                  destinationParent, dest);
+    success = parentItem->moveRow(sourceRow, destinationChild);
+    endMoveRows();
+    return success;
+}
+
 int TestUnitsModel::rowCount(const QModelIndex &parent) const
 {
     TestUnitItem *parentItem = getItem(parent);

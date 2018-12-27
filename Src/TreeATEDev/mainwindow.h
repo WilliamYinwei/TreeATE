@@ -71,9 +71,22 @@ private slots:
 
     void on_actionAdd_Sub_Unit_triggered();
 
-    void on_customContextMenu_Requested(const QPoint&pos);
+    void on_customContextMenu_Requested(const QPoint& pos);
 
     void on_editMenu_Show();
+
+    void on_actionUpItem_triggered();
+
+    void on_actionDownItem_triggered();
+
+    void on_actionImport_triggered();
+
+    void on_project_customContextMenu_Requested(const QPoint& pos);
+
+    void on_actionRemove_modelFile();
+
+protected:
+    bool importModelFile(const QString& sourcePath, const QString& distPath);
 
 private:
     Ui::MainWindow *ui;
@@ -86,6 +99,8 @@ private:
     QString         m_strScriptFile;
     QString         m_strProjectFile;
     bool            m_bChanged;
+    QMenu*          m_popMenuModelFile;
+    QAction*        m_actionRemoveFile;
 };
 
 #endif // MAINWINDOW_H

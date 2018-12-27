@@ -75,8 +75,11 @@
     </property>
     <widget class="QMenu" name="menu_Test_Units">
      <property name="title">
-      <string>&amp;Test Units</string>
+      <string>&amp;Test Items</string>
      </property>
+     <addaction name="actionUpItem"/>
+     <addaction name="actionDownItem"/>
+     <addaction name="separator"/>
      <addaction name="actionInsert_Unit"/>
      <addaction name="actionInsert_Parameter"/>
      <addaction name="separator"/>
@@ -109,6 +112,8 @@
    <addaction name="separator"/>
    <addaction name="actionImport"/>
    <addaction name="action_Export"/>
+   <addaction name="actionUpItem"/>
+   <addaction name="actionDownItem"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_model">
@@ -239,7 +244,7 @@
   </action>
   <action name="actionInsert_Unit">
    <property name="text">
-    <string>Insert Unit</string>
+    <string>Insert Item</string>
    </property>
   </action>
   <action name="actionInsert_Parameter">
@@ -249,7 +254,7 @@
   </action>
   <action name="actionRemove_Unit">
    <property name="text">
-    <string>Remove Unit</string>
+    <string>Remove Item</string>
    </property>
   </action>
   <action name="actionRemove_Parameter">
@@ -259,12 +264,30 @@
   </action>
   <action name="actionAdd_Sub_Unit">
    <property name="text">
-    <string>Add Sub Unit</string>
+    <string>Add Sub Item</string>
    </property>
   </action>
   <action name="action_Script">
    <property name="text">
     <string>&amp;Script</string>
+   </property>
+  </action>
+  <action name="actionUpItem">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/up.png</normaloff>:/up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Up Item</string>
+   </property>
+  </action>
+  <action name="actionDownItem">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/down.png</normaloff>:/down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Down Item</string>
    </property>
   </action>
  </widget>

@@ -15,6 +15,7 @@
 #include "Qsci/qsciapis.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QListWidget>
 #include <QStandardItemModel>
 #include <QTableView>
@@ -30,10 +31,26 @@
 #include <QMetaType>
 #include <QSplitter>
 #include <QMenu>
+#include <QCheckBox>
+#include <QPushButton>
+
+class TASizeWidget : public QWidget
+{
+public:
+    TASizeWidget(QWidget* parent) : QWidget(parent) {
+
+    }
+
+    QSize sizeHint() const
+    {
+        return QSize(500, 600);
+    }
+};
 
 TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property", parent)
 {
-    QWidget* pContents = new QWidget(this);
+    m_moveImage = NULL;
+    QWidget* pContents = new TASizeWidget(this);
     this->setWidget(pContents);
     pContents->setContentsMargins(0, 0, 0, 0);
     QVBoxLayout* verticalLayout_pro = new QVBoxLayout(pContents);
@@ -85,11 +102,36 @@ TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property
     m_labelImage->setAlignment(Qt::AlignCenter);
     verticalLayout_pro->addWidget(m_labelImage);
 
-    m_scriptEdit = new TaScriptEdit(pContents);
+    m_scriptEdit = new TaScriptEdit(pContents);    
     m_scriptEdit->SetShow(false);
     m_scriptEdit->GetScriptEdit()->setReadOnly(true);
+
+    QHBoxLayout* hboxLayout = new QHBoxLayout(pContents);
+    hboxLayout->setContentsMargins(6, 6, 6, 0);
+    m_cbOpenEdit = new QCheckBox(pContents);
+    m_cbOpenEdit->setText(tr("&Allow edit"));
+    m_cbOpenEdit->hide();
+    m_saveButton = new QPushButton(pContents);
+    m_saveButton->setText(tr("&Save"));
+    m_saveButton->setIcon(QIcon(":/save.png"));
+    m_saveButton->hide();
+    m_saveButton->setEnabled(false);
+    hboxLayout->addWidget(m_cbOpenEdit);
+    hboxLayout->addStretch();
+    hboxLayout->addWidget(m_saveButton);
+    verticalLayout_pro->addLayout(hboxLayout);
     verticalLayout_pro->addWidget((QWidget*)m_scriptEdit->GetScriptEdit());
     connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this, SLOT(MyDataChanged()));
+    connect(m_cbOpenEdit, SIGNAL(clicked(bool)), this, SLOT(on_checkBox_allowEdit(bool)));
+    connect(m_saveButton, SIGNAL(clicked(bool)), this, SLOT(on_saveButton_clicked(bool)));
+}
+
+TAPropertyMgrWidget::~TAPropertyMgrWidget()
+{
+    if(m_moveImage) {
+        m_moveImage->stop();
+        delete m_moveImage;
+    }
 }
 
 void TAPropertyMgrWidget::SetPublicPara(const QVariantList& vlPara)
@@ -136,6 +178,19 @@ void TAPropertyMgrWidget::SetProjectPath(const QString& strPrjPath)
 
 void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
 {
+    // need to save before at the view other item
+    if(m_saveButton->isEnabled()) {
+        QMessageBox::information(this, tr("Information"),
+                                 tr("Need to save the test script before at the view other file."));
+        return;
+    }
+
+    if(m_moveImage) {
+        m_moveImage->stop();
+        delete m_moveImage;
+        m_moveImage = NULL;
+    }
+
     m_strCurrName = strFileName;
     QFileInfo infoFile(m_strCurrName);
     QString strSuffix = infoFile.completeSuffix();
@@ -154,16 +209,20 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
             m_labelImage->setText(tr("Maybe is GUI Plugin, please view with TreeATE"));
             m_scriptEdit->SetShow(false);
         }
+        m_cbOpenEdit->hide();
+        m_saveButton->hide();
     }
     else if(strSuffix == "jpg" || strSuffix == "png" || strSuffix == "gif") {
         m_lvFunction->hide();
         m_splitter->hide();
         m_labelImage->show();
         m_scriptEdit->SetShow(false);
+        m_cbOpenEdit->hide();
+        m_saveButton->hide();
 
-        QMovie *movie = new QMovie(m_strCurrName);
-        m_labelImage->setMovie(movie);
-        movie->start();
+        m_moveImage = new QMovie(m_strCurrName);
+        m_labelImage->setMovie(m_moveImage);
+        m_moveImage->start();
     }
     else if(strSuffix == "tp")
     {
@@ -171,6 +230,8 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_splitter->show();
         m_labelImage->hide();
         m_scriptEdit->SetShow(false);
+        m_cbOpenEdit->hide();
+        m_saveButton->hide();
     }
     else if(strSuffix == "ts")
     {
@@ -178,6 +239,8 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_splitter->hide();
         m_labelImage->hide();
         m_scriptEdit->SetShow(true);
+        m_cbOpenEdit->show();
+        m_saveButton->show();
 
         OpenScriptFile(m_strCurrName);
     }
@@ -187,6 +250,8 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_labelImage->show();
         m_labelImage->setText(tr("Please view with other"));
         m_scriptEdit->SetShow(false);
+        m_cbOpenEdit->hide();
+        m_saveButton->hide();
     }
 }
 
@@ -229,20 +294,22 @@ QStringList TAPropertyMgrWidget::OpenDllFunc(const QString& strFile, bool bRet)
     QStringList lstFunc;
     QLibrary myLib(strFile);
     if(!myLib.load()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Failed to load the ") + strFile);
+        QMessageBox::warning(this, tr("Warning"), myLib.errorString());
         return lstFunc;
     }
 
     CreateInst myFunction = (CreateInst) myLib.resolve("CreateDeviceInst");
     if (NULL == myFunction)
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Failed to resolve the ") + strFile);
+        QMessageBox::warning(this, tr("Warning"), myLib.errorString());
+        myLib.unload();
         return lstFunc;
     }
 
     QObject* pObj = (QObject*)myFunction("");
     if(NULL == pObj)
     {
+        myLib.unload();
         QMessageBox::warning(this, tr("Warning"), tr("Failed to create the instance."));
         return lstFunc;
     }
@@ -267,6 +334,7 @@ QStringList TAPropertyMgrWidget::OpenDllFunc(const QString& strFile, bool bRet)
     }
 
     delete pObj;
+    myLib.unload();
     return lstFunc;
 }
 
@@ -295,9 +363,22 @@ void TAPropertyMgrWidget::OpenScriptFile(const QString& strFile)
     file.close();
 }
 
+void TAPropertyMgrWidget::on_saveButton_clicked(bool bClicked)
+{
+    Q_UNUSED(bClicked)
+    QFile file(m_strCurrName);
+    if(!file.open(QIODevice::WriteOnly))
+        return;
+    file.write(m_scriptEdit->GetScriptEdit()->text().toUtf8());
+    file.close();
+
+    m_saveButton->setEnabled(false);
+    m_cbOpenEdit->setChecked(false);
+}
+
 void TAPropertyMgrWidget::MyDataChanged()
 {
-
+    m_saveButton->setEnabled(m_cbOpenEdit->isChecked());
 }
 
 QStringList TAPropertyMgrWidget::GetAPIsFromModels()
@@ -403,4 +484,12 @@ void TAPropertyMgrWidget::on_popMenuPara_Show()
 {
     bool isItem = m_tvPublicPara->selectionModel()->currentIndex().isValid();
     m_actionParaRemove->setEnabled(isItem);
+}
+
+void TAPropertyMgrWidget::on_checkBox_allowEdit(bool bChk)
+{
+    if(!bChk) {
+        m_saveButton->setDisabled(true);
+    }
+    m_scriptEdit->GetScriptEdit()->setReadOnly(!bChk);
 }

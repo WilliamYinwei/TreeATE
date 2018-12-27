@@ -61,19 +61,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->verticalLayout_main->addWidget(splitterMain);
 
     m_fileSysModel = new QFileSystemModel();
-    m_tvModelsView = new QTreeView(ui->dockWidget_model);
-    m_tvModelsView->setMinimumWidth(200);
+    m_fileSysModel->setReadOnly(false);
+    m_tvModelsView = new QTreeView(ui->dockWidget_model);    
     m_tvModelsView->setModel(m_fileSysModel);
     m_tvModelsView->setColumnHidden(1, true);
     m_tvModelsView->setColumnHidden(2, true);
     m_tvModelsView->setColumnHidden(3, true);
+    m_tvModelsView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->horizontalLayout_model->addWidget(m_tvModelsView);
-    connect(m_tvModelsView, SIGNAL(clicked(QModelIndex)), this, SLOT(on_model_file_clicked(QModelIndex)));
+    connect(m_tvModelsView, SIGNAL(clicked(QModelIndex)), this, SLOT(on_model_file_clicked(QModelIndex)));    
+    connect(m_tvModelsView, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(on_project_customContextMenu_Requested(QPoint)));
 
     m_pProMgrWidget = new TAPropertyMgrWidget(this);
     addDockWidget(Qt::RightDockWidgetArea, ui->dockWidget_model);
     addDockWidget(Qt::RightDockWidgetArea, m_pProMgrWidget);
-    m_pProMgrWidget->resize(200, 500);
 
     splitterMain->setStretchFactor(0, 6);
     splitterMain->setStretchFactor(1, 4);
@@ -82,6 +84,13 @@ MainWindow::MainWindow(QWidget *parent) :
     strHeader << tr("Name") << tr("Description");
     m_pUnitModel = new TestUnitsModel(strHeader);
     m_tvTestItems->setModel(m_pUnitModel);
+
+    m_popMenuModelFile = new QMenu(this);
+    m_popMenuModelFile->addAction(ui->actionImport);
+    m_popMenuModelFile->addSeparator();
+    m_actionRemoveFile = m_popMenuModelFile->addAction(tr("Remove file"));
+    connect(m_actionRemoveFile, SIGNAL(triggered(bool)), this,
+            SLOT(on_actionRemove_modelFile()));
 
     updateActions();
 }
@@ -166,6 +175,8 @@ void MainWindow::on_action_Open_triggered()
 
 void MainWindow::on_testitems_clicked(const QModelIndex& index)
 {
+    updateActions();
+
     QVariant vData = m_pUnitModel->getDataForColumn(index, 0);
     QString strExpr = "function\\s+\\w+_" + vData.toString();
     if(!m_scriptEdit->GetScriptEdit()->findFirst(strExpr, true, false, false, false))
@@ -254,29 +265,36 @@ void MainWindow::on_actionSpread_items_Ctrl_triggered()
 void MainWindow::updateActions()
 {
     bool hasSelection = !m_tvTestItems->selectionModel()->selection().isEmpty();
-    QModelIndex& parentIndex = m_tvTestItems->selectionModel()->currentIndex().parent();
+    QModelIndex& currIndex = m_tvTestItems->selectionModel()->currentIndex();
+    bool hasCurrent = currIndex.isValid();
+
+    int column = currIndex.column();
+    int row = currIndex.row();
+    bool bRemovePara = column >= 2 ? true : false;
+    bool bInsertPara = column >= 1 ? true : false;
+
+    QModelIndex& parentIndex = currIndex.parent();
     bool notRoot = parentIndex.isValid();
     bool isCase = false;
     if(notRoot) {
         isCase = parentIndex.parent().isValid();
     }
-    int column = m_tvTestItems->selectionModel()->currentIndex().column();
-    bool bRemovePara = column >= 2 ? true : false;
-    bool bInsertPara = column >= 1 ? true : false;
 
     ui->actionRemove_Unit->setEnabled(hasSelection && notRoot);
     ui->actionRemove_Parameter->setEnabled(hasSelection && bRemovePara);
 
-    bool hasCurrent = m_tvTestItems->selectionModel()->currentIndex().isValid();
     ui->actionInsert_Unit->setEnabled(hasCurrent && notRoot);
     ui->actionInsert_Parameter->setEnabled(hasCurrent && bInsertPara);
     ui->actionAdd_Sub_Unit->setDisabled(isCase);
 
-    if (hasCurrent) {
-        m_tvTestItems->closePersistentEditor(m_tvTestItems->selectionModel()->currentIndex());
+    QAbstractItemModel *model = m_tvTestItems->model();
+    ui->actionUpItem->setEnabled(row != 0);
+    int rowCnt = model->rowCount(parentIndex);
+    int rowMaxIndx = rowCnt > 0 ? rowCnt  - 1 : 0;
+    ui->actionDownItem->setEnabled(row != rowMaxIndx);
 
-        int row = m_tvTestItems->selectionModel()->currentIndex().row();
-        int column = m_tvTestItems->selectionModel()->currentIndex().column();
+    if (hasCurrent) {
+        m_tvTestItems->closePersistentEditor(currIndex);
         if (notRoot)
             statusBar()->showMessage(tr("Position: (%1,%2)").arg(row).arg(column));
         else
@@ -365,9 +383,89 @@ void MainWindow::on_actionAdd_Sub_Unit_triggered()
     updateActions();
 }
 
+
+void MainWindow::on_actionUpItem_triggered()
+{
+    QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvTestItems->model();
+    index = index.sibling(index.row(), 0);
+    model->moveRow(index.parent(), index.row(), index.parent(), index.row() - 1);
+    updateActions();
+}
+
+void MainWindow::on_actionDownItem_triggered()
+{
+    QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
+    QAbstractItemModel *model = m_tvTestItems->model();
+    index = index.sibling(index.row(), 0);
+    model->moveRow(index.parent(), index.row(), index.parent(), index.row() + 1);
+    updateActions();
+}
+
+
 void MainWindow::on_customContextMenu_Requested(const QPoint& pos)
 {
     Q_UNUSED(pos)
     QMenu* popMenu = ui->menu_Test_Units;
     popMenu->exec(QCursor::pos());
+}
+
+bool MainWindow::importModelFile(const QString& sourcePath, const QString& distPath)
+{
+    QFileInfo infoSrc(sourcePath);
+    QFileInfo infoDist(distPath);
+    if(infoSrc.absolutePath() == infoDist.absolutePath())
+        return true;
+
+    if(!QFile::copy(sourcePath, distPath + "/" + infoSrc.fileName())) {
+        QMessageBox::warning(this, tr("Warning"), tr("Failed to copy this file: ") + sourcePath);
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::on_actionImport_triggered()
+{
+    QString selectedFilter;
+    const QString strLibSuff = "Lib files (*.dll *.ts)";
+    const QString strImgSuff = "Images (*.jpg *.png *.gif)";
+    QStringList lstFiles = QFileDialog::getOpenFileNames(this, tr("Import Files"),
+                           "", strLibSuff + ";;" + strImgSuff,
+                           &selectedFilter, QFileDialog::DontUseSheet);
+    if(lstFiles.count() <= 0) {
+        return;
+    }
+
+    QFileInfo info(m_strProjectFile);
+    QString strDistPath = info.absolutePath() + "/libs/";
+    if(selectedFilter == strImgSuff) {
+        strDistPath = info.absolutePath() + "/images/";
+    }
+    QFileInfo infoTo(strDistPath);
+    if(!infoTo.exists()) {
+        QDir dir;
+        dir.mkpath(strDistPath);
+    }
+    foreach(QString strFile, lstFiles) {
+        importModelFile(strFile, strDistPath);
+    }
+}
+
+void MainWindow::on_project_customContextMenu_Requested(const QPoint& pos)
+{
+    Q_UNUSED(pos);
+    m_popMenuModelFile->exec(QCursor::pos());
+}
+
+void MainWindow::on_actionRemove_modelFile()
+{
+    QModelIndex index = m_tvModelsView->selectionModel()->currentIndex();
+    QFileInfo info = m_fileSysModel->fileInfo(index);
+    QString suffix = info.completeSuffix();
+    if(suffix == "tp" || suffix == "tpx" || suffix == "tsx") {
+        QMessageBox::information(this, tr("Info"), tr("Don't remove this file"));
+        return;
+    }
+    bool ok = m_fileSysModel->remove(index);
+    QMessageBox::information(this, tr("Info"), ok ? tr("It was removed") : tr("No removed"));
 }
