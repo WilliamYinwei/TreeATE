@@ -119,11 +119,6 @@ QString ProjectMgr::getPrjDescription()
     return m_joPrj["Desc"].toString();
 }
 
-QString ProjectMgr::getPrjVersion()
-{
-    return m_joPrj["Ver"].toString();
-}
-
 QString ProjectMgr::getLastError()
 {
     return m_lastErr;

@@ -67,6 +67,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="action_Help"/>
+    <addaction name="separator"/>
     <addaction name="action_About"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
@@ -288,6 +290,11 @@
    </property>
    <property name="text">
     <string>Down Item</string>
+   </property>
+  </action>
+  <action name="action_Help">
+   <property name="text">
+    <string>&amp;Help...</string>
    </property>
   </action>
  </widget>

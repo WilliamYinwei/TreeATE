@@ -25,6 +25,7 @@ class QSplitter;
 class QMenu;
 class QCheckBox;
 class QPushButton;
+class TAPrjCfgWidget;
 
 class TAPropertyMgrWidget : public QDockWidget
 {
@@ -40,6 +41,12 @@ public:
     void SetModels(const QVariantList& vlModels);
     QVariantList GetModels();
     QStringList GetAPIsFromModels();
+    void SetPrjVersion(const QString& strVer);
+    QString GetPrjVersion();
+    bool SavePrjCfgFile();
+
+signals:
+    void propertyIsChanged();
 
 private slots:
     void MyDataChanged();
@@ -53,11 +60,13 @@ private slots:
     void on_popMenuPara_Show();
     void on_checkBox_allowEdit(bool bChk);
     void on_saveButton_clicked(bool bClicked);
+    void on_propertyIsChanged();
 
 protected:
     QStringList OpenDllFunc(const QString& strFile, bool bRet = true);
     bool OpenDllModel(const QString& strFile);
     void OpenScriptFile(const QString& strFile);
+    bool OpenPrjCfgFile(const QString& strFile);
 
 private:
     QString             m_strPrjPath;
@@ -80,6 +89,8 @@ private:
     QCheckBox*          m_cbOpenEdit;
     QPushButton*        m_saveButton;
     QMovie*             m_moveImage;
+    QLineEdit*          m_leVersion;
+    TAPrjCfgWidget*     m_prjCfgWidget;
 };
 
 #endif // TAPROPERTYMGR_H

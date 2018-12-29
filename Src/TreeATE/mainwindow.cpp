@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_pResultsWin = new QProcess(this);
     m_pEditWin = new QProcess(this);
+    connect(m_pEditWin, SIGNAL(finished(int)), this, SLOT(on_reload_testUnit()));
 
     openSysCfg();
     unLoad();
@@ -259,6 +260,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         m_leTotalSN->setEnabled(true);
         m_leTotalSN->setFocus();
         m_leTotalSN->selectAll();
+        ui->action_Edit->setEnabled(true);
         break;
     case Loading:
     case Testing:
@@ -272,6 +274,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->actionOption->setEnabled(false);
         ui->treeWidget_Units->setEnabled(false);
         m_leTotalSN->setEnabled(false);
+        ui->action_Edit->setEnabled(false);
         break;
     case Failed:
     case Pass:
@@ -289,6 +292,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         m_leTotalSN->setEnabled(true);
         m_leTotalSN->setFocus();
         m_leTotalSN->selectAll();
+        ui->action_Edit->setEnabled(true);
         break;
     }
 }
@@ -742,4 +746,12 @@ void MainWindow::on_action_Edit_triggered()
             QMessageBox::warning(this, "Warning", m_pEditWin->errorString());
         }
     }
+}
+
+void MainWindow::on_reload_testUnit()
+{
+    QString strFile = m_labelPath->text();
+    QFileInfo info(strFile);
+    if(info.isFile())
+        loadUnits(strFile);
 }

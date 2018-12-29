@@ -61,11 +61,13 @@ public:
     void SetPublicPara(const QVariantList& lstPara);
     QVariantList GetPublicModels();
     void SetPublicModels(const QVariantList& lstModel);
+    void SetPrjVersion(const QString& strVer);
+    QString GetPrjVersion();
 
 private:
     QVariantMap tranDataToVariant(TestUnitItem* item);
     TestUnitItem *getItem(const QModelIndex &index) const;
-    QVector<QVariant> getDataFromVM(const QVariantMap& vmData, bool isKey);
+    QVector<QVariant> getDataFromVM(const QVariantMap& vmData, bool isHeader);
     TestUnitItem* m_rootUnit;
     QVariant        m_vaPrj;
 };

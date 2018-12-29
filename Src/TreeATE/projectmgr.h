@@ -31,7 +31,6 @@ public:
     int  getLoopCounts();
     QString getPrjName();
     QString getPrjDescription();
-    QString getPrjVersion();
     QStringList getTestPrjName();
     QString getTestPrjFileName(const QString& testPrjName);
     QJsonObject getTestProjPara(const QString& testPrjName);

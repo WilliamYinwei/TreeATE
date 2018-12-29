@@ -20,17 +20,22 @@ SOURCES += main.cpp\
     aboutdlg.cpp \
     testunitsmodel.cpp \
     testunititem.cpp \
-    tapropertymgr.cpp
+    tapropertymgr.cpp \
+    taprjcfgwidget.cpp \
+    newprjdlg.cpp
 
 HEADERS  += mainwindow.h \
     tascriptedit.h \
     aboutdlg.h \
     testunitsmodel.h \
     testunititem.h \
-    tapropertymgr.h
+    tapropertymgr.h \
+    taprjcfgwidget.h \
+    newprjdlg.h
 
 FORMS    += mainwindow.ui \
-    aboutdlg.ui
+    aboutdlg.ui \
+    newprjdlg.ui
 
 RC_FILE += ate.rc
 

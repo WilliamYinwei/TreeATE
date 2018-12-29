@@ -159,11 +159,20 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="minimumSize">
     <size>
      <width>0</width>
      <height>0</height>
     </size>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
    </property>
    <property name="windowTitle">
     <string>Main Toolbar</string>
@@ -190,7 +199,7 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="TASizeDockWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <property name="spacing">
       <number>0</number>
@@ -382,7 +391,10 @@
      <normaloff>:/play.png</normaloff>:/play.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Play (F5)</string>
+    <string>&amp;Play</string>
+   </property>
+   <property name="toolTip">
+    <string>Play</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -394,7 +406,10 @@
      <normaloff>:/pause.png</normaloff>:/pause.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Stop (F8)</string>
+    <string>&amp;Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
@@ -512,6 +527,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>TASizeDockWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">tasizedockwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>treeWidget_Units</tabstop>
   <tabstop>textBrowser_Log</tabstop>

@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     if( argc >= 2) {
-        if(!w.openProjectFile(argv[1]))
+        w.SetNewPrjDisabled();
+        if(!w.OpenProjectFile(argv[1]))
             return -1;
     }
     w.show();

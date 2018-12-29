@@ -32,7 +32,6 @@ public:
     void SetRegSN(const QString& reg);
     void SetPrjName(const QString& strName);
     void SetPrjDesc(const QString& strDesc);
-    void SetPrjVer(const QString& strVer);
 
     bool GetFailedToStop();
     bool GetStoppedForLoop();

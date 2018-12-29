@@ -1,0 +1,184 @@
+/*
+ *  @brief         Style sheet of the TreeATE
+ *  @author        David Yin  2018-12 willage.yin@163.com
+ *
+ *  @license       GNU GPL v3
+ *
+ *  Distributed under the GNU GPL v3 License
+ *  (See accompanying file LICENSE or copy at
+ *  http://www.gnu.org/licenses/gpl.html)
+ */
+
+QWidget {
+        background:#223A51;
+        color: white;
+}
+
+QLabel {
+    background: transparent;
+}
+
+QLineEdit, QSpinBox, QComboBox {
+        background: #385f85;
+        border: 1px solid gray;
+}
+QLineEdit[readOnly="true"] { color: gray }
+
+QTreeView {
+        background: #385f85;
+        alternate-background-color: #2f4f6f;
+        font-size: 20px;
+}
+
+QTreeView::item {
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    padding-right: 8px;
+}
+
+QTreeView::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
+}
+
+QTreeView::item:selected:active{
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);
+}
+
+QTreeView::item:selected:!active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);
+}
+
+QTableView, QTextEdit, QListView, QTextBrowser {
+        background: #385f85;
+}
+
+QTableView QTableCornerButton::section {
+        background-color: #2f4f6f;
+}
+
+QHeaderView::section, QTableView QHeaderView::section {
+    background-color: #2f4f6f;
+    padding-left: 4px;
+        border: 1px solid #223A51;
+        font-size: 20px;
+}
+
+QHeaderView::section:checked
+{
+    background-color: red;
+}
+
+QHeaderView::section:header {
+    background-color: #2f4f6f;
+}
+
+QDockWidget::title {
+    text-align: left;
+    background: #2f4f6f;
+}
+
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+    background: red;
+}
+
+QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+    padding: 1px -1px -1px 1px;
+}
+
+QPushButton {
+    background-color: #2f4f6f;
+}
+
+QPushButton:disabled {
+        color: gray;
+}
+
+QPushButton:hover, QTabBar::tab:hover {
+    background-color: red;
+}
+
+QPushButton:pressed {
+        background-color: green;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: #385f85; /* make the default button prominent */
+}
+
+
+QTabWidget::pane { /* The tab widget frame */
+    border: 1px solid gray;
+}
+
+QTabWidget::tab-bar {
+    left: 8px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+    background: #2f4f6f;
+        padding: 8px;
+        border-right: 2px solid #223A51;
+}
+
+QTabBar::tab:selected {
+    background: green;
+}
+
+QAbstractItemView {
+    selection-background-color: red;
+}
+
+QToolBar::handle {
+    border: none;
+    image: url('');
+}
+
+QToolBar {
+    border: none;
+    spacing: 8px; /* spacing between items in the tool bar */
+    background: #223A51;
+}
+
+QToolBox::tab {
+    background: #223A51;
+}
+
+QToolButton:hover, QToolButton:checked {
+        background: #2f4f6f;
+}
+
+QToolButton:pressed {
+    background-color: red;
+}
+
+QToolButton:disabled {
+        color: gray;
+}
+
+QMenuBar {
+    background-color: #2f4f6f;
+}
+
+QMenuBar::item {
+    spacing: 8px; /* spacing between menu bar items */
+    padding: 5px 5px;
+    background: transparent;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed { /* when selected using mouse or keyboard */
+    background: red;
+}
+
+QMenu::item:selected {
+        background: red;
+}
+
+QMenu::item:disabled {
+        color: gray;
+}

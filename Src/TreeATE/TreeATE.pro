@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     prjoptdlg.cpp \
     talineedit.cpp \
     manybarcodedlg.cpp \
-    pluginsmgr.cpp
+    pluginsmgr.cpp \
+    tasizedockwidget.cpp
 
 HEADERS  += mainwindow.h \
     testproccess.h \
@@ -43,7 +44,8 @@ HEADERS  += mainwindow.h \
     talogin.h \
     manybarcodedlg.h \
     pluginsmgr.h \
-    tadefine.h
+    tadefine.h \
+    tasizedockwidget.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

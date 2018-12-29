@@ -27,6 +27,14 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     int iRet = 0;
 
+    QFile file(":/Qss/blue.qss");
+    if(file.open(QFile::ReadOnly)) {
+        QTextStream filetext(&file);
+        QString stylesheet = filetext.readAll();
+        qApp->setStyleSheet(stylesheet);
+        file.close();
+    }
+
     QSharedMemory sharedMemory("TreeATE_exe");
     if (sharedMemory.create(1) && sharedMemory.error() != QSharedMemory::AlreadyExists)
     {
@@ -35,15 +43,14 @@ int main(int argc, char *argv[])
         MainWindow w;
         w.showFullScreen();
 
-        /*login dlgLogin(&w);
+        login dlgLogin(&w);
         dlgLogin.SetHost(w.GetHostAddress());
         if(dlgLogin.exec() == QDialog::Accepted)
-        {*/
-            w.showMaximized();
-            /*w.SetCurrUser(dlgLogin.m_strUser);
-            w.setFocus();*/
+        {
+            w.SetCurrUser(dlgLogin.m_strUser);
+            w.setFocus();
             iRet = a.exec();
-        //}
+        }
     }
     else
     {

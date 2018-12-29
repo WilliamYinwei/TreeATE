@@ -19,7 +19,6 @@ PrjOptDlg::PrjOptDlg(QWidget *parent) :
     ui->setupUi(this);
     ui->lineEdit_Name->setDisabled(true);
     ui->lineEdit_Desc->setDisabled(true);
-    ui->lineEdit_Ver->setDisabled(true);
 }
 
 PrjOptDlg::~PrjOptDlg()
@@ -55,11 +54,6 @@ void PrjOptDlg::SetPrjName(const QString& strName)
 void PrjOptDlg::SetPrjDesc(const QString& strDesc)
 {
     ui->lineEdit_Desc->setText(strDesc);
-}
-
-void PrjOptDlg::SetPrjVer(const QString& strVer)
-{
-    ui->lineEdit_Ver->setText(strVer);
 }
 
 bool PrjOptDlg::GetFailedToStop()

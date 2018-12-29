@@ -227,10 +227,10 @@ bool TestUnitsModel::setHeaderData(int section, Qt::Orientation orientation,
     return result;
 }
 
-QVector<QVariant> TestUnitsModel::getDataFromVM(const QVariantMap& vmData, bool isKey)
+QVector<QVariant> TestUnitsModel::getDataFromVM(const QVariantMap& vmData, bool isHeader)
 {
     QVector<QVariant> columnData;
-    if(!isKey) {
+    if(!isHeader) {
         columnData << vmData["Name"].toString()
                    << vmData["Desc"].toString();
     }
@@ -239,7 +239,7 @@ QVector<QVariant> TestUnitsModel::getDataFromVM(const QVariantMap& vmData, bool 
          QVariantMap vmPara = vmData["Parameter"].toMap();
          for(auto itor = vmPara.begin(); itor != vmPara.end(); ++itor)
          {
-             if(isKey)
+             if(isHeader)
                  columnData << itor.key();
              else
                  columnData << itor.value();
@@ -254,8 +254,14 @@ bool TestUnitsModel::SetPrjData(const QVariant& data)
     if(NULL == m_rootUnit)
         return false;
 
-    m_rootUnit->removeChildren(0, 1);
-    m_rootUnit->removeColumns(2, m_rootUnit->columnCount() - 2);
+    blockSignals(true); // block begin
+
+    m_rootUnit->removeChildren(0, 1); // only one
+    if(m_rootUnit->columnCount() > 2) {
+        m_rootUnit->removeColumns(2, m_rootUnit->columnCount() - 2);
+    }
+
+    blockSignals(false); // block end
 
     QVariantMap vmPrj = data.toMap();
     m_vaPrj = vmPrj;
@@ -367,9 +373,11 @@ QVariant TestUnitsModel::GetPrjData()
 QVariantMap TestUnitsModel::tranDataToVariant(TestUnitItem* item)
 {
     QVariantMap vmPara;
-    for(int i = 2; i < item->columnCount(); i++)
-    {
-        vmPara.insert(m_rootUnit->data(i).toString(), item->data(i));
+    if(NULL != item) {
+        for(int i = 2; i < item->columnCount(); i++)
+        {
+            vmPara.insert(m_rootUnit->data(i).toString(), item->data(i));
+        }
     }
 
     return vmPara;
@@ -424,4 +432,17 @@ void TestUnitsModel::SetPublicModels(const QVariantList& lstModel)
     vmPrjPublic.insert("Models", lstModel);
     vmPrj.insert("Public", vmPrjPublic);
     m_vaPrj = vmPrj;
+}
+
+void TestUnitsModel::SetPrjVersion(const QString &strVer)
+{
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    vmPrj.insert("Ver", strVer);
+    m_vaPrj = vmPrj;
+}
+
+QString TestUnitsModel::GetPrjVersion()
+{
+    QVariantMap vmPrj = m_vaPrj.toMap();
+    return vmPrj["Ver"].toString();
 }

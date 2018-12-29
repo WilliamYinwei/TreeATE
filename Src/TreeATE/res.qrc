@@ -14,4 +14,7 @@
         <file>minus.png</file>
         <file>play.png</file>
     </qresource>
+    <qresource prefix="/Qss">
+        <file>blue.qss</file>
+    </qresource>
 </RCC>

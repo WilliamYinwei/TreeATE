@@ -104,8 +104,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
     m_dockLoopProgress = createLoopProgress(lstName);
     m_lstDockWidget.append(m_dockLoopProgress);
 
-    strTitle = m_prjMgr.getPrjName() + " - "
-            + m_prjMgr.getPrjDescription()  + " - " + m_prjMgr.getPrjVersion();
+    strTitle = m_prjMgr.getPrjName() + " - " + m_prjMgr.getPrjDescription();
     foreach (auto strName, lstName) {
         m_textBrower->append("Loading: " + strName);
         TestProcess* pTestPrj = new TestProcess(strName, (QObject*)m_parent);
@@ -620,7 +619,6 @@ void TestManger::SetPrjOption(const QString& prjName)
     PrjOptDlg optDlg(m_parent);
     optDlg.SetPrjName(m_prjMgr.getPrjName());
     optDlg.SetPrjDesc(m_prjMgr.getPrjDescription());
-    optDlg.SetPrjVer(m_prjMgr.getPrjVersion());
     optDlg.SetRegSN(m_prjMgr.getBarCodeReg());
     optDlg.SetLoopCounts(m_prjMgr.getLoopCounts());
     optDlg.SetFailedToStop(m_prjMgr.getFailedToStop());

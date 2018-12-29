@@ -12,6 +12,7 @@
 
 #include "tapropertymgr.h"
 #include "tascriptedit.h"
+#include "taprjcfgwidget.h"
 #include "Qsci/qsciapis.h"
 
 #include <QVBoxLayout>
@@ -33,6 +34,7 @@
 #include <QMenu>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QGridLayout>
 
 class TASizeWidget : public QWidget
 {
@@ -56,9 +58,25 @@ TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property
     QVBoxLayout* verticalLayout_pro = new QVBoxLayout(pContents);
     verticalLayout_pro->setContentsMargins(0, 0, 0, 0);
 
+    // project version
+    QGridLayout* gridLayout = new QGridLayout(pContents);
+    gridLayout->setContentsMargins(6, 6, 6, 0);
+    QLabel* labelVer = new QLabel(tr("Project Version: "), pContents);
+    m_leVersion = new QLineEdit(pContents);
+    gridLayout->addWidget(labelVer, 0, 0);
+    gridLayout->addWidget(m_leVersion, 0, 1);
+    verticalLayout_pro->addLayout(gridLayout);
+    connect(m_leVersion, SIGNAL(textChanged(QString)), this, SLOT(on_propertyIsChanged()));
+
+    // project config view
+    m_prjCfgWidget = new TAPrjCfgWidget(pContents);
+    verticalLayout_pro->addWidget(m_prjCfgWidget);
+    m_prjCfgWidget->hide();
+    connect(m_prjCfgWidget, SIGNAL(dataHasChanged()), this, SLOT(on_propertyIsChanged()));
+
     m_lvFunction = new QListWidget(pContents);
     verticalLayout_pro->addWidget(m_lvFunction);    
-    m_lvFunction->hide();
+    m_lvFunction->hide();    
 
     m_splitter = new QSplitter(Qt::Vertical, pContents);
     m_tmPublicPara = new QStandardItemModel();
@@ -66,11 +84,23 @@ TAPropertyMgrWidget::TAPropertyMgrWidget(QWidget *parent): QDockWidget("Property
     m_tmPublicPara->setHeaderData(0, Qt::Horizontal, tr("Parameter name"));
     m_tmPublicPara->setHeaderData(1, Qt::Horizontal, tr("Value"));
     m_tmPublicPara->setHeaderData(2, Qt::Horizontal, tr("Description"));
+    connect(m_tmPublicPara, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
+            SLOT(on_propertyIsChanged()));
+    connect(m_tmPublicPara, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
+            SLOT(on_propertyIsChanged()));
+    connect(m_tmPublicPara, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
+            SLOT(on_propertyIsChanged()));
 
     m_tmModels = new QStandardItemModel();
     m_tmModels->setColumnCount(2);
     m_tmModels->setHeaderData(0, Qt::Horizontal, tr("Object"));
     m_tmModels->setHeaderData(1, Qt::Horizontal, tr("Library file name"));
+    connect(m_tmModels, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
+            SLOT(on_propertyIsChanged()));
+    connect(m_tmModels, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
+            SLOT(on_propertyIsChanged()));
+    connect(m_tmModels, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
+            SLOT(on_propertyIsChanged()));
 
     m_tvModels = new QTableView(m_splitter);
     m_tvModels->setModel(m_tmModels);
@@ -132,6 +162,14 @@ TAPropertyMgrWidget::~TAPropertyMgrWidget()
         m_moveImage->stop();
         delete m_moveImage;
     }
+
+    if(m_tmPublicPara) {
+        delete m_tmPublicPara;
+    }
+
+    if(m_tmModels) {
+        delete m_tmModels;
+    }
 }
 
 void TAPropertyMgrWidget::SetPublicPara(const QVariantList& vlPara)
@@ -173,7 +211,10 @@ QVariantList TAPropertyMgrWidget::GetPublicPara()
 
 void TAPropertyMgrWidget::SetProjectPath(const QString& strPrjPath)
 {
-    m_strPrjPath = strPrjPath + "/";
+    QFileInfo fileInfo(strPrjPath);
+    m_strPrjPath = fileInfo.absolutePath() + "/";
+
+    OpenPrjCfgFile(strPrjPath);
 }
 
 void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
@@ -201,6 +242,7 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_splitter->hide();
         m_labelImage->hide();
         m_scriptEdit->SetShow(false);
+        m_prjCfgWidget->hide();
 
         if(!OpenDllModel(m_strCurrName)) {
             m_lvFunction->hide();
@@ -219,12 +261,13 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_scriptEdit->SetShow(false);
         m_cbOpenEdit->hide();
         m_saveButton->hide();
+        m_prjCfgWidget->hide();
 
         m_moveImage = new QMovie(m_strCurrName);
         m_labelImage->setMovie(m_moveImage);
         m_moveImage->start();
     }
-    else if(strSuffix == "tp")
+    else if(strSuffix == "tp" || strSuffix == "tpx")
     {
         m_lvFunction->hide();
         m_splitter->show();
@@ -232,6 +275,32 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_scriptEdit->SetShow(false);
         m_cbOpenEdit->hide();
         m_saveButton->hide();
+
+        QAbstractItemModel* modelObj = NULL;
+        QAbstractItemModel* modelPara = NULL;
+        if(strSuffix == "tpx") {
+            m_prjCfgWidget->show();
+            modelObj = m_prjCfgWidget->GetPluginModel();
+            modelPara = m_prjCfgWidget->GetPrjInstModel();
+        }
+        else {
+            m_prjCfgWidget->hide();
+            modelObj = m_tmModels;
+            modelPara = m_tmPublicPara;
+        }
+
+        m_tvModels->blockSignals(true);
+        m_tvModels->setModel(modelObj);
+        m_tvModels->blockSignals(false);
+
+        for (int column = 0; column < modelObj->columnCount(); ++column)
+            m_tvModels->resizeColumnToContents(column);
+
+        m_tvPublicPara->blockSignals(true);
+        m_tvPublicPara->setModel(modelPara);
+        m_tvPublicPara->blockSignals(false);
+        for (int column = 0; column < modelPara->columnCount(); ++column)
+            m_tvPublicPara->resizeColumnToContents(column);
     }
     else if(strSuffix == "ts")
     {
@@ -241,6 +310,7 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_scriptEdit->SetShow(true);
         m_cbOpenEdit->show();
         m_saveButton->show();
+        m_prjCfgWidget->hide();
 
         OpenScriptFile(m_strCurrName);
     }
@@ -252,6 +322,7 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         m_scriptEdit->SetShow(false);
         m_cbOpenEdit->hide();
         m_saveButton->hide();
+        m_prjCfgWidget->hide();
     }
 }
 
@@ -361,6 +432,17 @@ void TAPropertyMgrWidget::OpenScriptFile(const QString& strFile)
         return;
     m_scriptEdit->SetScriptData(file.readAll());
     file.close();
+}
+
+bool TAPropertyMgrWidget::OpenPrjCfgFile(const QString& strFile)
+{
+    return m_prjCfgWidget->OpenPrjCfgFile(strFile);
+}
+
+bool TAPropertyMgrWidget::SavePrjCfgFile()
+{
+    m_prjCfgWidget->CopyPublicPara(GetPublicPara());
+    return m_prjCfgWidget->SavePrjCfgFile();
 }
 
 void TAPropertyMgrWidget::on_saveButton_clicked(bool bClicked)
@@ -492,4 +574,19 @@ void TAPropertyMgrWidget::on_checkBox_allowEdit(bool bChk)
         m_saveButton->setDisabled(true);
     }
     m_scriptEdit->GetScriptEdit()->setReadOnly(!bChk);
+}
+
+void TAPropertyMgrWidget::on_propertyIsChanged()
+{
+    emit propertyIsChanged();
+}
+
+void TAPropertyMgrWidget::SetPrjVersion(const QString& strVer)
+{
+    m_leVersion->setText(strVer);
+}
+
+QString TAPropertyMgrWidget::GetPrjVersion()
+{
+    return m_leVersion->text();
 }

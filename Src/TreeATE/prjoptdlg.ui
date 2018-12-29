@@ -33,10 +33,13 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Version:</string>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_Desc">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -50,35 +53,19 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_Desc">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_Ver">
+      <widget class="QLineEdit" name="lineEdit">
        <property name="readOnly">
         <bool>true</bool>
        </property>
-       <property name="clearButtonEnabled">
-        <bool>false</bool>
-       </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Regex of product SN:</string>
        </property>
       </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
      </item>
     </layout>
    </item>
@@ -135,7 +122,6 @@
  <tabstops>
   <tabstop>lineEdit_Name</tabstop>
   <tabstop>lineEdit_Desc</tabstop>
-  <tabstop>lineEdit_Ver</tabstop>
   <tabstop>lineEdit</tabstop>
   <tabstop>spinBox</tabstop>
   <tabstop>checkBox</tabstop>

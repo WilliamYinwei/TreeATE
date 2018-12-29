@@ -90,6 +90,8 @@ private slots:
 
     void on_action_Edit_triggered();
 
+    void on_reload_testUnit();
+
 protected:
     void closeEvent(QCloseEvent *event);
 

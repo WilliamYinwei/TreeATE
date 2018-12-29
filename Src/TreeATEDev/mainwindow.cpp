@@ -16,6 +16,7 @@
 #include "aboutdlg.h"
 #include "testunitsmodel.h"
 #include "tapropertymgr.h"
+#include "newprjdlg.h"
 
 #include <QSplitter>
 #include <QTableView>
@@ -29,6 +30,7 @@
 #include <QFileSystemModel>
 #include <QInputDialog>
 #include <QItemSelectionModel>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -36,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
+    ui->action_Save->setEnabled(false);
 
     connect(ui->actionClose, &QAction::triggered, qApp, &QCoreApplication::quit);
     connect(ui->menu_View, SIGNAL(aboutToShow()), this, SLOT(on_menuView_Show()));
@@ -56,8 +59,27 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_tvTestItems, SIGNAL(customContextMenuRequested(QPoint)), this,
             SLOT(on_customContextMenu_Requested(QPoint)));
 
+    QStringList strHeader;
+    strHeader << tr("Name") << tr("Description");
+    m_pUnitModel = new TestUnitsModel(strHeader);
+    m_tvTestItems->setModel(m_pUnitModel);
+    connect(m_pUnitModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
+            SLOT(on_data_changed()));
+    connect(m_pUnitModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this,
+            SLOT(on_data_changed()));
+    connect(m_pUnitModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
+            SLOT(on_data_changed()));
+    connect(m_pUnitModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
+            SLOT(on_data_changed()));
+    connect(m_pUnitModel, SIGNAL(columnsInserted(QModelIndex,int,int)), this,
+            SLOT(on_data_changed()));
+    connect(m_pUnitModel, SIGNAL(columnsRemoved(QModelIndex,int,int)), this,
+            SLOT(on_data_changed()));
+
+
     m_scriptEdit = new TaScriptEdit(splitterMain);
-    connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this, SLOT(on_data_changed()));
+    connect(m_scriptEdit->GetScriptEdit(), SIGNAL(modificationChanged(bool)), this,
+            SLOT(on_data_changed()));
     ui->verticalLayout_main->addWidget(splitterMain);
 
     m_fileSysModel = new QFileSystemModel();
@@ -76,14 +98,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pProMgrWidget = new TAPropertyMgrWidget(this);
     addDockWidget(Qt::RightDockWidgetArea, ui->dockWidget_model);
     addDockWidget(Qt::RightDockWidgetArea, m_pProMgrWidget);
+    connect(m_pProMgrWidget, SIGNAL(propertyIsChanged()), this, SLOT(on_data_changed()));
 
     splitterMain->setStretchFactor(0, 6);
     splitterMain->setStretchFactor(1, 4);
-
-    QStringList strHeader;
-    strHeader << tr("Name") << tr("Description");
-    m_pUnitModel = new TestUnitsModel(strHeader);
-    m_tvTestItems->setModel(m_pUnitModel);
 
     m_popMenuModelFile = new QMenu(this);
     m_popMenuModelFile->addAction(ui->actionImport);
@@ -112,7 +130,7 @@ void MainWindow::on_action_About_triggered()
     dlg.exec();
 }
 
-bool MainWindow::openProjectFile(const QString& strPrjFile)
+bool MainWindow::OpenProjectFile(const QString& strPrjFile)
 {
     QFile prjFile(strPrjFile);
 
@@ -132,7 +150,6 @@ bool MainWindow::openProjectFile(const QString& strPrjFile)
     m_pUnitModel->SetPrjData(vaPrj);
     m_tvTestItems->expandAll();
 
-
     QFileInfo fileInfo(strPrjFile);
     m_strScriptFile = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".tsx";
     QFile scrFile(m_strScriptFile);
@@ -145,9 +162,11 @@ bool MainWindow::openProjectFile(const QString& strPrjFile)
     m_scriptEdit->SetScriptData(scrFile.readAll());
     scrFile.close();
 
-    m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath());
+    m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
+                                    + fileInfo.completeBaseName() + ".tpx");
     m_pProMgrWidget->SetPublicPara(m_pUnitModel->GetPublicPara());
     m_pProMgrWidget->SetModels(m_pUnitModel->GetPublicModels());
+    m_pProMgrWidget->SetPrjVersion(m_pUnitModel->GetPrjVersion());
 
     // add the model's apis
     m_scriptEdit->ClearApis();
@@ -159,7 +178,7 @@ bool MainWindow::openProjectFile(const QString& strPrjFile)
     // model path
     m_fileSysModel->setRootPath(fileInfo.absolutePath());
     m_tvModelsView->setRootIndex(m_fileSysModel->index(fileInfo.absolutePath()));
-
+    ui->action_Save->setEnabled(false);
     return true;
 }
 
@@ -170,7 +189,7 @@ void MainWindow::on_action_Open_triggered()
     if(fileName.isEmpty())
         return;
 
-    openProjectFile(fileName);
+    OpenProjectFile(fileName);
 }
 
 void MainWindow::on_testitems_clicked(const QModelIndex& index)
@@ -209,7 +228,7 @@ void MainWindow::on_editMenu_Show()
 void MainWindow::on_action_Save_triggered()
 {
     bool bSave = false;
-    if(m_bChanged) {
+    if(ui->action_Save->isEnabled()) {
         QString strScriptData = m_scriptEdit->GetScriptEdit()->text();
         QFile scrFile(m_strScriptFile);
 
@@ -220,12 +239,12 @@ void MainWindow::on_action_Save_triggered()
         }
         scrFile.write(strScriptData.toUtf8());
         scrFile.close();
-        m_bChanged = false;
         bSave = true;
     }
 
     m_pUnitModel->SetPublicModels(m_pProMgrWidget->GetModels());
     m_pUnitModel->SetPublicPara(m_pProMgrWidget->GetPublicPara());
+    m_pUnitModel->SetPrjVersion(m_pProMgrWidget->GetPrjVersion());
 
     QVariant vPrj = m_pUnitModel->GetPrjData();
     if(vPrj.isValid()) {
@@ -239,17 +258,21 @@ void MainWindow::on_action_Save_triggered()
 
         scrFile.write(QJsonDocument::fromVariant(vPrj).toJson());
         scrFile.close();
-        m_bChanged = false;
         bSave = true;
     }
 
-    if(bSave)
+    if(m_pProMgrWidget->SavePrjCfgFile())
+        bSave = true;
+
+    if(bSave) {
+        ui->action_Save->setEnabled(false);
         QMessageBox::information(this, tr("Information"), tr("Success to save"));
+    }
 }
 
 void MainWindow::on_data_changed()
 {
-    m_bChanged = true;
+    ui->action_Save->setEnabled(true);
 }
 
 void MainWindow::on_actionShrink_items_Ctrl_triggered()
@@ -295,10 +318,18 @@ void MainWindow::updateActions()
 
     if (hasCurrent) {
         m_tvTestItems->closePersistentEditor(currIndex);
-        if (notRoot)
-            statusBar()->showMessage(tr("Position: (%1,%2)").arg(row).arg(column));
+        QString statusStr;
+        if (notRoot) {
+            if(column > 1)
+                statusStr = tr("Parameter's value");
+            else if(column == 0)
+                statusStr = tr("Name of the test item, must be English.");
+            else
+                statusStr = tr("Description content");
+        }
         else
-            statusBar()->showMessage(tr("Position: (%1,%2) in top level").arg(row).arg(column));
+            statusStr = tr("It's test project");
+        statusBar()->showMessage(statusStr);
     }
 }
 
@@ -341,8 +372,9 @@ void MainWindow::on_actionRemove_Unit_triggered()
 {
     QModelIndex index = m_tvTestItems->selectionModel()->currentIndex();
     QAbstractItemModel *model = m_tvTestItems->model();
-    if (model->removeRow(index.row(), index.parent()))
+    if (model->removeRow(index.row(), index.parent())) {
         updateActions();
+    }
 }
 
 void MainWindow::on_actionRemove_Parameter_triggered()
@@ -353,8 +385,9 @@ void MainWindow::on_actionRemove_Parameter_triggered()
     // Insert columns in each child of the parent item.
     bool changed = model->removeColumn(column);
 
-    if (changed)
+    if (changed) {
         updateActions();
+    }
 }
 
 void MainWindow::on_actionAdd_Sub_Unit_triggered()
@@ -468,4 +501,73 @@ void MainWindow::on_actionRemove_modelFile()
     }
     bool ok = m_fileSysModel->remove(index);
     QMessageBox::information(this, tr("Info"), ok ? tr("It was removed") : tr("No removed"));
+}
+
+void MainWindow::SetNewPrjDisabled()
+{
+    ui->action_New->setDisabled(true);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(ui->action_Save->isEnabled()) {
+        int nRet = QMessageBox::question(this, tr("Question"),
+              tr("Are you sure quit and save it?"),
+              QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        if(nRet == QMessageBox::Yes)
+        {
+            on_action_Save_triggered();
+        }
+        else if(nRet == QMessageBox::Cancel)
+        {
+            event->ignore();
+            return;
+        }
+    }
+    event->accept();
+}
+
+void MainWindow::on_action_New_triggered()
+{
+    if(ui->action_Save->isEnabled()) {
+        QMessageBox::information(this, tr("Remid"),
+                                 tr("Please save the current project before at new that"));
+        return;
+    }
+
+    NewPrjDlg dlg;
+    if(QDialog::Accepted == dlg.exec())
+    {
+        QStringList lstFiles = dlg.GetNewProjectFiles();
+        if(lstFiles.count() == 3) // *.tp ; *.tpx ; *.tsx
+        {
+            QFileInfo info(lstFiles.at(0));
+            QDir dir(info.absolutePath());
+            if(dir.exists()) {
+                if(QMessageBox::No == QMessageBox::question(this, tr("Question"),
+                                                         info.completeBaseName()
+                                      + tr(" was exist, are you replace it?")))
+                    return;
+            }
+            else {
+                dir.mkpath(info.absolutePath());
+            }
+
+            foreach(QString strFile, lstFiles)
+            {
+                QFile file(strFile);
+                if(!file.open(QIODevice::WriteOnly)) {
+                    QMessageBox::warning(this, tr("Warning"), file.errorString());
+                    return;
+                }
+                QVariantMap vmData;
+                vmData.insert("Name", info.completeBaseName());
+                vmData.insert("Desc", tr("Please deleted it before at edit"));
+                file.write(QJsonDocument::fromVariant(vmData).toJson());
+                file.close();
+            }
+
+            OpenProjectFile(lstFiles.at(0));
+        }
+    }
 }

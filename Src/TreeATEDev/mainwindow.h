@@ -37,7 +37,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool openProjectFile(const QString& strPrjFile);
+    bool OpenProjectFile(const QString& strPrjFile);
+    void SetNewPrjDisabled();
 
 public slots:
     void updateActions();
@@ -85,8 +86,11 @@ private slots:
 
     void on_actionRemove_modelFile();
 
+    void on_action_New_triggered();
+
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::MainWindow *ui;
@@ -98,7 +102,6 @@ private:
     TAPropertyMgrWidget*    m_pProMgrWidget;
     QString         m_strScriptFile;
     QString         m_strProjectFile;
-    bool            m_bChanged;
     QMenu*          m_popMenuModelFile;
     QAction*        m_actionRemoveFile;
 };
