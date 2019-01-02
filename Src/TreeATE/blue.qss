@@ -11,7 +11,8 @@
 
 QWidget {
         background:#223A51;
-        color: white;
+        color: #f8f8fe;
+        font-family: "Arial";
 }
 
 QLabel {
@@ -181,4 +182,13 @@ QMenu::item:selected {
 
 QMenu::item:disabled {
         color: gray;
+}
+
+QProgressBar {
+    border: 1px solid grey;
+    background: #385f85;
+}
+
+QProgressBar::chunk {
+    background-color: #00F200;
 }

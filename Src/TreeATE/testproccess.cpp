@@ -91,12 +91,12 @@ QJsonObject TestProcess::parserStrLine(const QString& line)
     }
     else if(line.contains(":::")) { // is list units
         char path[255] = {0};
-        char desc[255] = {0};
-        sscanf(line.toUtf8().constData(), "%s ::: %s", path, desc);
+        sscanf(line.toUtf8().constData(), "%s", path);
+        int iStart = line.indexOf(":::");
 
         m_strCurrPath = QString(path);
         obj.insert("path", m_strCurrPath);
-        obj.insert("desc", QString(desc));
+        obj.insert("desc", line.mid(iStart + 3));
         obj.insert("type", "list");
         m_nUnitsCount++;
     }

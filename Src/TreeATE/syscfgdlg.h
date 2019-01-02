@@ -28,6 +28,7 @@ public:
 
     void SetSysConfig(const QVariant& sysCfg);
     QVariantMap GetDataValue();
+    void SetLanguageList(const QStringList& lstLang);
 
 private slots:
     void on_brownButton_clicked();

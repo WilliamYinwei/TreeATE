@@ -96,6 +96,7 @@ bool ResultMgr::CreateResult(const QString& strPath, const QJsonObject& objUnit)
         m_rstPrj.m_tStart = QDateTime::currentDateTime();
         m_rstPrj.m_tTime.start();
         m_rstPrj.m_strPath = strPath;
+        m_rstPrj.m_strDesc = objUnit["Desc"].toString();
         m_rstPrj.m_strVersion = objUnit["Ver"].toString();
         m_output.OutputTestProjectRst(m_rstPrj);
     }
@@ -103,6 +104,7 @@ bool ResultMgr::CreateResult(const QString& strPath, const QJsonObject& objUnit)
         TestSuiteRst rst;
         rst.m_strName = objUnit["Name"].toString();
         rst.m_strPath = strPath;
+        rst.m_strDesc = objUnit["Desc"].toString();
         rst.m_tStart = QDateTime::currentDateTime();
         rst.m_tTime.start();
 
@@ -115,6 +117,7 @@ bool ResultMgr::CreateResult(const QString& strPath, const QJsonObject& objUnit)
         TestCaseRst rst;
         rst.m_strName = objUnit["Name"].toString();
         rst.m_strPath = strPath;
+        rst.m_strDesc = objUnit["Desc"].toString();
         rst.m_tStart = QDateTime::currentDateTime();
         rst.m_tTime.start();
 

@@ -72,10 +72,10 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(customMessageHandler);
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationName("TestEngine");
-    QCoreApplication::setApplicationVersion("0.1.1");
+    QCoreApplication::setApplicationVersion("1.0.0");
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(TA_TR("Copyright 2018 David Yin.\r\nTreeATE TestEngine. It's based-command-line test executer"));
+    parser.setApplicationDescription(TA_TR("Copyright 2019 David Yin.\r\nTreeATE TestEngine. It's based-command-line test executer"));
     parser.addHelpOption();
     parser.addVersionOption();
     QCommandLineOption startOption(

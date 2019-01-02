@@ -76,6 +76,10 @@ void SysCfgDlg::SetSysConfig(const QVariant &sysCfg)
             ui->tableWidget->setItem(i, 1, item);
         }
     }
+    if(varMapCfg["Language"].isValid())
+    {
+        ui->comboBox_lang->setCurrentText(varMapCfg["Language"].toString());
+    }
 }
 
 
@@ -87,6 +91,7 @@ QVariantMap SysCfgDlg::GetDataValue()
     varMapCfg.insert("WorkPath", ui->lineEdit_Path->text());
     varMapCfg.insert("Station", ui->lineEdit_Station->text());
     varMapCfg.insert("Server", ui->lineEdit_Server->text());
+    varMapCfg.insert("Language", ui->comboBox_lang->currentText());
 
     QVariantList vlPrj;
     for(int i = 0; i < ui->tableWidget->rowCount(); i++)
@@ -126,4 +131,9 @@ void SysCfgDlg::on_pushButton_del_clicked()
     if(row < 0 || row > ui->tableWidget->rowCount())
         return;
     ui->tableWidget->removeRow(row);
+}
+
+void SysCfgDlg::SetLanguageList(const QStringList& lstLang)
+{
+    ui->comboBox_lang->addItems(lstLang);
 }

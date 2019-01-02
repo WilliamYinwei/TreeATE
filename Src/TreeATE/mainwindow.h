@@ -40,6 +40,7 @@ public:
 
     QString GetHostAddress();
     void SetCurrUser(const QString& strUser);
+    QString GetCurretLang();
 
 private slots:
     void on_actionLoading_triggered();
@@ -94,6 +95,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    void changeEvent(QEvent* e);
 
 private:
     void unLoad();
@@ -119,6 +121,7 @@ private:
     PluginsMgr*     m_pPluginsMgr;
     QProcess*       m_pResultsWin;
     QProcess*       m_pEditWin;
+    QStringList     m_lstLangFiles;
 };
 
 #endif // MAINWINDOW_H

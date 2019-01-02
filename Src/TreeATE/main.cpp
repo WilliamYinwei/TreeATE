@@ -19,6 +19,7 @@
 #include <QFile>
 #include <QDir>
 #include <QDateTime>
+#include <QTranslator>
 
 extern void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext, const QString& str);
 
@@ -40,7 +41,13 @@ int main(int argc, char *argv[])
     {
         qInstallMessageHandler(customMessageHandler);
 
+        QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
+
+        QTranslator trans;
         MainWindow w;
+        if(trans.load(w.GetCurretLang(), strLangPath)) {
+            qApp->installTranslator(&trans);
+        }
         w.showFullScreen();
 
         login dlgLogin(&w);

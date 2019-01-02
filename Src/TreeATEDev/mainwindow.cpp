@@ -330,6 +330,12 @@ void MainWindow::updateActions()
         else
             statusStr = tr("It's test project");
         statusBar()->showMessage(statusStr);
+        ui->action_Export->setEnabled(true);
+    }
+    else {
+        ui->action_Export->setEnabled(false);
+        ui->actionDownItem->setEnabled(false);
+        ui->actionUpItem->setEnabled(false);
     }
 }
 
@@ -462,10 +468,20 @@ void MainWindow::on_actionImport_triggered()
     QString selectedFilter;
     const QString strLibSuff = "Lib files (*.dll *.ts)";
     const QString strImgSuff = "Images (*.jpg *.png *.gif)";
+    const QString strCSV = "CSV (*.csv)";
     QStringList lstFiles = QFileDialog::getOpenFileNames(this, tr("Import Files"),
-                           "", strLibSuff + ";;" + strImgSuff,
+                           "", strLibSuff + ";;" + strImgSuff + ";;" + strCSV,
                            &selectedFilter, QFileDialog::DontUseSheet);
     if(lstFiles.count() <= 0) {
+        return;
+    }
+
+    if(selectedFilter == strCSV && m_pUnitModel) {
+        QString strErr;
+        if(!m_pUnitModel->ImportCSVFile(lstFiles.at(0), strErr)) {
+            QMessageBox::warning(this, tr("Warning"), strErr);
+        }
+        m_tvTestItems->expandAll();
         return;
     }
 
@@ -481,6 +497,18 @@ void MainWindow::on_actionImport_triggered()
     }
     foreach(QString strFile, lstFiles) {
         importModelFile(strFile, strDistPath);
+    }
+}
+
+void MainWindow::on_action_Export_triggered()
+{
+    QString saveFile = QFileDialog::getSaveFileName(this, tr("Export to CSV file"),
+                                                    "", "CSV (*.csv)");
+    if(m_pUnitModel && !saveFile.isEmpty()) {
+        QString strErr;
+        if(!m_pUnitModel->ExportCSVFile(saveFile, strErr)) {
+            QMessageBox::warning(this, tr("Warning"), strErr);
+        }
     }
 }
 

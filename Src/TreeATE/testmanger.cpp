@@ -195,6 +195,7 @@ void TestManger::on_startTesting(const QString& who)
 }
 
 int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
+                          const QString &strUser,
                           const QMap<QString, QString> &mapSN)
 {
     int nSelectedCnt = 0;
@@ -260,6 +261,7 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
                 << (m_prjMgr.getFailedToStop() ? "-S" : "")
                 << "-s" << strStation
                 << "-w" << strWorkLine
+                << "-u" << strUser
                 << "-b" << mapSN[who]
                 << "-p"
                 << tempParaFile->fileName();
@@ -319,9 +321,6 @@ void TestManger::UnloadUnits()
 void TestManger::on_updateTestItemStatus(const QString& who,
                                  const QJsonObject& objData, quint32 nCnt)
 {
-    /* m_textBrower->append(who + ":" +
-                        QJsonDocument::fromVariant(objData.toVariantMap())
-                        .toJson(QJsonDocument::Compact)); */
     if(objData.isEmpty())
         return;
 

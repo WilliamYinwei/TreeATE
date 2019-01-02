@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     testunititem.cpp \
     tapropertymgr.cpp \
     taprjcfgwidget.cpp \
-    newprjdlg.cpp
+    newprjdlg.cpp \
+    tacsvparser.cpp
 
 HEADERS  += mainwindow.h \
     tascriptedit.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     testunititem.h \
     tapropertymgr.h \
     taprjcfgwidget.h \
-    newprjdlg.h
+    newprjdlg.h \
+    tacsvparser.h
 
 FORMS    += mainwindow.ui \
     aboutdlg.ui \

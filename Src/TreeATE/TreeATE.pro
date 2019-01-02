@@ -65,3 +65,6 @@ RC_FILE += ate.rc
 DEFINES += QT_MESSAGELOGCONTEXT
 
 LIBS += -L$$DESTDIR/libs/ -lTALocalSocket
+
+TRANSLATIONS += $$PWD/i18n/en.ts \
+    $$PWD/i18n/zh.ts

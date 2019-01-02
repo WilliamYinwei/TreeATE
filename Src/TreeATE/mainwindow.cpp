@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // SN: serial number of the UUT
     m_leTotalSN = new TALineEdit(ui->mainToolBar);
     connect(m_leTotalSN, SIGNAL(returnPressed()), this, SLOT(on_barcode_returnPressed()));
-    const QString strStyleFont("font: 28pt;");
+    const QString strStyleFont("font: 28pt Arial;");
     m_leTotalSN->setStyleSheet(strStyleFont);
     m_leTotalSN->setContextMenuPolicy(Qt::NoContextMenu);
     QLabel* labelSN = new QLabel(ui->mainToolBar);
@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mainToolBar->addWidget(labelSN);
     ui->mainToolBar->addWidget(m_leTotalSN);
-    const QString strStyleFontLine("font: 18pt;");
+    const QString strStyleFontLine("font: 18pt Arial;");
     m_labelStationName = new QLabel(ui->mainToolBar);
     m_labelStationName->setStyleSheet(strStyleFontLine);
     m_labelStationName->setToolTip(tr("Line and station name."));
@@ -234,7 +234,7 @@ void MainWindow::on_actionPlay_triggered()
 
     QVariantMap vmTemp = m_vaSysCfg.toMap();
     int nSelectedCnt = m_pTestMgr->StartTest(vmTemp["LineName"].toString(),
-            vmTemp["Station"].toString(), mapSN);
+            vmTemp["Station"].toString(), m_strUser, mapSN);
     on_startLoading(nSelectedCnt);
 }
 
@@ -303,7 +303,7 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
 
     if(eStatus == Unload) {
         ui->progressBar->hide();
-        m_labelPath->setText("Unload");
+        m_labelPath->setText(tr("Unload"));
         setWindowTitle("TreeATE");
     }
     else {
@@ -609,6 +609,7 @@ void MainWindow::on_tableWidget_Property_cellChanged(int row, int column)
 void MainWindow::on_actionSys_options_triggered()
 {
     SysCfgDlg sysCfgDlg(this);
+    sysCfgDlg.SetLanguageList(m_lstLangFiles);
     sysCfgDlg.SetSysConfig(m_vaSysCfg);
     if(QDialog::Accepted == sysCfgDlg.exec())
     {
@@ -655,6 +656,13 @@ void MainWindow::openSysCfg()
             + vmSysCfg["Station"].toString());
 
     file.close();
+
+    // list the language files at i18n/treeate
+    QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
+    QDir dir(strLangPath);
+    QStringList filters;
+    filters << "*.qm";
+    m_lstLangFiles = dir.entryList(filters);
 }
 
 QString MainWindow::GetHostAddress()
@@ -754,4 +762,18 @@ void MainWindow::on_reload_testUnit()
     QFileInfo info(strFile);
     if(info.isFile())
         loadUnits(strFile);
+}
+
+QString MainWindow::GetCurretLang()
+{
+    QVariantMap vm = m_vaSysCfg.toMap();
+    return vm["Language"].toString();
+}
+
+void MainWindow::changeEvent(QEvent* e)
+{
+    QMainWindow::changeEvent(e);
+    if(e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
 }

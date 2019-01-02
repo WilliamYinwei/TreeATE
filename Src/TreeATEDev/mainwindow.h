@@ -88,6 +88,8 @@ private slots:
 
     void on_action_New_triggered();
 
+    void on_action_Export_triggered();
+
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);
     void closeEvent(QCloseEvent *event);

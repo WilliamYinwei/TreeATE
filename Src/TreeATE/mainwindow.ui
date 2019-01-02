@@ -366,7 +366,7 @@
      <item>
       <widget class="QLabel" name="label_rst">
        <property name="text">
-        <string>TextLabel</string>
+        <string notr="true">TextLabel</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -397,7 +397,7 @@
     <string>Play</string>
    </property>
    <property name="shortcut">
-    <string>F5</string>
+    <string notr="true">F5</string>
    </property>
   </action>
   <action name="actionStop">
@@ -412,7 +412,7 @@
     <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string>F8</string>
+    <string notr="true">F8</string>
    </property>
   </action>
   <action name="actionProperty">
@@ -472,7 +472,7 @@
   </action>
   <action name="actionSpread_items">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATEDev/res.qrc">
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
@@ -482,12 +482,12 @@
     <string>Spread items</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+=</string>
+    <string notr="true">Ctrl+=</string>
    </property>
   </action>
   <action name="actionShrink_items">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATEDev/res.qrc">
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
@@ -497,7 +497,7 @@
     <string>Shrink items</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+-</string>
+    <string notr="true">Ctrl+-</string>
    </property>
   </action>
   <action name="actionSys_options">
@@ -542,6 +542,7 @@
   <tabstop>pushButton_SaveCfg</tabstop>
  </tabstops>
  <resources>
+  <include location="../TreeATEDev/res.qrc"/>
   <include location="res.qrc"/>
  </resources>
  <connections/>

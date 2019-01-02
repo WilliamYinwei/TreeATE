@@ -68,7 +68,9 @@ public:
     bool IsLoaded();
 
     QStringList SeletedPrj(QString& forOnlyOne);
-    int StartTest(const QString& strWorkLine, const QString& strStation, const QMap<QString, QString> &mapSN);
+    int StartTest(const QString& strWorkLine, const QString& strStation,
+                  const QString& strUser,
+                  const QMap<QString, QString> &mapSN);
     void StopTest();
     QList<QDockWidget*> GetDockWidgetList();
     void SpreadUnitItems();
