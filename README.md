@@ -26,7 +26,7 @@ TreeATE界面预览
 
 TreeATE Dev界面预览
 -------------------------------------------------------------------------------
-![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png）
+![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png)
 
 开发编译
 -------------------------------------------------------------------------------
