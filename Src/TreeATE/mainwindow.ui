@@ -69,7 +69,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Spend Time</string>
+        <string>Elapsed Time</string>
        </property>
       </column>
      </widget>

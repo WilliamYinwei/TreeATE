@@ -79,9 +79,8 @@
         <translation>开始时间</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="72"/>
         <source>Spend Time</source>
-        <translation>花费时间</translation>
+        <translation type="vanished">花费时间</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="109"/>
@@ -161,6 +160,11 @@
     <message>
         <source>&amp;Language</source>
         <translation type="vanished">语言(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="72"/>
+        <source>Elapsed Time</source>
+        <translation>用时</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="412"/>

@@ -79,9 +79,8 @@
         <translation>Start Time</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="72"/>
         <source>Spend Time</source>
-        <translation>Spend Time</translation>
+        <translation type="vanished">Spend Time</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="109"/>
@@ -161,6 +160,11 @@
     <message>
         <source>&amp;Language</source>
         <translation type="vanished">&amp;Language</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="72"/>
+        <source>Elapsed Time</source>
+        <translation>Elapsed Time</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="412"/>

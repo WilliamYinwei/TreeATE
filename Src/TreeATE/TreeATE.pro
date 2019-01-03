@@ -66,5 +66,32 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 LIBS += -L$$DESTDIR/libs/ -lTALocalSocket
 
-TRANSLATIONS += $$PWD/i18n/en.ts \
-    $$PWD/i18n/zh.ts
+TRANSLATIONS += $${PWD}/i18n/en.ts \
+    $${PWD}/i18n/zh.ts
+
+linux-g++{
+    # for linux
+    QMAKE_POST_LINK += $$quote(lrelease $${TRANSLATIONS}$$escape_expand(\n\t))
+
+    EXTRA_BINFILES += \
+        $${PWD}/i18n/*.qm
+    DESTDIR_LINUX = $${DESTDIR}/i18n/treeate/
+    for(FILE,EXTRA_BINFILES){
+        QMAKE_POST_LINK += $$quote(cp $${FILE} $${DESTDIR_LINUX}$$escape_expand(\n\t))
+    }
+}
+
+win32 {
+    # for windows
+    QMAKE_POST_LINK +=$$quote(cmd /c lrelease $${TRANSLATIONS}$$escape_expand(\n\t))
+
+    EXTRA_BINFILES += \
+        $${PWD}/i18n/*.qm
+    EXTRA_BINFILES_WIN = $${EXTRA_BINFILES}
+    EXTRA_BINFILES_WIN ~= s,/,\\,g
+    DESTDIR_WIN = $${DESTDIR}/i18n/treeate/
+    DESTDIR_WIN ~= s,/,\\,g
+    for(FILE,EXTRA_BINFILES_WIN){
+        QMAKE_POST_LINK +=$$quote(cmd /c xcopy $${FILE} $${DESTDIR_WIN} /y /e $$escape_expand(\n\t))
+    }
+}
