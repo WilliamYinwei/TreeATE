@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS += Src Example Plugins \
-    Libs
+SUBDIRS += Libs Src Example Plugins \
 CONFIG +=ordered
 
 CONFIG(debug, debug|release) {
