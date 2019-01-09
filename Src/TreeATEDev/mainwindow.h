@@ -28,6 +28,7 @@ class TestUnitsModel;
 class QStandardItemModel;
 class QFileSystemModel;
 class TAPropertyMgrWidget;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -90,6 +91,8 @@ private slots:
 
     void on_action_Export_triggered();
 
+    void on_action_Help_triggered();
+
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);
     void closeEvent(QCloseEvent *event);
@@ -106,6 +109,7 @@ private:
     QString         m_strProjectFile;
     QMenu*          m_popMenuModelFile;
     QAction*        m_actionRemoveFile;
+    QLabel*         m_labelPrjPath;
 };
 
 #endif // MAINWINDOW_H

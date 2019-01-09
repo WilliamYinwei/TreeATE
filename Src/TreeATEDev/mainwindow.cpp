@@ -31,6 +31,8 @@
 #include <QInputDialog>
 #include <QItemSelectionModel>
 #include <QCloseEvent>
+#include <QLabel>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +41,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
     ui->action_Save->setEnabled(false);
+
+    m_labelPrjPath = new QLabel(this);
+    statusBar()->addWidget(m_labelPrjPath);
 
     connect(ui->actionClose, &QAction::triggered, qApp, &QCoreApplication::quit);
     connect(ui->menu_View, SIGNAL(aboutToShow()), this, SLOT(on_menuView_Show()));
@@ -179,6 +184,8 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile)
     m_fileSysModel->setRootPath(fileInfo.absolutePath());
     m_tvModelsView->setRootIndex(m_fileSysModel->index(fileInfo.absolutePath()));
     ui->action_Save->setEnabled(false);
+
+    m_labelPrjPath->setText(m_strProjectFile);
     return true;
 }
 
@@ -598,4 +605,9 @@ void MainWindow::on_action_New_triggered()
             OpenProjectFile(lstFiles.at(0));
         }
     }
+}
+
+void MainWindow::on_action_Help_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/column/info/31202"));
 }

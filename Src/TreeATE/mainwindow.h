@@ -93,6 +93,8 @@ private slots:
 
     void on_reload_testUnit();
 
+    void on_action_Help_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent* e);

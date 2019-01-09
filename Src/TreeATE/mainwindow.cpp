@@ -30,6 +30,7 @@
 #include <QJsonObject>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -776,4 +777,9 @@ void MainWindow::changeEvent(QEvent* e)
     if(e->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
     }
+}
+
+void MainWindow::on_action_Help_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/article/details/86063014"));
 }
