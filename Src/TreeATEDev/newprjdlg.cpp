@@ -3,11 +3,11 @@
 /// @brief         New project dialog
 /// @author        David Yin  2018-12 willage.yin@163.com
 ///
-/// @license       GNU LGPL
+/// @license       GNU GPL v3
 ///
-/// Distributed under the GNU LGPL License
+/// Distributed under the GNU GPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/lgpl.html)
+/// http://www.gnu.org/licenses/gpl.html)
 ///
 
 #include "newprjdlg.h"
@@ -42,6 +42,7 @@ QStringList NewPrjDlg::GetNewProjectFiles()
     QString strName = ui->lineEdit_name->text();
     QString strPath = ui->lineEdit_workpath->text();
     QString strNewName = strName.trimmed();
+    strNewName.remove(' ');
     QStringList lstFile;
     if(!strNewName.isEmpty()) {
         strName = strPath.trimmed() + "/" + strNewName + "/" + strNewName;
