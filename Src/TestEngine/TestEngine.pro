@@ -12,6 +12,11 @@ CONFIG(debug, debug|release): DESTDIR = ../../bind
 
 TEMPLATE = app
 
+include ( ../../3part/PythonQt/build/common.prf )
+include ( ../../3part/PythonQt/build/PythonQt.prf )
+
+INCLUDEPATH += ../../3part/PythonQt/include
+
 SOURCES += main.cpp \
     outputstd.cpp \
     unitmgr.cpp \
@@ -19,7 +24,10 @@ SOURCES += main.cpp \
     testrunner.cpp \
     resultmgr.cpp \
     testctrl.cpp \
-    outputlocal.cpp
+    outputlocal.cpp \
+    langqs.cpp \
+    langpy.cpp \
+    maintask.cpp
 
 HEADERS += \
     ioutput.h \
@@ -31,7 +39,11 @@ HEADERS += \
     testrunner.h \
     resultmgr.h \
     testctrl.h \
-    outputlocal.h
+    outputlocal.h \
+    langqs.h \
+    imutlilang.h \
+    langpy.h \
+    maintask.h
 
 linux-g++{
     # for linux

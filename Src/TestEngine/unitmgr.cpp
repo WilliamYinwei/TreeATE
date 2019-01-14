@@ -20,17 +20,19 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QTextStream>
+#include <QDebug>
 
 UnitMgr::UnitMgr()
 {
     m_strPrjPath = "";
+    m_currLang = UnitMgr::JavaScript;
 }
 
 // Load the configure file and
 // the script file for test project.
 bool UnitMgr::LoadUnitConfig(const QString& strFileName)
 {
-    m_script.clear();
+    m_scriptFiles.clear();
 
     // Load the configure file for test project. suffix(.tp)
     QFileInfo cfgFileInfo(strFileName);
@@ -63,30 +65,28 @@ bool UnitMgr::LoadUnitConfig(const QString& strFileName)
     QJsonValue jsonCfg = QJsonValue::fromVariant(jsonDoc.toVariant());
     initUnitPath(jsonCfg);
 
-    // Load the script file for test project. suffix(.tsx)
+    // Load the script file for test project. suffix(.js/.py)
     // This file name same to the configure file name
-    QString strScriptFileName = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".tsx";
-    QFileInfo scpFileInfo(strScriptFileName);
+    QString strJs = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".js";
+    QString strPy = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".py";
 
-    if(!scpFileInfo.isFile()){
-        m_lastErr = strScriptFileName + TA_TR(" is not script file.");
+    QFileInfo scpFileInfo(strJs);
+    if(scpFileInfo.isFile()){
+        m_scriptFiles.append(strJs);
+        m_currLang = UnitMgr::JavaScript;
+        return loadScriptCom(getModelList(), m_strPrjPath, "js");
+    }
+
+    // try again for python
+    scpFileInfo.setFile(strPy);
+    if(!scpFileInfo.isFile()) {
+        m_lastErr = strPy + TA_TR(" and (*.py) file was not exist.");
         return false;
     }
 
-    QFile scpFile(strScriptFileName);
-    if(!scpFile.open(QIODevice::ReadOnly)) {
-        m_lastErr = scpFile.errorString();
-        return false;
-    }
-
-    QString strScriptCom;
-    if(!loadScriptCom(getModelList(), m_strPrjPath, strScriptCom))
-        return false;
-
-    m_script = strScriptCom + scpFile.readAll();
-    scpFile.close();
-
-    return true;
+    m_scriptFiles.append(strPy);
+    m_currLang = UnitMgr::Python;
+    return loadScriptCom(getModelList(), m_strPrjPath, "py");
 }
 
 QString UnitMgr::getPrjPath()
@@ -154,7 +154,7 @@ bool UnitMgr::LoadPublicPara(const QString& strParaFile)
     return true;
 }
 
-bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath, QString &script)
+bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath, const QString& suffix)
 {
     QString strScriptPath = strPath + "/libs/";
 
@@ -164,10 +164,15 @@ bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath
         QString strComFile = vmModel["Com"].toString();
 
         QString strScriptFile = strScriptPath + strComFile;
-        // not test script file
-        if(0 != QFileInfo(strScriptFile).suffix().compare("ts", Qt::CaseInsensitive))
-            continue;
+        qDebug() << "loadScriptCom:" << strScriptFile;
+        // is test script file
+        if(0 == QFileInfo(strScriptFile).suffix().compare(suffix, Qt::CaseInsensitive))
+        {
+            m_scriptFiles.append(strScriptFile);
+        }
 
+
+        /*
         QFile scriptFile(strScriptFile);
         if (!scriptFile.open(QIODevice::ReadOnly))
         {
@@ -184,7 +189,7 @@ bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath
         }
         QString contents(bData);
         scriptFile.close();
-        script += contents;
+        script += contents;*/
     }
 
     return true;
@@ -381,12 +386,17 @@ void UnitMgr::printUnitToStd()
     }
 }
 
-QString UnitMgr::getScript()
+QStringList UnitMgr::getScript()
 {
-    return m_script;
+    return m_scriptFiles;
 }
 
 QString UnitMgr::getLastError()
 {
     return m_lastErr;
+}
+
+UnitMgr::TaLang UnitMgr::getCurrentLanguage()
+{
+    return m_currLang;
 }

@@ -2,22 +2,23 @@
 在基于TreeATE开发自动化测试工程之前，先了解一下TreeATE的整体架构。如下图所示：
 ![TreeATE系统架构图](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/arch.png)
 TreeATE借鉴了Chrome的多进程设计思路，支持并行化测试。每个独立的测试进程由“Test Engine”承接。 TreeATE（GUI）是向工厂用户提供的HMI（人机交互界面），详见博客《[开始使用TreeATE](https://blog.csdn.net/vivasoft/article/details/86063014)》。
-“Test Engine”是TreeATE的核心，向下负责管理不同设备驱动，对接MES系统、测试结果输出（数据库）、图形化人机界面插件，向上接受不同种语言的测试用例（当前版本仅支持QtScript，类JavaScript）和测试参数配置等数据。
+“Test Engine”是TreeATE的核心，向下负责管理不同设备驱动，对接MES系统、测试结果输出（数据库）、图形化人机界面插件，向上接受不同种语言的测试用例（当前版本支持JavaScript和Python）和测试参数配置等数据。
 而TreeATE Dev（以下简称Dev）就是本文需要介绍的重点了。通过TreeATE可以编辑测试参数配置文件和开发测试用例。当然像上面提到的各种组件需要通过QT进行开发，详情的请关注[TreeATE专栏](https://blog.csdn.net/vivasoft/column/info/31202)，找到TreeATE组件或插件开发指南。
 
 ## 新建测试工程
 打开Dev有2种方式，一种是在安装目录下找到TreeATEDev.exe，另一种是选择TreeATE的菜单“测试工程”->“开发”即可。在第二种打开方式下，如果TreeATE有已加载的测试工程，则无法新建，仅是修改当前打开的测试工程。
  1. 点击菜单“Project”->“New”，出现New Project对话框；
  2. 在New Project对话框中先选择好测试工程的默认工作路径，再输入测试工程名称（名称不能有空格）；
- 3. 点击OK确认新建测试工程。
+ 3. 选择需要采用JavaScript还是Python语言开发测试用例；
+ 4. 点击OK确认新建测试工程。
 
 在“Project files”窗口中可以看到，Dev系统自动添加了3个文件，后缀分别是：
  - tp：测试工程组织配置文件。测试套和测试项的参数、测试顺序都在该文件中存储。
  - tpx：测试工程公共配置文件。测试工程的公共参数配置，是否需要支持并行测试等配置都在此。
- - txs：测试用例脚本文件。目前仅支持QtScript语言。
+ - js/py：支持Javascript和Python的测试用例脚本文件。
 
 ## 导入测试组件
-测试工程依赖的各种组件，在这里统称为测试组件。例如组件TA_MsgBox（测试过程中的提示框），找到组件所在位置，选择“Import”按钮或菜单“Project”->“Import”，在对话框"Import Files"选择Lib files(*.dll *.ts)选项，再选择需要的组件导入。导入后，可以在“Project files”窗口中看到被导入的组件都放在"libs"文件夹中。
+测试工程依赖的各种组件，在这里统称为测试组件。例如组件TA_MsgBox（测试过程中的提示框），找到组件所在位置，选择“Import”按钮或菜单“Project”->“Import”，在对话框"Import Files"选择Lib files(*.dll *.js)选项，再选择需要的组件导入。导入后，可以在“Project files”窗口中看到被导入的组件都放在"libs"文件夹中。
 
 为了在测试时向用户提示更为友好，MsgBox中可以显示自定义的图片，目前支持jpg/png/gif三种格式。
 图片也可以通过Dev系统导入到测试工程中，在导入文件的对话框“Import Files”选择Images选项，再选择图片文件导入。导入后，可以在“Project files”窗口中看到被导入的图片都放在"images"文件夹中。
@@ -100,6 +101,15 @@ function test_test1()
 	__ate.OutputRst(Name2, Gabc, ret);    
 	return 0;
 }
+```
+```
+def test_test1():
+
+	__ate.OutputError("test_test1")
+	ret = ta.MsgBox("images/treeate.png", "hello", 0, 5000)
+	__ate.OutputError(ret)
+	__ate.OutputRst(Name2, Gabc, ret)
+	return 0
 ```
 >测试用例代码中__ate为TreeATE系统Test Engine固定的对象名。关于__ate的接口说明将在另外的博客中描述。
 

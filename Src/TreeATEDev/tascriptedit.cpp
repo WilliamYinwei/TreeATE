@@ -14,11 +14,13 @@
 
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexerjavascript.h>
+#include <Qsci/qscilexerpython.h>
 #include <Qsci/qsciapis.h>
 #include <Qsci/qscicommand.h>
 
 TaScriptEdit::TaScriptEdit(QWidget *parent)
 {
+    m_lexerPython = new QsciLexerPython();
     m_lexerJavaScript = new QsciLexerJavaScript();
     m_textEdit = new QsciScintilla(parent);
     m_sciApis = new QsciAPIs(m_lexerJavaScript);
@@ -48,6 +50,20 @@ TaScriptEdit::TaScriptEdit(QWidget *parent)
 TaScriptEdit::~TaScriptEdit()
 {
 
+}
+
+void TaScriptEdit::SwitchLang(const QString& suffix)
+{
+    if(suffix.compare("js", Qt::CaseInsensitive) == 0)
+    {
+        m_textEdit->setLexer(m_lexerJavaScript);
+        m_textEdit->setAutoCompletionFillups(m_lexerJavaScript->autoCompletionFillups());
+    }
+    else if(suffix.compare("py", Qt::CaseInsensitive) == 0)
+    {
+        m_textEdit->setLexer(m_lexerPython);
+        m_textEdit->setAutoCompletionFillups(m_lexerPython->autoCompletionFillups());
+    }
 }
 
 QsciScintilla* TaScriptEdit::GetScriptEdit()

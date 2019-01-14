@@ -213,6 +213,7 @@ void TAPropertyMgrWidget::SetProjectPath(const QString& strPrjPath)
 {
     QFileInfo fileInfo(strPrjPath);
     m_strPrjPath = fileInfo.absolutePath() + "/";
+    m_strPrjName = fileInfo.completeBaseName();
 
     OpenPrjCfgFile(strPrjPath);
 }
@@ -302,12 +303,14 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         for (int column = 0; column < modelPara->columnCount(); ++column)
             m_tvPublicPara->resizeColumnToContents(column);
     }
-    else if(strSuffix == "ts")
+    else if((strSuffix == "js" || strSuffix == "py")&&
+            0 != infoFile.completeBaseName().compare(m_strPrjName, Qt::CaseInsensitive))
     {
         m_lvFunction->hide();
         m_splitter->hide();
         m_labelImage->hide();
         m_scriptEdit->SetShow(true);
+        m_scriptEdit->SwitchLang(strSuffix);
         m_cbOpenEdit->show();
         m_saveButton->show();
         m_prjCfgWidget->hide();

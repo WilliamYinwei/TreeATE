@@ -156,14 +156,25 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile)
     m_tvTestItems->expandAll();
 
     QFileInfo fileInfo(strPrjFile);
-    m_strScriptFile = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".tsx";
+    QString scriptFileJs = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".js";
+    QString scriptFilePy = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".py";
+    fileInfo.setFile(scriptFileJs);
+    if(fileInfo.isFile()) {
+        m_strScriptFile = scriptFileJs;
+        m_scriptEdit->SwitchLang("js");
+    }
+    else {
+        m_strScriptFile = scriptFilePy;
+        m_scriptEdit->SwitchLang("py");
+    }
+
     QFile scrFile(m_strScriptFile);
 
     if(!scrFile.open(QIODevice::ReadOnly)) {
         QString errStr = scrFile.errorString() + ": " + m_strScriptFile;
         QMessageBox::warning(this, tr("Warning"), errStr);
         return false;
-    }
+    }    
     m_scriptEdit->SetScriptData(scrFile.readAll());
     scrFile.close();
 
@@ -473,7 +484,7 @@ bool MainWindow::importModelFile(const QString& sourcePath, const QString& distP
 void MainWindow::on_actionImport_triggered()
 {
     QString selectedFilter;
-    const QString strLibSuff = "Lib files (*.dll *.ts)";
+    const QString strLibSuff = "Lib files (*.dll *.js *.py)";
     const QString strImgSuff = "Images (*.jpg *.png *.gif)";
     const QString strCSV = "CSV (*.csv)";
     QStringList lstFiles = QFileDialog::getOpenFileNames(this, tr("Import Files"),
@@ -530,7 +541,7 @@ void MainWindow::on_actionRemove_modelFile()
     QModelIndex index = m_tvModelsView->selectionModel()->currentIndex();
     QFileInfo info = m_fileSysModel->fileInfo(index);
     QString suffix = info.completeSuffix();
-    if(suffix == "tp" || suffix == "tpx" || suffix == "tsx") {
+    if(suffix == "tp" || suffix == "tpx") {
         QMessageBox::information(this, tr("Info"), tr("Don't remove this file"));
         return;
     }
@@ -574,7 +585,7 @@ void MainWindow::on_action_New_triggered()
     if(QDialog::Accepted == dlg.exec())
     {
         QStringList lstFiles = dlg.GetNewProjectFiles();
-        if(lstFiles.count() == 3) // *.tp ; *.tpx ; *.tsx
+        if(lstFiles.count() == 3) // *.tp ; *.tpx ; *.js
         {
             QFileInfo info(lstFiles.at(0));
             QDir dir(info.absolutePath());

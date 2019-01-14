@@ -1,5 +1,5 @@
 ///
-/// @brief         Test runner, parse the QtScript and configure file
+/// @brief         Test runner, parse the mutli-language and configure file
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
 /// @license       GNU GPL v3
@@ -15,12 +15,12 @@
 #include "unitmgr.h"
 #include "resultmgr.h"
 
-#include <QScriptEngine>
 #include <QList>
 #include <QMap>
 
 typedef QList<QObject*>         TA_ListObj;
 
+class IMutliLang;
 class TestRunner
 {
 public:
@@ -43,11 +43,10 @@ protected:
 private:
     bool            m_bStopped;
     UnitMgr*        m_pUnitMgr;
-    QScriptEngine   m_engine;
     QString         m_lastErr;
     TA_ListObj      m_lstObj;
-    TA_MapParaValue m_mapTotalPara;
     QStringList     m_lstPath;
+    IMutliLang*     m_pCurretLang;
 };
 
 #endif // TESTRUNNER_H

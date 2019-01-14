@@ -32,10 +32,12 @@ public:
     void SetShow(bool bShow);
     void AddSciApis(const QStringList& lstApis);
     void ClearApis();
+    void SwitchLang(const QString& suffix);
 
 private:
     QsciScintilla*  m_textEdit;
     QsciLexer*      m_lexerJavaScript;
+    QsciLexer*      m_lexerPython;
     QsciAPIs*       m_sciApis;
 };
 

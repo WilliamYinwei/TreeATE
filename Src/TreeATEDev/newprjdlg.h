@@ -28,6 +28,7 @@ public:
     ~NewPrjDlg();
 
     QStringList GetNewProjectFiles();
+    QString GetScriptSuffix();
 
 private slots:
     void on_pushButton_clicked();

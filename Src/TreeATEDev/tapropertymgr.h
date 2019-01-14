@@ -70,6 +70,7 @@ protected:
 
 private:
     QString             m_strPrjPath;
+    QString             m_strPrjName;
     QString             m_strCurrName;
     QListWidget*        m_lvFunction;
     QLabel*             m_labelImage;

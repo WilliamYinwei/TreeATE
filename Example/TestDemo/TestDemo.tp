@@ -1,82 +1,87 @@
 {
-	"Parameter": {
-		"Name1": "gfedcba",
-		"Name2": "abcdefg"
-	},
-	"Desc": "demo",
-	"Ver": "1.1.0",
-	"TestSuite": [{
-			"Name": "suite1",
-			"Parameter": {
-				"Name1": "2",
-				"Name2": "TEMP"
-			},
-			"Desc": "suite1描述",
-			"TestCase": [{
-					"Name": "test1",
-					"Parameter": {
-						"Name1": "1",
-						"Name2": "TEMP1"
-					},
-					"Desc": "描述1"
-				},
-				{
-					"Name": "test2",
-					"Parameter": {
-						"Name1": "1",
-						"Name2": "TEMP2"
-					},
-					"Desc": "描述2"
-				}
-			]
-		},
-		{
-			"Name": "suite2",
-			"Parameter": {
-				"Name1": "2",
-				"Name2": "TEMP"
-			},
-			"Desc": "suite2描述",
-			"TestCase": [
-				{
-					"Name": "test2",
-					"Parameter": {
-						"Name1": "1",
-						"Name2": "TEMP2"
-					},
-					"Desc": "描述2"
-				},
-				{
-					"Name": "test1",
-					"Parameter": {
-						"Name1": "1",
-						"Name2": "TEMP1"
-					},
-					"Desc": "描述1"
-				}
-			]
-		}
-	],
-	"Name": "testdemo",
-	"Public": {
-		"Parameter": [{
-				"Value": "123",
-				"Desc": "asd",
-				"Name": "Gabc"
-			},
-			{
-				"Value": "22.3",
-				"Desc": "ss",
-				"Name": "Ga11"
-			}
-		],
-		"Models": [{
-            "Com": "TA_MsgBox.dll",
-            "Obj": "ta"
+    "Desc": "demo",
+    "Name": "testdemo",
+    "Parameter": {
+        "Name1": "gfedcba",
+        "Name2": "abcdefg"
+    },
+    "Public": {
+        "Models": [
+            {
+                "Com": "TA_MsgBox.dll",
+                "Obj": "ta"
+            },
+            {
+                "Com": "Sleep.js",
+                "Obj": "bb"
+            }
+        ],
+        "Parameter": [
+            {
+                "Desc": "asd",
+                "Name": "Gabc",
+                "Value": "123"
+            },
+            {
+                "Desc": "all of this",
+                "Name": "Gall",
+                "Value": "22.3"
+            }
+        ]
+    },
+    "TestSuite": [
+        {
+            "Desc": "suite2 test",
+            "Name": "suite2",
+            "Parameter": {
+                "Name1": "2",
+                "Name2": "2"
+            },
+            "TestCase": [
+                {
+                    "Desc": "描述2",
+                    "Name": "test2",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                },
+                {
+                    "Desc": "描述1",
+                    "Name": "test1",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                }
+            ]
         },
         {
-            "Com": "Sleep.ts",
-            "Obj": "aa"
-        }]
-	}
+            "Desc": "suite1描述",
+            "Name": "suite1",
+            "Parameter": {
+                "Name1": "2",
+                "Name2": "2"
+            },
+            "TestCase": [
+                {
+                    "Desc": "描述1",
+                    "Name": "test1",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                },
+                {
+                    "Desc": "描述2",
+                    "Name": "test2",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                }
+            ]
+        }
+    ],
+    "Ver": "1.1.0"
 }

@@ -1,5 +1,5 @@
 ///
-/// @brief         Test runner, parse the QtScript and configure file
+/// @brief         Test runner, parse the mutli-language and configure file
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
 /// @license       GNU GPL v3
@@ -11,6 +11,9 @@
 
 #include "stdinc.h"
 #include "testrunner.h"
+#include "imutlilang.h"
+#include "langqs.h"
+#include "langpy.h"
 
 #include <QScriptValue>
 #include <QMetaObject>
@@ -24,6 +27,7 @@ TestRunner::TestRunner(UnitMgr* pMgr)
 {
     m_pUnitMgr = pMgr;
     m_bStopped = false;
+    m_pCurretLang = NULL;
 }
 
 TestRunner::~TestRunner()
@@ -32,7 +36,8 @@ TestRunner::~TestRunner()
         delete m_lstObj.at(i);
     }
     m_lstObj.clear();
-    m_mapTotalPara.clear();
+    if(m_pCurretLang)
+        delete m_pCurretLang;
 }
 
 void TestRunner::stop()
@@ -45,20 +50,28 @@ QString TestRunner::getLastError()
     return m_lastErr;
 }
 
-void TestRunner::initPublicPara()
-{
-    for(TA_MapParaValue::const_iterator itorTotal = m_mapTotalPara.begin();
-            itorTotal != m_mapTotalPara.end(); ++itorTotal )
-    {
-        QScriptValue scriptValue = m_engine.newVariant(itorTotal.value());
-        m_engine.globalObject().setProperty(itorTotal.key(), scriptValue);
-    }
-}
-
 bool TestRunner::initScript(const QString& prjPath)
 {
     if(NULL == m_pUnitMgr) {
         m_lastErr = TA_TR("No assign the unit manager.");
+        return false;
+    }
+
+    UnitMgr::TaLang lang = m_pUnitMgr->getCurrentLanguage();
+    if(UnitMgr::JavaScript == lang) {
+        if(m_pCurretLang)
+            delete m_pCurretLang;
+        m_pCurretLang = new LangQS();
+    }
+    else if(UnitMgr::Python == lang) {
+        if(m_pCurretLang)
+            delete m_pCurretLang;
+        m_pCurretLang = new LangPy();
+    }
+
+    // load script
+    if(!m_pCurretLang->loadScript(m_pUnitMgr->getScript())) {
+        m_lastErr = m_pCurretLang->getLastErr();
         return false;
     }
 
@@ -101,64 +114,13 @@ bool TestRunner::initScript(const QString& prjPath)
 
         m_lstObj.append(pObj);
 
-        QScriptValue scriptObj = m_engine.newQObject(pObj);
-        m_engine.globalObject().setProperty(strModelObj, scriptObj);        
-    }
-
-    // load script
-    QScriptValue result = m_engine.evaluate(m_pUnitMgr->getScript());
-    if(m_engine.hasUncaughtException()) {
-        int line = m_engine.uncaughtExceptionLineNumber();
-        m_lastErr = TA_TR("Script exception at line(%1):%2")
-                .arg(QString::number(line))
-                .arg(result.toString());
-        m_engine.clearExceptions();
-        return false;
+        m_pCurretLang->addModel(strModelObj, pObj);
     }
 
     // load public Parameter
-    m_mapTotalPara = m_pUnitMgr->getPublicParameter();
-    initPublicPara();
+    m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
 
     return true;
-}
-
-int TestRunner::executeScript(const QString& funcName, const TA_MapParaValue& localValue)
-{
-    int iRet = 0;
-    for(TA_MapParaValue::const_iterator itor = localValue.begin(); itor != localValue.end(); ++itor)
-    {
-        QScriptValue scriptValue = m_engine.newVariant(itor.value());
-        m_engine.globalObject().setProperty(itor.key(), scriptValue);
-    }
-
-    QScriptValue global = m_engine.globalObject();
-    QScriptValue func = global.property(funcName);
-    if(func.isFunction())
-    {
-        QScriptValue ret = func.call(QScriptValue());
-        if (m_engine.hasUncaughtException())
-        {
-            int line = m_engine.uncaughtExceptionLineNumber();
-            m_lastErr = TA_TR("Script exception at line(%1):%2")
-                    .arg(QString::number(line))
-                    .arg(ret.toString());
-            m_engine.clearExceptions();
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            iRet = -1;
-        }
-        else
-            iRet = ret.toUInt32() & TA_MASK_RST;
-    }
-    else {
-        m_lastErr = TA_TR("Not found this function name(%1) in script.").arg(funcName);
-        iRet = -2;
-    }
-
-    // over the total parameter
-    initPublicPara();
-
-    return iRet;
 }
 
 QStringList TestRunner::runningList(const QStringList& selPath)
@@ -186,11 +148,11 @@ QStringList TestRunner::runningList(const QStringList& selPath)
 
 bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bStopWhenFailed)
 {
+    Q_ASSERT(m_pCurretLang);
     QStringList runLst = runningList(selPath);
     QStringList lstTeardown;
 
-    QScriptValue scriptObj = m_engine.newQObject(&rstMgr);
-    m_engine.globalObject().setProperty("__ate", scriptObj);
+    m_pCurretLang->addModel("__ate", &rstMgr);
 
     bool bSuccess = true;
 
@@ -223,7 +185,9 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             rstMgr.CreateResult(path, objUnit);
         }
 
-        int iRet = executeScript(strScriptFunc, m_pUnitMgr->getLocalParameter(objUnit));
+        int iRet = m_pCurretLang->executeScript(strScriptFunc, m_pUnitMgr->getLocalParameter(objUnit));
+        // recovery the public parameter
+        m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
 
         if(eType != eTestCase) {
             if(bTeardown) {
@@ -257,10 +221,13 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         itor != lstTeardown.rend(); ++itor) {
         QString path = *itor;
         QJsonObject objUnit = m_pUnitMgr->getUnitObj(path);
-        int iRet = executeScript(strScriptFunc + objUnit["Name"].toString(),
+        int iRet = m_pCurretLang->executeScript(strScriptFunc + objUnit["Name"].toString(),
                 m_pUnitMgr->getLocalParameter(objUnit));
+        // recovery the public parameter
+        m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
+        m_lastErr = m_pCurretLang->getLastErr();
 
-        if(iRet < 0) {
+        if(iRet < 0) {            
             rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
             bSuccess = false;
             break;

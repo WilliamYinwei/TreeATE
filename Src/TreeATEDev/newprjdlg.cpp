@@ -21,6 +21,7 @@ NewPrjDlg::NewPrjDlg(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->lineEdit_workpath->setText(qApp->applicationDirPath());
+    ui->radioButton_js->setChecked(true);
 }
 
 NewPrjDlg::~NewPrjDlg()
@@ -43,12 +44,21 @@ QStringList NewPrjDlg::GetNewProjectFiles()
     QString strPath = ui->lineEdit_workpath->text();
     QString strNewName = strName.trimmed();
     strNewName.remove(' ');
+    QString suffix = GetScriptSuffix();
     QStringList lstFile;
     if(!strNewName.isEmpty()) {
         strName = strPath.trimmed() + "/" + strNewName + "/" + strNewName;
         lstFile << strName + ".tp"
                 << strName + ".tpx"
-                << strName + ".tsx";
+                << strName + "." + suffix;
     }
     return lstFile;
+}
+
+QString NewPrjDlg::GetScriptSuffix()
+{
+    QString suffix = "js";
+    if(ui->radioButton_py->isChecked())
+        suffix = "py";
+    return suffix;
 }

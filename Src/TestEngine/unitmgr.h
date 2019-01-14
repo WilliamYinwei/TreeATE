@@ -28,6 +28,11 @@ class UnitMgr
 public:
     UnitMgr();
 
+    typedef enum eTaLang{
+        JavaScript,
+        Python
+    }TaLang;
+
     bool LoadUnitConfig(const QString& strFileName);
     bool LoadPublicPara(const QString& strParaFile);
 
@@ -44,22 +49,25 @@ public:
 
     QJsonObject getUnitObj(const QString& strPath);
 
-    QString getScript();
+    QStringList getScript();
 
     QString getLastError();
     QString getPrjPath();
 
+    TaLang getCurrentLanguage();
+
 protected:
     void initUnitPath(QJsonValue &jsonCfg);
-    bool loadScriptCom(const QVariantList& vlModels, const QString& strPath, QString& script);
+    bool loadScriptCom(const QVariantList& vlModels, const QString& strPath, const QString &suffix);
 
 private:
     QString     m_lastErr;
-    QString     m_script;
+    QStringList m_scriptFiles;
     TA_MapJson  m_lstUnits;
     QStringList m_lstUnitPaths;
     QString     m_strPrjPathName;
     QString     m_strPrjPath;
+    TaLang      m_currLang;
 };
 
 #endif // UNITMGR_H
