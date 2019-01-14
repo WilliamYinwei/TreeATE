@@ -40,7 +40,10 @@ TreeATE Dev界面预览
 
 关于以上工具的安装和配置请参见它们的帮助文档。
 
-试用运行
+运行
 -------------------------------------------------------------------------------
 在试用运行之前，一般还需要以下几个操作：
-* 手动复制3part/PythonQt/lib/PythonQt-Qt5-PythonXXX.dll(xxx是你本地Python环境的版本号）
+* 手动复制3part/PythonQt/lib/PythonQt-Qt5-PythonXXX.dll(xxx是你本地Python环境的版本号）。PythonQt-Qt5-PythonXXX.dll是通过PythonQt生成的库。
+
+在构建的目录下启动TreeATE.exe即可。例如作者的开发构建目录为：
+D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
