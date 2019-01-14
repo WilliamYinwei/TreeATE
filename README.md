@@ -31,7 +31,7 @@ TreeATE Dev界面预览
 -------------------------------------------------------------------------------
 ![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png)
 
-##开发编译
+## 开发编译
 
 在编译TreeATE之前，你需要安装QT（>=5.7版本）和以下开发工具：
 * [qt-opensource-windows-x86-msvc2013-5.7.0](https://www.qt.io/)	(L)GPL v3
