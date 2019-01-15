@@ -38,6 +38,7 @@ TreeATE Dev界面预览
 * [QScintilla_gpl-2.10.3](https://riverbankcomputing.com/software/qscintilla/download) GPL v3
 * [PythonQt 3.2.0](http://pythonqt.sourceforge.net)	LGPL v2.1
 * [Python27](https://www.python.org/ftp/python/2.7.15/python-2.7.15.msi) Python License (Python-2.0)
+
 关于以上工具的安装和配置请参见它们的帮助文档。
 
 运行
