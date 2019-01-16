@@ -26,10 +26,12 @@ TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品�
 TreeATE界面预览
 -------------------------------------------------------------------------------
 ![TreeATE GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE.png)
+关于如何使用TreeATE，请点击[这里](https://github.com/WilliamYinwei/TreeATE/wiki/Start-TreeATE)
 
 TreeATE Dev界面预览
 -------------------------------------------------------------------------------
 ![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png)
+关于如何使用TreeATE Dev，请点击[这里](https://github.com/WilliamYinwei/TreeATE/wiki/TreeATE-Dev)
 
 ## 开发编译
 
