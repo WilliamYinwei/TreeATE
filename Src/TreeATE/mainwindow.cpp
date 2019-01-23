@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_Log->document()->setMaximumBlockCount(1000);
     ui->textBrowser_Log->moveCursor(QTextCursor::End);
 
-    ui->treeWidget_Units->setAlternatingRowColors(true);
     ui->treeWidget_Units->hideColumn(TA_COLUMN_UNIT_PATH);
     ui->treeWidget_Units->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->treeWidget_Units->setItemDelegateForColumn(TA_COLUMN_TEST_STATUS,
