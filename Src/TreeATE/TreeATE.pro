@@ -15,6 +15,8 @@ TEMPLATE = app
 CONFIG(release, debug|release): DESTDIR = ../../bin
 CONFIG(debug, debug|release): DESTDIR = ../../bind
 
+INCLUDEPATH += ../../libs/TALocalSocket
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     testproccess.cpp \

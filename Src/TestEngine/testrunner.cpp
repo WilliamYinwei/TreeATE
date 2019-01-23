@@ -13,13 +13,14 @@
 #include "testrunner.h"
 #include "imutlilang.h"
 #include "langqs.h"
-#include "langpy.h"
 
 #include <QScriptValue>
 #include <QMetaObject>
 #include <QLibrary>
 #include <QDebug>
 #include <QFileInfo>
+#include <QDir>
+#include <QCoreApplication>
 
 typedef void* (*CreateInst)(const char*);
 
@@ -66,7 +67,38 @@ bool TestRunner::initScript(const QString& prjPath)
     else if(UnitMgr::Python == lang) {
         if(m_pCurretLang)
             delete m_pCurretLang;
-        m_pCurretLang = new LangPy();
+
+        QDir dir;
+        dir.setPath(qApp->applicationDirPath());
+        QStringList pythonDlls = dir.entryList(QStringList() << "DevLangPython*.dll", QDir::Files);
+        if(pythonDlls.count() <= 0) {
+            m_lastErr = TA_TR("Can't found the DevLangPython*.dll");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+        const QString strDllFile(pythonDlls.at(0));
+        QLibrary myLib(strDllFile);
+        if(!myLib.load()) {
+            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        CreateInst myFunction = (CreateInst) myLib.resolve("CreateLanguageInst");
+        if (NULL == myFunction)
+        {
+            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        m_pCurretLang = (IMutliLang*)myFunction("py");
+        if(m_pCurretLang == NULL)
+        {
+            m_lastErr = TA_TR("The current language is NULL.");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
     }
 
     // load script

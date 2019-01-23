@@ -10,12 +10,9 @@ CONFIG -= app_bundle
 CONFIG(release, debug|release): DESTDIR = ../../bin
 CONFIG(debug, debug|release): DESTDIR = ../../bind
 
+INCLUDEPATH += ../../Plugins/DevLangPython
+
 TEMPLATE = app
-
-include ( ../../3part/PythonQt/build/common.prf )
-include ( ../../3part/PythonQt/build/PythonQt.prf )
-
-INCLUDEPATH += ../../3part/PythonQt/include
 
 SOURCES += main.cpp \
     outputstd.cpp \
@@ -26,7 +23,6 @@ SOURCES += main.cpp \
     testctrl.cpp \
     outputlocal.cpp \
     langqs.cpp \
-    langpy.cpp \
     maintask.cpp
 
 HEADERS += \
@@ -41,8 +37,6 @@ HEADERS += \
     testctrl.h \
     outputlocal.h \
     langqs.h \
-    imutlilang.h \
-    langpy.h \
     maintask.h
 
 linux-g++{

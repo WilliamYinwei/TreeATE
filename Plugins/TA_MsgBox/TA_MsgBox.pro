@@ -38,6 +38,6 @@ win32 {
        $${PWD}/Example/TestDemoPy/libs
     DESTDIR_WIN ~= s,/,\\,g
     for(FILE,EXTRA_BINFILES_WIN){
-        QMAKE_POST_LINK +=$$quote(cmd /c xcopy $${FILE} $${DESTDIR_WIN} /y /e $$escape_expand(\n\t))
+        QMAKE_POST_LINK +=$$quote(cmd /c xcopy $${FILE} $${DESTDIR_WIN} /y /e$$escape_expand(\n\t))
     }
 }

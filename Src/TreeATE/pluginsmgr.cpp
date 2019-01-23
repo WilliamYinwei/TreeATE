@@ -10,7 +10,7 @@
 ///
 
 #include "pluginsmgr.h"
-#include "../../libs/TALocalSocket/talocalsocket.h"
+#include "talocalsocket.h"
 
 #include <QLocalSocket>
 #include <QLibrary>
