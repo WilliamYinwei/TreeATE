@@ -32,8 +32,8 @@ QTreeView {
 }
 
 QTreeView::item {
-    border-bottom: 1px solid #223A51;
-    border-right: 1px solid #223A51;
+    border-bottom: 1px solid #2f4f6f;
+    border-right: 1px solid #2f4f6f;
     padding-right: 8px;
 }
 

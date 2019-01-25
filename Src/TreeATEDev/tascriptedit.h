@@ -33,12 +33,14 @@ public:
     void AddSciApis(const QStringList& lstApis);
     void ClearApis();
     void SwitchLang(const QString& suffix);
+    QString GetLanguageSuffix();
 
 private:
     QsciScintilla*  m_textEdit;
     QsciLexer*      m_lexerJavaScript;
     QsciLexer*      m_lexerPython;
     QsciAPIs*       m_sciApis;
+    QString         m_suffix;
 };
 
 #endif // TASCRIPTEDIT_H

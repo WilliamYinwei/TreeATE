@@ -216,6 +216,9 @@ void MainWindow::on_testitems_clicked(const QModelIndex& index)
 
     QVariant vData = m_pUnitModel->getDataForColumn(index, 0);
     QString strExpr = "function\\s+\\w+_" + vData.toString();
+    if(m_scriptEdit->GetLanguageSuffix() == "py") {
+        strExpr = "def\\s+\\w+_" + vData.toString();
+    }
     if(!m_scriptEdit->GetScriptEdit()->findFirst(strExpr, true, false, false, false))
     {
         if(!m_scriptEdit->GetScriptEdit()->findFirst(strExpr, true, false, false, false, false))
@@ -223,6 +226,9 @@ void MainWindow::on_testitems_clicked(const QModelIndex& index)
             int nEol = m_scriptEdit->GetScriptEdit()->lines();
             m_scriptEdit->GetScriptEdit()->setSelection(nEol, 0, nEol, 0);
             QString strNew = "\r\n\r\nfunction test_" + vData.toString() + "()\r\n{\r\n}";
+            if(m_scriptEdit->GetLanguageSuffix() == "py") {
+                strNew = "\r\n\r\ndef test_" + vData.toString() + "():\r\n\r\n";
+            }
             m_scriptEdit->GetScriptEdit()->insert(strNew);
         }
     }

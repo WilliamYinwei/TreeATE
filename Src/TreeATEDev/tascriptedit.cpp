@@ -64,6 +64,12 @@ void TaScriptEdit::SwitchLang(const QString& suffix)
         m_textEdit->setLexer(m_lexerPython);
         m_textEdit->setAutoCompletionFillups(m_lexerPython->autoCompletionFillups());
     }
+    m_suffix = suffix;
+}
+
+QString TaScriptEdit::GetLanguageSuffix()
+{
+    return m_suffix;
 }
 
 QsciScintilla* TaScriptEdit::GetScriptEdit()
