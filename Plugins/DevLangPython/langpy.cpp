@@ -40,22 +40,18 @@ bool LangPy::loadScript(const QStringList &scriptFiles)
         itor != scriptFiles.rend(); ++itor)
     {
         QString scrFile = *itor;
-        QFile scriptFile(scrFile);
-        if (!scriptFile.open(QIODevice::ReadOnly))
-        {
-            m_lastErr = scrFile + scriptFile.errorString();
+        
+        script = "import py_compile\r\npy_compile.compile('" + scrFile + "')";
+        m_mainModule.evalScript(script);
+        if(PythonQt::self()->hadError()) {
+            m_lastErr = TA_TR("Error at parser the python script");
             return false;
         }
-
-        QString contents(scriptFile.readAll());
-        script += contents;
-        scriptFile.close();
-    }
-
-    m_mainModule.evalScript(script);
-    if(PythonQt::self()->hadError()) {
-        m_lastErr = TA_TR("Error at parser the python script");
-        return false;
+        m_mainModule.evalFile(scrFile);
+        if(PythonQt::self()->hadError()) {
+            m_lastErr = TA_TR("Error at parser the python file:") + scrFile;
+            return false;
+        }
     }
 
     return true;
