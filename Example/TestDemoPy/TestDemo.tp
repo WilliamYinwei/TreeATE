@@ -10,10 +10,6 @@
             {
                 "Com": "TA_MsgBox.dll",
                 "Obj": "ta"
-            },
-			{
-                "Com": "Sleep.py",
-                "Obj": "xx"
             }
         ],
         "Parameter": [

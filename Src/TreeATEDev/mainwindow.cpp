@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     m_scriptEdit = new TaScriptEdit(splitterMain);
-    connect(m_scriptEdit->GetScriptEdit(), SIGNAL(modificationChanged(bool)), this,
+    connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this,
             SLOT(on_data_changed()));
     ui->verticalLayout_main->addWidget(splitterMain);
 

@@ -106,12 +106,13 @@ bool TALocalSocket::sendToServer(const QString& data, int mSecs)
     QByteArray baHead;
     baHead.append((char)TA_LOCAL_START_REQ);
     baHead.append((char)TA_LOCAL_FLAG_SYNC);
-    int nLen = data.length();
+    QByteArray bufData = data.toUtf8();
+    int nLen = bufData.size();
     baHead.append((uchar)(nLen >> 8));
     baHead.append((char)nLen);
     QByteArray bufMsg;
     bufMsg.append(baHead);
-    bufMsg.append(data.toUtf8());
+    bufMsg.append(bufData);
 
     m_lsClient->write(bufMsg);
     if(!m_lsClient->waitForBytesWritten(mSecs))

@@ -43,6 +43,8 @@ QString TA_MsgBox::cmdProcess(const QString &strCmd, int mSec)
         return TA_MSGBOX_TIMEOUT;
     }
 
+    qDebug() << "Send to Server: " << strCmd;
+
     // send data to server
     if(!taSocket.sendToServer(strCmd, 200)) {
         m_strLstErr = taSocket.getLastError();
