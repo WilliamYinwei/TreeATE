@@ -4,6 +4,12 @@ TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品�
 ## 目标
 对接工业物联网，打造简单易用的开源自动化测试软件工具。
 
+## 系统架构
+![TreeATE系统架构图](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/arch.png)
+TreeATE借鉴了Chrome的多进程设计思路，支持并行化测试。每个独立的测试进程由“Test Engine”承接。 TreeATE（GUI）是向工厂用户提供的HMI（人机交互界面），详见博客《[开始使用TreeATE](https://blog.csdn.net/vivasoft/article/details/86063014)》。
+“Test Engine”是TreeATE的核心，向下负责管理不同设备驱动，对接MES系统、测试结果输出（数据库）、图形化人机界面插件，向上接受不同种语言的测试用例（当前版本支持JavaScript和Python）和测试参数配置等数据。
+而TreeATE Dev（以下简称Dev）就是本文需要介绍的重点了。通过Dev可以编辑测试参数配置文件和开发测试用例。当然像上面提到的各种组件需要通过QT进行开发，详情的请关注[TreeATE专栏](https://blog.csdn.net/vivasoft/column/info/31202)，找到TreeATE组件或插件开发指南。
+
 ## 功能特性
 * 为工厂提供统一且简单易用的用户操作界面，减免每个产品测试都有不同的程序操作界面的学习成本；
 * 采用多进程技术，支持成品或半成品并行测试，测试运行时更加稳定；
