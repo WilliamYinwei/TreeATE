@@ -233,6 +233,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
         // Exception(iRet < 0), stopped, or failed to stop
         if(iRet < 0) {
+            m_lastErr = m_pCurretLang->getLastErr();
             rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
             bSuccess = false;
             break;

@@ -75,16 +75,23 @@ bool LangPy::initPublicPara(const TA_MapParaValue& publicPara)
 
 int LangPy::executeScript(const QString& funcName, const TA_MapParaValue& localValue)
 {
-    int iRet = 0;
+    int iRet = -1;
     for(TA_MapParaValue::const_iterator itor = localValue.begin(); itor != localValue.end(); ++itor)
     {
         m_mainModule.addVariable(itor.key(), itor.value());
     }
 
-    QVariant res = m_mainModule.call(funcName);
-    if (res.isValid())
-    {
+    QVariant res = m_mainModule.call(funcName);    
+    if(PythonQt::self()->hadError()) {
+        m_lastErr = TA_TR("*** Error at parser the python function: ") + funcName;
+        return iRet;
+    }
+
+    if (res.isValid()) {
         iRet = res.toInt() & TA_MASK_RST;
+    }
+    else {
+        m_lastErr = TA_TR("*** Error: Not have return value of the function: ") + funcName;
     }
 
     return iRet;

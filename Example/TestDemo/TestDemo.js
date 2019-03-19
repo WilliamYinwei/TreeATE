@@ -1,7 +1,7 @@
 function setup_testdemo()
 {
-	__ate.OutputError("setup_testdemo中文");
-	ta.BandObj("msg");     
+	__ate.OutputError("setup_testdemo涓枃");
+	ta.BandObj("msg"); 
 
 	var ret = __ate.GetProjectName();
 	__ate.OutputError("GetProjectName:" + ret);
@@ -53,7 +53,7 @@ function teardown_suite2()
 function test_test1()
 {
 	__ate.OutputError("test_test1");
-	var ret = ta.MsgBox("images/treeate.png", "hello中文", 0, 5000);
+	var ret = ta.MsgBox("images/treeate.png", "hello涓枃", 0, 5000);
 	__ate.OutputError(ret);
 	__ate.OutputRst(Name2, Gabc, ret);    
 	return 0;
