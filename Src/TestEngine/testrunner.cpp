@@ -185,6 +185,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
     QStringList lstTeardown;
 
     m_pCurretLang->addModel("__ate", &rstMgr);
+    m_pCurretLang->addModel("__aterun", this);
 
     bool bSuccess = true;
 
@@ -272,4 +273,9 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
     }
 
     return bSuccess;
+}
+
+bool TestRunner::IsStopped()
+{
+    return m_bStopped;
 }

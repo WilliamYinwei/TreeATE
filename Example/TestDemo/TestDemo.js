@@ -53,7 +53,15 @@ function teardown_suite2()
 function test_test1()
 {
 	__ate.OutputError("test_test1");
-	var ret = ta.MsgBox("images/treeate.png", "hello中文", 0, 5000);
+    var ret = 0
+    for(i = 0; i < 100; i++) {
+	//var ret = ta.MsgBox("images/treeate.png", "hello中文", 0, 5000);
+	sleep(300);
+	if(__aterun.IsStopped()) {
+	    ta.MsgBox("images/treeate.png", "Stopped", 0, 3000);
+	    break;
+	}
+    }
 	__ate.OutputError(ret);
 	__ate.OutputRst(Name2, Gabc, ret);    
 	return 0;

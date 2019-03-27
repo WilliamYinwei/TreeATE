@@ -21,8 +21,9 @@
 typedef QList<QObject*>         TA_ListObj;
 
 class IMutliLang;
-class TestRunner
+class TestRunner : public QObject
 {
+    Q_OBJECT
 public:
     TestRunner(UnitMgr* pMgr);
     virtual ~TestRunner();
@@ -34,6 +35,9 @@ public:
     QString getLastError();
 
     void stop();
+
+public slots:
+    bool IsStopped();
 
 protected:
     void initPublicPara();
