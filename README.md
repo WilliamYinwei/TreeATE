@@ -61,3 +61,7 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 
 在构建的目录下启动TreeATE.exe即可。例如作者的开发构建目录为：
 D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
+
+联系方式
+-------------------------------------------------------------------------------
+willage.yin@163.com
