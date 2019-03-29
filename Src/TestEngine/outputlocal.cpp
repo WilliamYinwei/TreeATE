@@ -40,6 +40,7 @@ OutputLocal::OutputLocal()
 bool OutputLocal::OpenOutput()
 {
     m_out.setDevice(&m_fRst);
+    m_out.setCodec("UTF-8");
 
     // output to local sqlite database
     if(!m_dbSqlite.isOpen()) {

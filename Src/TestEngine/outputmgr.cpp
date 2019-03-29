@@ -117,8 +117,8 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
 
     QJsonObject obj = json.toObject();
     QString strLongName = obj["longname"].toString();
-    bool isUpdateRst = obj["time"].isUndefined();
-    bool isDetailRst = obj["spend"].isUndefined();
+    bool isUpdateRst = obj["time"].isNull();
+    bool isDetailRst = obj["spend"].isNull() && (!obj["standard"].isNull());
     QStringList lstName = strLongName.split("/");
 
     bool bRst = false;
