@@ -138,7 +138,7 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
             tpr.m_strName = obj["name"].toString();
             tpr.m_strBarcode = obj["barcode"].toString();
             tpr.m_strStation = obj["station"].toString();
-            tpr.m_tStart = QDateTime::fromString(obj["time"].toString());
+            tpr.m_tStart = QDateTime::fromString(obj["time"].toString(), TREEATE_DATETIME_FORMAT);
             tpr.m_strUser = obj["user"].toString();
             tpr.m_strVersion = obj["version"].toString();
             tpr.m_strLineName = obj["workingline"].toString();
@@ -159,7 +159,7 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
             QString strParentPath = "/" + lstName.at(1);
             tsr.m_strPath = strLongName;
             tsr.m_strName = obj["name"].toString();
-            tsr.m_tStart = QDateTime::fromString(obj["time"].toString());
+            tsr.m_tStart = QDateTime::fromString(obj["time"].toString(), TREEATE_DATETIME_FORMAT);
             bRst = m_pOutputSvr->OutputTestSuiteRst(tsr, strParentPath);
         }
         break;
@@ -170,7 +170,7 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
             rst.m_strPath = strLongName;
             rst.m_strName = obj["name"].toString();
             rst.m_eRst = TestResult::FromString(obj["rst"].toString());
-            rst.m_tStart = QDateTime::fromString(obj["time"].toString());
+            rst.m_tStart = QDateTime::fromString(obj["time"].toString(), TREEATE_DATETIME_FORMAT);
             rst.m_strDesc = obj["desc"].toString();
             rst.m_strStandard = obj["standard"].toString();
             bRst = m_pOutputSvr->OutputDetailRst(rst, rst.m_strPath);
@@ -188,7 +188,7 @@ bool OutputMgr::uploadRst(const QJsonValue& json)
                 QString strParentPath = "/" + lstName.at(1) + "/" + lstName.at(2);
                 tcr.m_strPath = strLongName;
                 tcr.m_strName = obj["name"].toString();
-                tcr.m_tStart = QDateTime::fromString(obj["time"].toString());
+                tcr.m_tStart = QDateTime::fromString(obj["time"].toString(), TREEATE_DATETIME_FORMAT);
                 bRst = m_pOutputSvr->OutputTestCaseRst(tcr, strParentPath);
             }
         }
