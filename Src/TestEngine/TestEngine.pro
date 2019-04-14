@@ -14,6 +14,11 @@ INCLUDEPATH += ../../Plugins/DevLangPython
 
 TEMPLATE = app
 
+DISTFILES += \
+    ate_te.rc
+
+RC_FILE += ate_te.rc
+
 SOURCES += main.cpp \
     outputstd.cpp \
     unitmgr.cpp \

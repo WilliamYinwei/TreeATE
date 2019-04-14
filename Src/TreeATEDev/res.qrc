@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>ATE.ico</file>
         <file>new.png</file>
         <file>open.png</file>
         <file>save.png</file>
@@ -10,5 +9,6 @@
         <file>minus.png</file>
         <file>down.png</file>
         <file>up.png</file>
+        <file>ate_dev.ico</file>
     </qresource>
 </RCC>

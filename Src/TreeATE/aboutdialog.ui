@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>236</width>
-    <height>123</height>
+    <width>268</width>
+    <height>317</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -68,7 +68,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string notr="true">Version: 1.0.0 </string>
+          <string notr="true">Version: 1.1.0 </string>
          </property>
         </widget>
        </item>
@@ -96,6 +96,9 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QListWidget" name="listWidget"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

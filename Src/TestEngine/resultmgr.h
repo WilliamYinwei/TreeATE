@@ -43,6 +43,7 @@ public:
 
 public slots:
     bool OutputRst(const QString& strName, const QString& strValue, const QString& strStand);
+    bool OutputRstEx(const QString& strName, const QString& strValue, const QString& strStand, int nRst);
     void OutputError(const QString& strOutput);
     QString GetProjectName();
     QString GetProjectVer();

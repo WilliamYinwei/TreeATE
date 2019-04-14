@@ -17,6 +17,7 @@
 #include "testunitsmodel.h"
 #include "tapropertymgr.h"
 #include "newprjdlg.h"
+#include "dlgfind.h"
 
 #include <QSplitter>
 #include <QTableView>
@@ -86,6 +87,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_scriptEdit->GetScriptEdit(), SIGNAL(textChanged()), this,
             SLOT(on_data_changed()));
     ui->verticalLayout_main->addWidget(splitterMain);
+
+    m_pFindDlg = new DlgFind(this);
+    connect(m_pFindDlg, SIGNAL(seachForText(QString,bool,bool,bool)), this,
+            SLOT(on_dlgFind(QString,bool,bool,bool)));
 
     m_fileSysModel = new QFileSystemModel();
     m_fileSysModel->setReadOnly(false);
@@ -627,4 +632,21 @@ void MainWindow::on_action_New_triggered()
 void MainWindow::on_action_Help_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/column/info/31202"));
+}
+
+void MainWindow::on_actionFind_triggered()
+{
+    if(m_pFindDlg)
+    {
+        m_pFindDlg->show();
+    }
+}
+
+void MainWindow::on_dlgFind(QString text, bool wo, bool ca, bool re)
+{
+    m_scriptEdit->GetScriptEdit()->activateWindow();
+    if(!m_scriptEdit->GetScriptEdit()->findFirst(text, re, ca, wo, true))
+    {
+        QMessageBox::information(this, "Info", "Not found: " + text);
+    }
 }

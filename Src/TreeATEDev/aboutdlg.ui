@@ -34,7 +34,7 @@
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/ATE.ico);</string>
+        <string notr="true">image: url(:/ate_dev.ico);</string>
        </property>
        <property name="text">
         <string/>
@@ -59,7 +59,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Version: 1.0.0 </string>
+          <string>Version: 1.1.0 </string>
          </property>
         </widget>
        </item>

@@ -92,6 +92,8 @@
     </widget>
     <addaction name="action_Script"/>
     <addaction name="menu_Test_Units"/>
+    <addaction name="separator"/>
+    <addaction name="actionFind"/>
    </widget>
    <addaction name="menuProject"/>
    <addaction name="menu_Edit"/>
@@ -147,7 +149,7 @@
   </widget>
   <action name="action_New">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/new.png</normaloff>:/new.png</iconset>
    </property>
    <property name="text">
@@ -159,7 +161,7 @@
   </action>
   <action name="action_Open">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/open.png</normaloff>:/open.png</iconset>
    </property>
    <property name="text">
@@ -171,7 +173,7 @@
   </action>
   <action name="action_Save">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/save.png</normaloff>:/save.png</iconset>
    </property>
    <property name="text">
@@ -193,7 +195,7 @@
   </action>
   <action name="actionImport">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/input.png</normaloff>:/input.png</iconset>
    </property>
    <property name="text">
@@ -202,7 +204,7 @@
   </action>
   <action name="action_Export">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/output.png</normaloff>:/output.png</iconset>
    </property>
    <property name="text">
@@ -211,7 +213,7 @@
   </action>
   <action name="actionShrink_items_Ctrl">
    <property name="icon">
-    <iconset resource="../TreeATE/res.qrc">
+    <iconset>
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
@@ -226,7 +228,7 @@
   </action>
   <action name="actionSpread_items_Ctrl">
    <property name="icon">
-    <iconset resource="../TreeATE/res.qrc">
+    <iconset>
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
@@ -276,7 +278,7 @@
   </action>
   <action name="actionUpItem">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/up.png</normaloff>:/up.png</iconset>
    </property>
    <property name="text">
@@ -285,7 +287,7 @@
   </action>
   <action name="actionDownItem">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/down.png</normaloff>:/down.png</iconset>
    </property>
    <property name="text">
@@ -297,11 +299,16 @@
     <string>&amp;Help...</string>
    </property>
   </action>
+  <action name="actionFind">
+   <property name="text">
+    <string>Find...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../TreeATE/res.qrc"/>
-  <include location="res.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

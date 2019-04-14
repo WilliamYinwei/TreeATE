@@ -1,4 +1,4 @@
-IDI_ICON1 ICON DISCARDABLE "ATE.ico"
+IDI_ICON1 ICON DISCARDABLE "ATE_dev.ico"
 
 #if defined(UNDER_CE)
 #include <winbase.h>
@@ -7,8 +7,8 @@ IDI_ICON1 ICON DISCARDABLE "ATE.ico"
 #endif
 
 VS_VERSION_INFO VERSIONINFO
-    FILEVERSION 1,0,0,1
-    PRODUCTVERSION 1,0,0,1
+    FILEVERSION 1,1,0,1
+    PRODUCTVERSION 1,1,0,1
     FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
     FILEFLAGS VS_FF_DEBUG
@@ -24,14 +24,14 @@ VS_VERSION_INFO VERSIONINFO
             BLOCK "080404b0"
             BEGIN
                 VALUE "CompanyName", "David Yin\0"
-                VALUE "FileDescription", "TreeATE for manufactory automatic testing\0"
-                VALUE "FileVersion", "1,0,0,1"
-                VALUE "ProductVersion", "1,0,0,1"
+                VALUE "FileDescription", "TreeATE Developer Tools for TreeATE\0"
+                VALUE "FileVersion", "1,1,0,1"
+                VALUE "ProductVersion", "1,1,0,1"
                 VALUE "LegalCopyright", "Copyright 2019(C) David Yin\0"
                 VALUE "LegalTrademarks", "Tree ATE\0"
-                VALUE "OriginalFilename", "TreeATE.exe\0"
+                VALUE "OriginalFilename", "TreeATEDev.exe\0"
                 VALUE "ProductName", "TreeATE\0"
-                VALUE "InternalName", "TreeATE.exe\0"
+                VALUE "InternalName", "TreeATEDev.exe\0"
            END
         END
         

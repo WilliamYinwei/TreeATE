@@ -29,6 +29,7 @@ class QStandardItemModel;
 class QFileSystemModel;
 class TAPropertyMgrWidget;
 class QLabel;
+class DlgFind;
 
 class MainWindow : public QMainWindow
 {
@@ -93,9 +94,13 @@ private slots:
 
     void on_action_Help_triggered();
 
+    void on_actionFind_triggered();
+
+    void on_dlgFind(QString text, bool wo, bool ca, bool re);
+
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event);    
 
 private:
     Ui::MainWindow *ui;
@@ -110,6 +115,7 @@ private:
     QMenu*          m_popMenuModelFile;
     QAction*        m_actionRemoveFile;
     QLabel*         m_labelPrjPath;
+    DlgFind*        m_pFindDlg;
 };
 
 #endif // MAINWINDOW_H

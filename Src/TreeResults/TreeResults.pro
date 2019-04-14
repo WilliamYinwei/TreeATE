@@ -23,7 +23,10 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RC_FILE += ate.rc
+RC_FILE += ate_rst.rc
+
+DISTFILES += \
+    ate_rst.rc
 
 RESOURCES += \
     res.qrc

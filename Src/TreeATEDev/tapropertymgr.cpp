@@ -174,6 +174,7 @@ TAPropertyMgrWidget::~TAPropertyMgrWidget()
 
 void TAPropertyMgrWidget::SetPublicPara(const QVariantList& vlPara)
 {
+    m_tmPublicPara->clear();
     for(int i = 0; i < vlPara.count(); i++) {
         QVariantMap vmPara = vlPara.at(i).toMap();
         m_tmPublicPara->setItem(i, 0, new QStandardItem(vmPara["Name"].toString()));
@@ -331,6 +332,7 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
 
 void TAPropertyMgrWidget::SetModels(const QVariantList& vlModels)
 {
+    m_tmModels->clear();
     for(int i = 0; i < vlModels.count(); i++) {
         QVariantMap vmPara = vlModels.at(i).toMap();
         m_tmModels->setItem(i, 0, new QStandardItem(vmPara["Obj"].toString()));

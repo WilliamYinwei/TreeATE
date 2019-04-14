@@ -1,10 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file>ATE.ico</file>
         <file>search.png</file>
         <file>ChevronLeft.png</file>
         <file>ChevronRight.png</file>
         <file>FristPage.png</file>
         <file>LastPage.png</file>
+        <file>ate_rst.ico</file>
     </qresource>
 </RCC>

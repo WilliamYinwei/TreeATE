@@ -69,8 +69,8 @@ void ResultMgr::ClearResult()
     m_rstCase.clear();
 }
 
-bool ResultMgr::OutputRst(const QString& strName,
-                          const QString& strValue, const QString& strStand)
+bool ResultMgr::OutputRstEx(const QString& strName, const QString& strValue,
+                            const QString& strStand, int nRst)
 {
     QStringList lstName = m_strCurrPath.split("/");
     if(m_strCurrPath.isEmpty() || lstName.count() != 4)
@@ -78,13 +78,19 @@ bool ResultMgr::OutputRst(const QString& strName,
 
     TestResult rst;
     rst.m_tStart = QDateTime::currentDateTime();
-    rst.m_eRst = TestResult::INFO;
+    rst.m_eRst = TestResult::TypeTestRst(nRst);
     rst.m_strName = strName;
     rst.m_strPath = m_strCurrPath;
     rst.m_strDesc = strValue;
     rst.m_strStandard = strStand;
 
     return m_output.OutputDetailTestRst(rst, m_strCurrPath);
+}
+
+bool ResultMgr::OutputRst(const QString& strName, const QString& strValue,
+                            const QString& strStand)
+{
+    return OutputRstEx(strName, strValue, strStand, TestResult::INFO);
 }
 
 bool ResultMgr::CreateResult(const QString& strPath, const QJsonObject& objUnit)

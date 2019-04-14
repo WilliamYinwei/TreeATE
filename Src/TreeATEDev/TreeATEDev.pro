@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     tapropertymgr.cpp \
     taprjcfgwidget.cpp \
     newprjdlg.cpp \
-    tacsvparser.cpp
+    tacsvparser.cpp \
+    dlgfind.cpp
 
 HEADERS  += mainwindow.h \
     tascriptedit.h \
@@ -33,13 +34,19 @@ HEADERS  += mainwindow.h \
     tapropertymgr.h \
     taprjcfgwidget.h \
     newprjdlg.h \
-    tacsvparser.h
+    tacsvparser.h \
+    ate_dev.rc \
+    dlgfind.h
 
 FORMS    += mainwindow.ui \
     aboutdlg.ui \
-    newprjdlg.ui
+    newprjdlg.ui \
+    dlgfind.ui
 
-RC_FILE += ate.rc
+RC_FILE += ate_dev.rc
+
+DISTFILES += \
+    ate_dev.rc
 
 RESOURCES += \
     res.qrc
