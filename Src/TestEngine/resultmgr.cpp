@@ -79,10 +79,10 @@ bool ResultMgr::OutputRstEx(const QString& strName, const QString& strValue,
     TestResult rst;
     rst.m_tStart = QDateTime::currentDateTime();
     rst.m_eRst = TestResult::TypeTestRst(nRst);
-    rst.m_strName = strName;
+    rst.m_strName = strName.left(TA_RST_MAXLEN_NAME);
     rst.m_strPath = m_strCurrPath;
-    rst.m_strDesc = strValue;
-    rst.m_strStandard = strStand;
+    rst.m_strDesc = strValue.left(TA_RST_MAXLEN_VALUE);
+    rst.m_strStandard = strStand.left(TA_RST_MAXLEN_STAND);
 
     return m_output.OutputDetailTestRst(rst, m_strCurrPath);
 }

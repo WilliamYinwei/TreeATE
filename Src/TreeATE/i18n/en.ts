@@ -559,12 +559,22 @@
 <context>
     <name>TestManger</name>
     <message>
-        <location filename="../testmanger.cpp" line="594"/>
+        <location filename="../testmanger.cpp" line="207"/>
+        <source>Question</source>
+        <translation>Question</translation>
+    </message>
+    <message>
+        <location filename="../testmanger.cpp" line="208"/>
+        <source>It&apos;s loop test, are you sure?</source>
+        <translation>It&apos;s loop test, are you sure?</translation>
+    </message>
+    <message>
+        <location filename="../testmanger.cpp" line="601"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="595"/>
+        <location filename="../testmanger.cpp" line="602"/>
         <source>Warning: Testing now, an error may occur when quit. Are you quit?</source>
         <translation>Warning: Testing now, an error may occur when quit. Are you quit?</translation>
     </message>

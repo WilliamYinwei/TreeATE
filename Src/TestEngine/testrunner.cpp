@@ -222,6 +222,14 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         // recovery the public parameter
         m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
 
+        // Exception(iRet < 0)
+        if(iRet < 0) {
+            m_lastErr = m_pCurretLang->getLastErr();
+            rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
+            bSuccess = false;
+            break;
+        }
+
         if(eType != eTestCase) {
             if(bTeardown) {
                 if(!lstTeardown.isEmpty())
@@ -232,14 +240,8 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             }
         }
 
-        // Exception(iRet < 0), stopped, or failed to stop
-        if(iRet < 0) {
-            m_lastErr = m_pCurretLang->getLastErr();
-            rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
-            bSuccess = false;
-            break;
-        }
-        else if(m_bStopped || (iRet > 0 && bStopWhenFailed)) {
+        // stopped, or failed to stop
+        if(m_bStopped || (iRet > 0 && bStopWhenFailed)) {
             rstMgr.UpdateResult(path, objUnit, 1, TA_TR("Stopped by TreeATE."));
             break;
         }

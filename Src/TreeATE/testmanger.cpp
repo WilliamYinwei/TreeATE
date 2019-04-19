@@ -203,6 +203,13 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
 
     clearTempFile();
     int nCnt = m_prjMgr.getLoopCounts();
+    if(nCnt > 1) {
+        if(QMessageBox::Yes != QMessageBox::question(m_parent, tr("Question"),
+                                                  tr("It's loop test, are you sure?")))
+        {
+            return nSelectedCnt;
+        }
+    }
 
     for(QMap<QString, TestProcess*>::iterator itor = m_prcTestEngine.begin();
         itor != m_prcTestEngine.end(); ++itor) {

@@ -45,4 +45,8 @@ typedef enum {
 #define TA_STOPPED      "stop"
 #define TA_RST_FILE     ".rst"
 
+#define TA_RST_MAXLEN_NAME      32
+#define TA_RST_MAXLEN_VALUE     256
+#define TA_RST_MAXLEN_STAND     256
+
 #endif // STDINC_H

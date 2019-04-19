@@ -108,7 +108,7 @@ int LangQS::executeScript(const QString& funcName, const TA_MapParaValue& localV
             iRet = -1;
         }
         else
-            iRet = ret.toUInt32() & TA_MASK_RST;
+            iRet = ret.toUInt32() /*& TA_MASK_RST*/;
     }
     else {
         m_lastErr = TA_TR("Not found this function name(%1) in script.").arg(funcName);

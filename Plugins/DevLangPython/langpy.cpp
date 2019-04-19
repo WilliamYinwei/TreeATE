@@ -88,7 +88,7 @@ int LangPy::executeScript(const QString& funcName, const TA_MapParaValue& localV
     }
 
     if (res.isValid()) {
-        iRet = res.toInt() & TA_MASK_RST;
+        iRet = res.toInt() /*& TA_MASK_RST*/;
     }
     else {
         m_lastErr = TA_TR("*** Error: Not have return value of the function: ") + funcName;
