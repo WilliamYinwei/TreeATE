@@ -39,7 +39,7 @@ function setup_suite2()
 	__ate.OutputError("setup_suite2");
 	var ret = __ate.GetProjectBarcode();
 	__ate.OutputError("GetProjectBarcode:" + ret);
-	return 0;
+	return -1; // Exception
 }
 
 function teardown_suite2()
