@@ -25,6 +25,7 @@
 #include <QDockWidget>
 #include <QProgressBar>
 
+
 #define TA_COLUMN_UNIT_NAME     0
 #define TA_COLUMN_UNIT_PATH     1
 #define TA_COLUMN_UNIT_DESC     2
@@ -34,7 +35,9 @@
 #define TA_COLUMN_START_TIME    6
 #define TA_COLUMN_SPEND_TIME    7
 
+#define TA_ERR_UPLOAD_HRST      -9
 #define TA_LIST_OK          10000
+#define TA_UPLOAD_OK        10001
 
 #define TA_PROGRESS_BC_FAIL "QProgressBar::chunk { background-color: rgb(255, 100, 100);margin:0.5px;}"
 #define TA_PROGRESS_BC_EXCE "QProgressBar::chunk { background-color: rgb(255, 191, 0);margin:0.5px;}"
@@ -92,6 +95,7 @@ signals:
     void updateTotalStatus(eTestStatus, int n);
     void startLoading(int nCnt);
     void startTesting(const QString& who);
+    void statusHisRst(eTestStatus);
 
 private slots:
     void on_updateTestItemStatus(const QString& who,
@@ -101,6 +105,7 @@ private slots:
 
 private:
     QWidget*        m_parent;
+    TestProcess*                    m_pUploadRst;
     QMap<QString, TestProcess*>     m_prcTestEngine;
     QList<QTemporaryFile*>          m_lstTempFile;
     QList<QDockWidget*>             m_lstDockWidget;

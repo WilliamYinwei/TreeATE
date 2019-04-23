@@ -95,6 +95,8 @@ private slots:
 
     void on_action_Help_triggered();
 
+    void on_status_HistoryRst(eTestStatus nStatus);
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent* e);
@@ -114,6 +116,7 @@ private:
     QLabel*         m_labelUser;
     QLabel*         m_labelTime;
     QLabel*         m_labelStationName;
+    QLabel*         m_labelHistoryRst;
     QLineEdit*      m_leTotalSN;
     QTimer*         m_pTimer;
     QThread*        m_pThreadTimer;

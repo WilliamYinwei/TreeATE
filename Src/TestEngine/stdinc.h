@@ -28,8 +28,11 @@ typedef enum {
     eTestProject
 }TA_UNIT_TYPE;
 
-#define TA_OK               0
+#define TA_UPLOAD_OK        10001
 #define TA_LIST_OK          10000
+
+#define TA_OK               0
+
 #define TA_ERR_NEED_PARA    -1
 #define TA_ERR_NO_PROJECT   -2
 #define TA_ERR_LOAD_UNITS   -3
@@ -38,12 +41,14 @@ typedef enum {
 #define TA_ERR_UNSELECTED   -6
 #define TA_ERR_INIT_RESULT  -7
 #define TA_ERR_RUNNING      -8
+#define TA_ERR_UPLOAD_HRST  -9
 
 
 #define TA_OUT_DEBUG_INFO  qDebug()
 #define TA_MASK_RST     0x7FFFFFFF
 #define TA_STOPPED      "stop"
 #define TA_RST_FILE     ".rst"
+#define TA_UPLOAD_RST   "uploadrst"
 
 #define TA_RST_MAXLEN_NAME      32
 #define TA_RST_MAXLEN_VALUE     256

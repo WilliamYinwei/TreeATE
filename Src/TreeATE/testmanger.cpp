@@ -30,6 +30,7 @@ TestManger::TestManger(QTreeWidget *pWidget, QTextBrowser *pBrower, QObject *par
     m_textBrower = pBrower;
     m_bIsLoaded = false;
     m_dockLoopProgress = NULL;
+    m_pUploadRst = NULL;
 
     connect(this, SIGNAL(startTesting(QString)), this, SLOT(on_startTesting(QString)), Qt::QueuedConnection);
 }
@@ -104,6 +105,20 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
     m_dockLoopProgress = createLoopProgress(lstName);
     m_lstDockWidget.append(m_dockLoopProgress);
 
+    // upload history results
+    if(NULL == m_pUploadRst) {
+        m_pUploadRst = new TestProcess("Upload histroy results", (QObject*)m_parent);
+
+        connect(m_pUploadRst, SIGNAL(updateTestItemStatus(QString,QJsonObject,quint32)), this,
+                SLOT(on_updateTestItemStatus(QString,QJsonObject,quint32)));
+        connect(m_pUploadRst, SIGNAL(testEngineFinished(QString, int)), this,
+                SLOT(on_testEngineFinished(QString, int)));
+        m_lstDockWidget.append(m_pUploadRst->getDockWidget());
+    }
+
+    m_pUploadRst->start("TestEngine", QStringList() << "uploadrst");
+
+    // loading test projects
     strTitle = m_prjMgr.getPrjName() + " - " + m_prjMgr.getPrjDescription();
     foreach (auto strName, lstName) {
         m_textBrower->append("Loading: " + strName);
@@ -309,6 +324,11 @@ void TestManger::UnloadUnits()
     m_rstLevel = Unload;
     m_mpPrjTestStatus.clear();
 
+    if(m_pUploadRst) {
+        delete m_pUploadRst;
+        m_pUploadRst = NULL;
+    }
+
     for(QMap<QString, TestProcess*>::iterator itor = m_prcTestEngine.begin();
         itor != m_prcTestEngine.end(); ++itor) {
         delete itor.value();
@@ -322,7 +342,7 @@ void TestManger::UnloadUnits()
     if(m_dockLoopProgress) {
         delete m_dockLoopProgress;
         m_dockLoopProgress = NULL;
-    }
+    }    
 }
 
 void TestManger::on_updateTestItemStatus(const QString& who,
@@ -397,6 +417,14 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
             m_rstLevel = Ready;
             emit updateTotalStatus(Ready, 0);
         }
+        return;
+    }
+    else if(nCode == TA_UPLOAD_OK) {
+        emit statusHisRst(Pass);
+        return;
+    }
+    else if(nCode == TA_ERR_UPLOAD_HRST) {
+        emit statusHisRst(Failed);
         return;
     }
 

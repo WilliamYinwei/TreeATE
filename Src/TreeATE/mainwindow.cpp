@@ -54,12 +54,15 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pTestMgr = new TestManger(ui->treeWidget_Units, ui->textBrowser_Log, this);
     connect(m_pTestMgr, SIGNAL(updateTotalStatus(eTestStatus, int)), this,
             SLOT(on_updateTotalStatus(eTestStatus, int)));
+    connect(m_pTestMgr, SIGNAL(statusHisRst(eTestStatus)), this, SLOT(on_status_HistoryRst(eTestStatus)));
 
     // statusBar
     m_labelPath = new QLabel(tr("Path of test project"), this);
     m_labelUser = new QLabel(tr("User name"), this);
-    m_labelTime = new QLabel(tr("Current Time"), this);    
-    statusBar()->addWidget(m_labelPath, 1);
+    m_labelTime = new QLabel(tr("Current Time"), this);
+    m_labelHistoryRst = new QLabel("History Result", this);
+    statusBar()->addWidget(m_labelPath, 1);    
+    statusBar()->addPermanentWidget(m_labelHistoryRst, 0);
     statusBar()->addPermanentWidget(m_labelUser, 1);
     statusBar()->addPermanentWidget(m_labelTime, 0);
 
@@ -241,6 +244,16 @@ void MainWindow::on_actionPlay_triggered()
 void MainWindow::on_startLoading(int nCnt)
 {
     ui->progressBar->setRange(1, nCnt);
+}
+
+void MainWindow::on_status_HistoryRst(eTestStatus nStatus)
+{
+    if(m_labelHistoryRst) {
+        if(nStatus != Pass)
+            m_labelHistoryRst->setStyleSheet("background-color: rgb(255, 191, 0); margin:0.5px; color: rgb(140, 0, 0);");
+        else
+            m_labelHistoryRst->setStyleSheet("");
+    }
 }
 
 void MainWindow::enableForStatus(eTestStatus eStatus)

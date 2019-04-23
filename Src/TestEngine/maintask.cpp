@@ -83,7 +83,7 @@ int MainTask::mainTest()
     parser.addOption(stationOpt);
     parser.addOption(workLineOpt);
     parser.addOption(fstopOpt);
-    parser.addPositionalArgument("project", "Enter the project file name to test.");
+    parser.addPositionalArgument("project", "Enter the project file name to test,\r\n or upload(use 'uploadrst') history results.");
     parser.process(*m_app);
 
     if(m_app->arguments().count() <= 1) {
@@ -97,14 +97,29 @@ int MainTask::mainTest()
         cerr << "Please enter the project file name or --help." << endl;
         return TA_ERR_NO_PROJECT;
     }
-    else {
-        QString prjFile = argLst.at(0);
 
-        // loading project file and parser it.
-        if(!utMgr.LoadUnitConfig(prjFile)) {
-            cerr << utMgr.getLastError().toStdString() << endl;
-            return TA_ERR_LOAD_UNITS;
-        }
+    ResultMgr rstMgr;
+    if(!rstMgr.InitResult(parser.value(userOpt),
+                          parser.value(stationOpt),
+                          parser.value(workLineOpt),
+                          parser.value(barcodeOpt))) {
+        cerr << rstMgr.getLastError().toStdString() << endl;
+        return TA_ERR_INIT_RESULT;
+    }
+
+    QString prjFile = argLst.at(0);
+    if(prjFile.compare(TA_UPLOAD_RST, Qt::CaseInsensitive) == 0)
+    {
+        // Upload the test result of history to server when list the test items.
+        if(rstMgr.UploadResultToSvr())
+            return TA_UPLOAD_OK;
+        else
+            return TA_ERR_UPLOAD_HRST;
+    }
+    // loading project file and parser it.
+    if(!utMgr.LoadUnitConfig(prjFile)) {
+        cerr << utMgr.getLastError().toStdString() << endl;
+        return TA_ERR_LOAD_UNITS;
     }
 
     if(parser.isSet(parameterOption)) {
@@ -127,15 +142,6 @@ int MainTask::mainTest()
         return TA_ERR_INIT_RUNNER;
     }
 
-    ResultMgr rstMgr;
-    if(!rstMgr.InitResult(parser.value(userOpt),
-                          parser.value(stationOpt),
-                          parser.value(workLineOpt),
-                          parser.value(barcodeOpt))) {
-        cerr << rstMgr.getLastError().toStdString() << endl;
-        return TA_ERR_INIT_RESULT;
-    }
-
     QStringList selPath;
     if(parser.isSet(startOption))
     {
@@ -150,8 +156,6 @@ int MainTask::mainTest()
     else if(parser.isSet(listOption))
     {
         utMgr.printUnitToStd();
-        // Upload the test result of history to server when list the test items.
-        (void)rstMgr.UploadResultToSvr();
         return TA_LIST_OK;
     }
 
