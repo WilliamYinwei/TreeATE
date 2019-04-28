@@ -191,8 +191,7 @@ void MainWindow::on_actionLoading_triggered()
 
 void MainWindow::on_actionPlay_triggered()
 {
-    QString onlyOne;
-    QStringList lstSelPrj = m_pTestMgr->SeletedPrj(onlyOne);
+    QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
     QMap<QString, QString> mapSN;
     int nCnt = lstSelPrj.count();
     if(nCnt == 1) {
@@ -218,7 +217,7 @@ void MainWindow::on_actionPlay_triggered()
             m_leTotalSN->setFocus();
             return;
         }
-        mapSN.insert(onlyOne, strSN);
+        mapSN.insert(lstSelPrj.at(0), strSN);
     }
     else if(nCnt <= 0) {
         QMessageBox::warning(this, tr("Warning"), tr("Please selected the test item to play."));

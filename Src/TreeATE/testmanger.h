@@ -70,7 +70,7 @@ public:
     void UnloadUnits();
     bool IsLoaded();
 
-    QStringList SeletedPrj(QString& forOnlyOne);
+    QStringList SeletedPrj();
     int StartTest(const QString& strWorkLine, const QString& strStation,
                   const QString& strUser,
                   const QMap<QString, QString> &mapSN);

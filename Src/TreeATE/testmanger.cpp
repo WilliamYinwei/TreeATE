@@ -159,7 +159,7 @@ QString TestManger::GetPrjPath()
     return fileInfo.absolutePath();
 }
 
-QStringList TestManger::SeletedPrj(QString &forOnlyOne)
+QStringList TestManger::SeletedPrj()
 {
     QStringList lstSel;
     const int topCnt = m_treeWidget->topLevelItemCount();
@@ -168,8 +168,7 @@ QStringList TestManger::SeletedPrj(QString &forOnlyOne)
         if(NULL == parentItem)
             continue;
         if(parentItem->checkState(0) != Qt::Unchecked) {
-            forOnlyOne = parentItem->text(0);
-            lstSel.append(forOnlyOne);
+            lstSel.append(parentItem->text(0));
         }
     }
 
@@ -421,10 +420,12 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     }
     else if(nCode == TA_UPLOAD_OK) {
         emit statusHisRst(Pass);
+        emit updateTotalStatus(Ready, 0);
         return;
     }
     else if(nCode == TA_ERR_UPLOAD_HRST) {
         emit statusHisRst(Failed);
+        emit updateTotalStatus(Ready, 0);
         return;
     }
 
