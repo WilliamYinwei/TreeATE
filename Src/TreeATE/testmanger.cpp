@@ -31,6 +31,7 @@ TestManger::TestManger(QTreeWidget *pWidget, QTextBrowser *pBrower, QObject *par
     m_bIsLoaded = false;
     m_dockLoopProgress = NULL;
     m_pUploadRst = NULL;
+    SetCheckboxEnable(false);
 
     connect(this, SIGNAL(startTesting(QString)), this, SLOT(on_startTesting(QString)), Qt::QueuedConnection);
 }
@@ -250,7 +251,7 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
             QTreeWidgetItem* item = *itorItem;
 
             // path of test unit with selected
-            if(item->checkState(0) != Qt::Unchecked) {
+            if(m_bCheckboxEnable || item->checkState(0) != Qt::Unchecked) {
                 QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
                 in << line;
                 nSelectedCnt++;
@@ -352,11 +353,11 @@ void TestManger::on_updateTestItemStatus(const QString& who,
 
     QString status = objData["type"].toString();
     if(status == "commit") {
-        emit startLoading(objData["count"].toInt());
+        //emit startLoading(objData["count"].toInt());
     }
     else if(status == "progress") {
-        m_rstLevel = Loading;
-        emit updateTotalStatus(Loading, objData["count"].toInt());
+        //m_rstLevel = Loading;
+        //emit updateTotalStatus(Loading, objData["count"].toInt());
     }
     else if(status == "list") {
         addUnitItems(who, objData);
@@ -420,12 +421,12 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     }
     else if(nCode == TA_UPLOAD_OK) {
         emit statusHisRst(Pass);
-        emit updateTotalStatus(Ready, 0);
+        //emit updateTotalStatus(Ready, 0);
         return;
     }
     else if(nCode == TA_ERR_UPLOAD_HRST) {
         emit statusHisRst(Failed);
-        emit updateTotalStatus(Ready, 0);
+        //emit updateTotalStatus(Ready, 0);
         return;
     }
 
@@ -466,6 +467,11 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
             emit startTesting(who);
         }
     }
+}
+
+void TestManger::SetCheckboxEnable(bool bEnable)
+{
+    m_bCheckboxEnable = bEnable;
 }
 
 

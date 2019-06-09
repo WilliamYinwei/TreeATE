@@ -169,6 +169,13 @@ void MainWindow::loadUnits(const QString& strPrjName)
         {
             ui->textBrowser_Log->append(m_pPluginsMgr->GetLastError());
         }
+
+        if(m_strUser != "admin") {
+            m_pTestMgr->SetCheckboxEnable(true);
+        }
+        else {
+            m_pTestMgr->SetCheckboxEnable(false);
+        }
     }
 }
 

@@ -69,6 +69,7 @@ public:
     bool LoadTestUnits(const QString& strPrjFile, QString &strTitle);
     void UnloadUnits();
     bool IsLoaded();
+    void SetCheckboxEnable(bool bEnable);
 
     QStringList SeletedPrj();
     int StartTest(const QString& strWorkLine, const QString& strStation,
@@ -124,6 +125,7 @@ private:
     QMap<QString, quint32>      m_mapLoopCount;
     QDockWidget*    m_dockLoopProgress;
     QMap<QString, QProgressBar*> m_mapLoopProgress;
+    bool    m_bCheckboxEnable;
 };
 
 #endif // TESTMANGER_H

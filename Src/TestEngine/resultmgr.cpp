@@ -249,3 +249,8 @@ QString ResultMgr::GetUserName()
 {
     return m_rstPrj.m_strUser;
 }
+
+int ResultMgr::GetTotalRst()
+{
+    return (int)m_rstPrj.m_eRst;
+}

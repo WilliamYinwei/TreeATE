@@ -52,6 +52,7 @@ public slots:
     QString GetWorkLine();
     QString GetWorkStation();
     QString GetUserName();
+    int GetTotalRst();
 
 protected:
     TestResult::TypeTestRst updateRst(const QString &strPath,

@@ -78,7 +78,7 @@ void login::on_pushButton_Login_clicked()
             bOk = true;
         }
     }
-    else if(m_pLogin->InitLogin(strHost)) {
+    else if(m_pLogin && m_pLogin->InitLogin(strHost)) {
         if(m_pLogin->VerifyLogin(strUser, strPwd, strErr))
         {
             m_strUser = strUser;
