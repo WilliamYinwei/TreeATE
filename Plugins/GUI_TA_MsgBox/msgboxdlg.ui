@@ -106,12 +106,20 @@ color: rgb(255, 255, 255);</string>
        <property name="text">
         <string>OK</string>
        </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>pushButton_Cancel</tabstop>
+  <tabstop>pushButton_OK</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
