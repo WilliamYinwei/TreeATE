@@ -110,8 +110,6 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
     if(NULL == m_pUploadRst) {
         m_pUploadRst = new TestProcess("Upload histroy results", (QObject*)m_parent);
 
-        connect(m_pUploadRst, SIGNAL(updateTestItemStatus(QString,QJsonObject,quint32)), this,
-                SLOT(on_updateTestItemStatus(QString,QJsonObject,quint32)));
         connect(m_pUploadRst, SIGNAL(testEngineFinished(QString, int)), this,
                 SLOT(on_testEngineFinished(QString, int)));
         m_lstDockWidget.append(m_pUploadRst->getDockWidget());
