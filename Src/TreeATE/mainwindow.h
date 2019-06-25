@@ -1,4 +1,4 @@
-///
+﻿///
 /// @brief         TreeATE's main window
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
@@ -127,6 +127,7 @@ private:
     QProcess*       m_pResultsWin;
     QProcess*       m_pEditWin;
     QStringList     m_lstLangFiles;
+    QString         m_strPreSN;
 };
 
 #endif // MAINWINDOW_H

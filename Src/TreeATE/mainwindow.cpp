@@ -1,4 +1,4 @@
-///
+﻿///
 /// @brief         TreeATE's main window
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     m_strAppDir = qApp->applicationDirPath();
+    m_strPreSN = "";
 
     ui->setupUi(this);
     ui->textBrowser_Log->document()->setMaximumBlockCount(1000);
@@ -201,7 +202,7 @@ void MainWindow::on_actionPlay_triggered()
     QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
     QMap<QString, QString> mapSN;
     int nCnt = lstSelPrj.count();
-    if(nCnt == 1) {
+    if(nCnt == 1) {        
         QString strSN = m_leTotalSN->text();
 
         QString pattern = m_pTestMgr->GetMgr().getBarCodeReg();
@@ -224,6 +225,17 @@ void MainWindow::on_actionPlay_triggered()
             m_leTotalSN->setFocus();
             return;
         }
+        if(!m_strPreSN.isEmpty() && m_strPreSN == strSN) {
+            if(QMessageBox::No == QMessageBox::question(this, tr("Question"),
+                                                      tr("The same barcode to play, are you sure?"),
+                                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+            {
+                m_leTotalSN->setFocus();
+                return;
+            }
+        }
+
+        m_strPreSN = strSN;
         mapSN.insert(lstSelPrj.at(0), strSN);
     }
     else if(nCnt <= 0) {
@@ -318,6 +330,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
 
 void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
 {
+    qDebug() << "on_updateTotalStatus: " << eStatus << " : " << n;
     QString strPgBC = TA_PROGRESS_BC_OK;
 
     if(eStatus == Unload) {
