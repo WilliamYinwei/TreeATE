@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TreeATE"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion "1.1.3"
 #define MyAppPublisher "David Yin"
 #define MyAppURL "https://blog.csdn.net/vivasoft/column/info/31202"
 #define MyAppExeName "TreeATE.exe"

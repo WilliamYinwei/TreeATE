@@ -127,6 +127,7 @@ private:
     QProcess*       m_pResultsWin;
     QProcess*       m_pEditWin;
     QStringList     m_lstLangFiles;
+    QString         m_strPreSN;
 };
 
 #endif // MAINWINDOW_H

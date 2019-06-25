@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     m_strAppDir = qApp->applicationDirPath();
+    m_strPreSN = "";
 
     ui->setupUi(this);
     ui->textBrowser_Log->document()->setMaximumBlockCount(1000);
@@ -219,11 +220,24 @@ void MainWindow::on_actionPlay_triggered()
             m_leTotalSN->setText(rx.cap(0));
         }
 
-        if(strSN.trimmed().isEmpty()) {
+        strSN = m_leTotalSN->text().trimmed();
+        if(strSN.isEmpty()) {
             QMessageBox::warning(this, tr("Warning"), tr("Please scan the product's barcode to play."));
             m_leTotalSN->setFocus();
             return;
         }
+
+        if(m_strPreSN == strSN){
+            if(QMessageBox::No == QMessageBox::question(this, tr("Question"),
+                                                    tr("The same barcode to play, are you sure?"),
+                                                    QMessageBox::Yes | QMessageBox::No,
+                                                    QMessageBox::No)) {
+                m_leTotalSN->setFocus();
+                return;
+            }
+        }
+
+        m_strPreSN = strSN;
         mapSN.insert(lstSelPrj.at(0), strSN);
     }
     else if(nCnt <= 0) {
