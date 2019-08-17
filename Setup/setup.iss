@@ -34,7 +34,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: "D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\*"; DestDir: "{app}"; Flags: recursesubdirs replacesameversion
 Source: "..\Example\TestDemo\*"; DestDir: "{app}\Example\TestDemo\"; Flags: recursesubdirs
 Source: "..\Example\TestDemoPy\*"; DestDir: "{app}\Example\TestDemoPy\"; Flags: recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

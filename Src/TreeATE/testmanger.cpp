@@ -140,7 +140,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
                 << "-l";
         pTestPrj->setProcessEnvironment(m_env);
         pTestPrj->start("TestEngine", lstPara);
-        //pTestPrj->waitForFinished(6000);
+        pTestPrj->waitForFinished(1000);
     }
 
     m_bIsLoaded = true;
