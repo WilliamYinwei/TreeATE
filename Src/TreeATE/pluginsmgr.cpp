@@ -33,6 +33,13 @@ MsgDispatchThread::MsgDispatchThread(int socket)
     m_socket = socket;
 }
 
+MsgDispatchThread::~MsgDispatchThread()
+{
+    requestInterruption();
+    quit();
+    wait();
+}
+
 void MsgDispatchThread::run()
 {
     TALocalSocket objSocket;
