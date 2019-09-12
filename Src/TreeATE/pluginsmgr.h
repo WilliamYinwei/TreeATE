@@ -25,7 +25,8 @@ class MsgDispatchThread : public QThread
     Q_OBJECT
 public:
     MsgDispatchThread(int socket);
-
+    ~MsgDispatchThread();
+    
 signals:
     QString msgRecived(const QString& strCmd);
 
