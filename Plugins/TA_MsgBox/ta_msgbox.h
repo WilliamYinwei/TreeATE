@@ -29,6 +29,7 @@ public slots:
     QString MsgBox(const QString& strPic, const QString& strMsg, const int type, const int mSec);
     int AsyncMsgBox(const QString& strPic, const QString& strMsg, const int type, const int mSec);
     QString CloseAsyncMsgBox(int nMsgBoxId);
+    QString GuiCmdProcess(const QString& cmd, int mSec);
 
 protected:
     QString cmdProcess(const QString& strCmd, int mSec);

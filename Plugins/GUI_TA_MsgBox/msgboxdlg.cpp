@@ -33,6 +33,7 @@ MsgBoxDlg::MsgBoxDlg(QWidget *parent) :
     setWindowFlags(windowFlags()|Qt::WindowTitleHint);
     ui->lineEdit->hide();
     ui->lineEdit->setText("");
+    m_movie = NULL;
 }
 
 MsgBoxDlg::~MsgBoxDlg()
@@ -46,6 +47,13 @@ MsgBoxDlg::~MsgBoxDlg()
     if(m_timer)
     {
         delete m_timer;
+    }
+
+    if(m_movie)
+    {
+        m_movie->stop();
+        ui->label_Pic->setMovie(NULL);
+        delete m_movie;
     }
 
     delete ui;
@@ -98,9 +106,15 @@ void MsgBoxDlg::SetShowData(const QString& strPathPic, const QString& strMsg, in
     QFile f(strPathPic);
     if(f.exists())
     {
-        QMovie *movie = new QMovie(strPathPic);
-        ui->label_Pic->setMovie(movie);
-        movie->start();
+        if(m_movie != NULL) {
+            m_movie->stop();
+            ui->label_Pic->setMovie(NULL);
+            delete m_movie;
+            m_movie = NULL;
+        }
+        m_movie = new QMovie(strPathPic, QByteArray(), this);
+        ui->label_Pic->setMovie(m_movie);
+        m_movie->start();
         ui->label_Pic->show();
     }
 

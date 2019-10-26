@@ -43,8 +43,6 @@ QString TA_MsgBox::cmdProcess(const QString &strCmd, int mSec)
         return TA_MSGBOX_TIMEOUT;
     }
 
-    qDebug() << "Send to Server: " << strCmd;
-
     // send data to server
     if(!taSocket.sendToServer(strCmd, 200)) {
         m_strLstErr = taSocket.getLastError();
@@ -61,6 +59,13 @@ QString TA_MsgBox::cmdProcess(const QString &strCmd, int mSec)
     qDebug() << "MsgBox Recieve: " << retData;
 
     return retData;
+}
+
+QString TA_MsgBox::GuiCmdProcess(const QString& cmd, int mSec)
+{
+    QString strCmd = "return " + m_strObj + "." + cmd;
+
+    return cmdProcess(strCmd, mSec);
 }
 
 QString TA_MsgBox::MsgBox(const QString& strPic, const QString& strMsg,

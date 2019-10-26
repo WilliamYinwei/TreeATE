@@ -12,6 +12,7 @@
 #include "login.h"
 #include "ui_login.h"
 #include <QTextCodec>
+#include <QTimer>
 #include <qmessagebox.h>
 
 #include "talogin.h"
@@ -19,10 +20,18 @@
 login::login(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::login)
-{
+{    
+    m_nSpendTime = 60; // 60 seconds
     ui->setupUi(this);
     ui->lineEdit_User->setFocus();
     m_lib.setFileName("TreeATELogin");
+    m_strCancelName = ui->pushButton_Cancel->text();
+
+    m_pTimeCancel = new QTimer(this);
+    connect(m_pTimeCancel, SIGNAL(timeout()), this, SLOT(on_timeout_Cancel()));
+    m_pTimeCancel->start();
+    m_pTimeCancel->start(1000); // 1 second
+
     if(m_lib.load())
     {
         CreateInstTALogin_t fnCreate = (CreateInstTALogin_t)m_lib.resolve("CreateTALogin");
@@ -50,6 +59,16 @@ login::~login()
         m_lib.unload();
     }
     delete ui;
+}
+
+void login::on_timeout_Cancel()
+{
+    m_nSpendTime--;
+    ui->pushButton_Cancel->setText(m_strCancelName
+                                   + "(" + QString::number(m_nSpendTime) + ")");
+    if(m_nSpendTime <= 0) {
+        close();
+    }
 }
 
 void login::SetHost(const QString& strHost)

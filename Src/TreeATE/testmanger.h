@@ -83,6 +83,7 @@ public:
     void SetPrjOption(const QString &prjName);
     bool Exit();
     QString GetPrjPath();
+    void ActiveWindows(int n);
 
 private:
     void addUnitItems(const QString& who, const QJsonObject& objData);

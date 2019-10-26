@@ -46,6 +46,13 @@ QList<QDockWidget*> TestManger::GetDockWidgetList()
     return m_lstDockWidget;
 }
 
+void TestManger::ActiveWindows(int n)
+{
+    if(n >= 0 && n < m_lstDockWidget.count()) {
+        m_lstDockWidget.at(n)->raise();
+    }
+}
+
 QDockWidget* TestManger::createLoopProgress(const QStringList& lstPrj)
 {
     QDockWidget* dockWidget = new QDockWidget(m_parent);
@@ -140,7 +147,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
                 << "-l";
         pTestPrj->setProcessEnvironment(m_env);
         pTestPrj->start("TestEngine", lstPara);
-        //pTestPrj->waitForFinished(6000);
+        pTestPrj->waitForFinished(1000);
     }
 
     m_bIsLoaded = true;
@@ -397,6 +404,7 @@ void TestManger::on_updateTestItemStatus(const QString& who,
 
 void TestManger::on_testEngineFinished(const QString& who, int nCode)
 {
+    qDebug() << who << " --- TestManger::on_testEngineFinished: " << nCode;
     m_treeWidget->expandAll();
     for (int column = 0; column < m_treeWidget->columnCount(); ++column)
         m_treeWidget->resizeColumnToContents(column);
@@ -419,12 +427,10 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     }
     else if(nCode == TA_UPLOAD_OK) {
         emit statusHisRst(Pass);
-        //emit updateTotalStatus(Ready, 0);
         return;
     }
     else if(nCode == TA_ERR_UPLOAD_HRST) {
         emit statusHisRst(Failed);
-        //emit updateTotalStatus(Ready, 0);
         return;
     }
 

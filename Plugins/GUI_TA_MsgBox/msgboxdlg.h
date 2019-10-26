@@ -43,6 +43,7 @@ private:
     class QThread*  m_pThreadTimer;
     int             m_totalTime;
     QString         m_strRetValue;
+    class QMovie *  m_movie;
 };
 
 #endif // MSGBOXDLG_H

@@ -108,6 +108,7 @@ private:
     void enableForStatus(eTestStatus eStatus);
     void showPara(const QString& who);
     void openSysCfg();
+    bool getNeedCheckNetwork();
 
 private:
     Ui::MainWindow  *ui;
@@ -128,6 +129,8 @@ private:
     QProcess*       m_pEditWin;
     QStringList     m_lstLangFiles;
     QString         m_strPreSN;
+    bool            m_isNetworkBreak;
+    int             m_LogoutTimeCnt;
 };
 
 #endif // MAINWINDOW_H

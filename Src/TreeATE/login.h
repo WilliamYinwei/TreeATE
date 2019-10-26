@@ -40,10 +40,15 @@ private slots:
 
     void on_lineEdit_Pwd_textChanged(const QString &arg1);
 
+    void on_timeout_Cancel();
+
 private:
     Ui::login *ui;
     TALogin* m_pLogin;
     QLibrary m_lib;
+    class QTimer* m_pTimeCancel;
+    int         m_nSpendTime;
+    QString     m_strCancelName;
 };
 
 #endif // LOGIN_H

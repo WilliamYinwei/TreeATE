@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_strAppDir = qApp->applicationDirPath();
     m_strPreSN = "";
+    m_isNetworkBreak = false;
+    m_LogoutTimeCnt = 0;
 
     ui->setupUi(this);
     ui->textBrowser_Log->document()->setMaximumBlockCount(1000);
@@ -184,6 +186,13 @@ void MainWindow::on_getSystemTime()
 {
     QString strCurr = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
     m_labelTime->setText(strCurr);
+    m_LogoutTimeCnt++;
+    QVariantMap vmSys = m_vaSysCfg.toMap();
+    if(vmSys["Logout"].toInt() > 0 &&
+            m_LogoutTimeCnt > vmSys["Logout"].toInt() * 3600) { // one hour
+        m_LogoutTimeCnt = 0;
+        on_actionLogin_triggered();
+    }
 }
 
 void MainWindow::on_actionLoading_triggered()
@@ -199,10 +208,17 @@ void MainWindow::on_actionLoading_triggered()
 
 void MainWindow::on_actionPlay_triggered()
 {
+    if(getNeedCheckNetwork() && m_isNetworkBreak) {
+        QMessageBox::critical(this, tr("Critical"),
+                              tr("Can't test, Please check the network and reload the test project before that."));
+        // history result
+        m_pTestMgr->ActiveWindows(1);
+        return;
+    }
     QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
     QMap<QString, QString> mapSN;
     int nCnt = lstSelPrj.count();
-    if(nCnt == 1) {        
+    if(nCnt == 1) {
         QString strSN = m_leTotalSN->text();
 
         QString pattern = m_pTestMgr->GetMgr().getBarCodeReg();
@@ -220,7 +236,8 @@ void MainWindow::on_actionPlay_triggered()
             m_leTotalSN->setText(rx.cap(0));
         }
 
-        if(strSN.trimmed().isEmpty()) {
+        strSN = m_leTotalSN->text().trimmed();
+        if(strSN.isEmpty()) {
             QMessageBox::warning(this, tr("Warning"), tr("Please scan the product's barcode to play."));
             m_leTotalSN->setFocus();
             return;
@@ -230,6 +247,7 @@ void MainWindow::on_actionPlay_triggered()
                                                       tr("The same barcode to play, are you sure?"),
                                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
             {
+
                 m_leTotalSN->setFocus();
                 return;
             }
@@ -267,10 +285,14 @@ void MainWindow::on_startLoading(int nCnt)
 void MainWindow::on_status_HistoryRst(eTestStatus nStatus)
 {
     if(m_labelHistoryRst) {
-        if(nStatus != Pass)
+        if(nStatus != Pass) {
+            m_isNetworkBreak = true;
             m_labelHistoryRst->setStyleSheet("background-color: rgb(255, 191, 0); margin:0.5px; color: rgb(140, 0, 0);");
-        else
+        }
+        else {
+            m_isNetworkBreak = false;
             m_labelHistoryRst->setStyleSheet("");
+        }
     }
 }
 
@@ -375,6 +397,10 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
         strStatus = tr("ERROR");
         strStyle = TA_STATUS_BC_EXCE;
         strPgBC = TA_PROGRESS_BC_EXCE;
+        if(m_pTestMgr) {
+            // test project error output window
+            m_pTestMgr->ActiveWindows(2);
+        }
         break;
     case Pass:
         strStatus = tr(TA_STATUS_PASS);
@@ -579,6 +605,10 @@ void MainWindow::on_actionLogin_triggered()
     {
         SetCurrUser(dlgLogin.m_strUser);
     }
+    else
+    {
+        this->close();
+    }
 }
 
 void MainWindow::on_dockWidget_Property_visibilityChanged(bool visible)
@@ -778,7 +808,7 @@ void MainWindow::on_action_Edit_triggered()
         QString strPath = m_labelPath->text();
         QFileInfo info(strPath);
         if(info.isFile()) {
-            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file            
+            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file
         }
         m_pEditWin->start("TreeATEDev.exe", lstPara);
         if(!m_pEditWin->waitForStarted(3000))
@@ -800,6 +830,15 @@ QString MainWindow::GetCurretLang()
 {
     QVariantMap vm = m_vaSysCfg.toMap();
     return vm["Language"].toString();
+}
+
+bool MainWindow::getNeedCheckNetwork()
+{
+    QVariantMap vm = m_vaSysCfg.toMap();
+    if(vm["CheckNetwork"].isNull()) {
+        return true;
+    }
+    return vm["CheckNetwork"].toBool();
 }
 
 void MainWindow::changeEvent(QEvent* e)

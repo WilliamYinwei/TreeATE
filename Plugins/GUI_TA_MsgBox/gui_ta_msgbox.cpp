@@ -81,6 +81,7 @@ bool GUI_TA_MsgBox::CloseAsyncMsgBox(int msgBoxId)
         MsgBoxDlg* pDlg = itor.value();
         if(pDlg) {
             pDlg->close();
+            delete pDlg;
         }
         m_lstDlg.remove(msgBoxId);
         return true;

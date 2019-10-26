@@ -43,25 +43,25 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Station Name:</string>
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBox_lang">
+       <property name="statusTip">
+        <string>need restart TreeATE</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_Station"/>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QLineEdit" name="lineEdit_Line"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Work Path</string>
-       </property>
-      </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
@@ -70,7 +70,31 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Station Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Work Path</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="lineEdit_Station"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Server:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLineEdit" name="lineEdit_Path"/>
@@ -84,30 +108,63 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Server:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
+     <item row="2" column="2">
       <widget class="QLineEdit" name="lineEdit_Server"/>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="statusTip">
-        <string/>
-       </property>
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
+     <item row="6" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QSpinBox" name="spinBox">
+         <property name="suffix">
+          <string>h</string>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>168</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Check Item:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_network">
+         <property name="text">
+          <string>Need check the network</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="comboBox_lang">
-       <property name="statusTip">
-        <string>need restart TreeATE</string>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Logout time:</string>
        </property>
       </widget>
      </item>
