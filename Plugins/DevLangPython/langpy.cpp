@@ -35,18 +35,20 @@ void LangPy::strOut(const QString &out)
 
 bool LangPy::loadScript(const QStringList &scriptFiles)
 {
-    //QString script;
     for(QStringList::const_reverse_iterator itor = scriptFiles.rbegin();
         itor != scriptFiles.rend(); ++itor)
     {
         QString scrFile = *itor;
-        /*
-        script = "import py_compile\r\npy_compile.compile('" + scrFile + "')";
-        m_mainModule.evalScript(script);
-        if(PythonQt::self()->hadError()) {
-            m_lastErr = TA_TR("Error at parser the python script");
-            return false;
-        }*/
+        QFileInfo fInfoPy(scrFile);
+        QFileInfo fileInfo(scrFile + "c");
+        if(!fileInfo.exists() || fInfoPy.lastModified() > fileInfo.lastModified()) {
+            QString script = "import py_compile\r\npy_compile.compile('" + scrFile + "')";
+            m_mainModule.evalScript(script);
+            if(PythonQt::self()->hadError()) {
+                m_lastErr = TA_TR("Error at parser the python script");
+                return false;
+            }
+        }
         m_mainModule.evalFile(scrFile);
         if(PythonQt::self()->hadError()) {
             m_lastErr = TA_TR("Error at parser the python file:") + scrFile;
