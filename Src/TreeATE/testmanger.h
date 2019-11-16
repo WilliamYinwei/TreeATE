@@ -75,6 +75,9 @@ public:
     int StartTest(const QString& strWorkLine, const QString& strStation,
                   const QString& strUser,
                   const QMap<QString, QString> &mapSN);
+    int StartOneTest(const QString& strWorkLine, const QString& strStation,
+                      const QString& strUser,
+                      const QMap<QString, QString> &mapSN, const QString& who);
     void StopTest();
     QList<QDockWidget*> GetDockWidgetList();
     void SpreadUnitItems();
@@ -123,7 +126,7 @@ private:
     QProcessEnvironment m_env;
     bool            m_bIsLoaded;
     QMap<QString, QStringList>  m_mapLstPara;
-    QMap<QString, quint32>      m_mapLoopCount;
+    QMap<QString, qint32>      m_mapLoopCount;
     QDockWidget*    m_dockLoopProgress;
     QMap<QString, QProgressBar*> m_mapLoopProgress;
     bool    m_bCheckboxEnable;

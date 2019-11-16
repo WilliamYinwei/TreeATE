@@ -175,8 +175,7 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
         }
 
         m_lstObj.append(pObj);
-        QScriptValue scriptObj = m_engine.newQObject(pObj);
-        m_engine.globalObject().setProperty(strModelObj, scriptObj);
+        AddModelObj(strModelObj, pObj);
     }
 
     if(!m_pMsgServer->isListening()) {
@@ -184,6 +183,12 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
         m_pMsgServer->listen(TA_LOCAL_SERVER_NAME);
     }
     return true;
+}
+
+void PluginsMgr::AddModelObj(QString strModelObj, QObject* pObj)
+{
+    QScriptValue scriptObj = m_engine.newQObject(pObj);
+    m_engine.globalObject().setProperty(strModelObj, scriptObj);
 }
 
 QString PluginsMgr::on_msg_process(const QString& strCmd)

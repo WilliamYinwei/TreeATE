@@ -66,6 +66,7 @@ public:
                     const QString& strPath);
     void UnloadPluginObj();
     QString GetLastError();
+    void AddModelObj(QString strModelObj, QObject* pObj);
 
 public slots:
     QString on_msg_process(const QString& strCmd);

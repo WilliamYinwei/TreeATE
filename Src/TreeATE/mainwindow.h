@@ -97,6 +97,13 @@ private slots:
 
     void on_status_HistoryRst(eTestStatus nStatus);
 
+    void on_treeWidget_Units_customContextMenuRequested(const QPoint &pos);
+
+    void on_start_curr_uint();
+
+public slots:
+    void on_start_unit(const QString& who);
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent* e);

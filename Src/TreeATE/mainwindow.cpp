@@ -1,7 +1,7 @@
 ﻿///
 /// @brief         TreeATE's main window
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU GPL v3
 ///
 /// Distributed under the GNU GPL v3 License
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_labelUser = new QLabel(tr("User name"), this);
     m_labelTime = new QLabel(tr("Current Time"), this);
     m_labelHistoryRst = new QLabel("History Result", this);
-    statusBar()->addWidget(m_labelPath, 1);    
+    statusBar()->addWidget(m_labelPath, 1);
     statusBar()->addPermanentWidget(m_labelHistoryRst, 0);
     statusBar()->addPermanentWidget(m_labelUser, 1);
     statusBar()->addPermanentWidget(m_labelTime, 0);
@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(m_labelStationName);
 
     m_pPluginsMgr = new PluginsMgr(this);
+    m_pPluginsMgr->AddModelObj("TreeATE_GUI", this);
 
     m_pResultsWin = new QProcess(this);
     m_pEditWin = new QProcess(this);
@@ -332,7 +333,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
     case Failed:
     case Pass:
     case Exception:
-    case Ready:        
+    case Ready:
         ui->actionLoading->setEnabled(true);
         ui->actionClose->setEnabled(true);
         ui->actionPlay->setEnabled(true);
@@ -852,4 +853,46 @@ void MainWindow::changeEvent(QEvent* e)
 void MainWindow::on_action_Help_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/article/details/86063014"));
+}
+
+void MainWindow::on_treeWidget_Units_customContextMenuRequested(const QPoint &pos)
+{
+    Q_UNUSED(pos)
+    QMenu* popMenu = new QMenu(ui->treeWidget_Units);
+    QAction* pStart = popMenu->addAction(tr("Start test"));
+    connect(pStart, SIGNAL(triggered(bool)), this, SLOT(on_start_curr_uint()));
+    popMenu->exec(QCursor::pos());
+}
+
+void MainWindow::on_start_curr_uint()
+{
+    QTreeWidgetItem* item = ui->treeWidget_Units->currentItem();
+    if(item)
+        on_start_unit(item->text(0));
+}
+
+void MainWindow::on_start_unit(const QString &who)
+{
+    QStringList lstSelPrj;
+
+    if(!who.isEmpty()) {
+        lstSelPrj << who;
+    }
+    else {
+        return;
+    }
+
+    ManyBarcodeDlg mbDlg(this);
+    mbDlg.SetProjectName(lstSelPrj);
+    mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
+    if(QDialog::Accepted != mbDlg.exec())
+        return;
+    QMap<QString, QString> mapSN = mbDlg.GetPrjsBarcodes();
+
+    ui->textBrowser_Log->append("Start: " + mapSN.values().join(","));
+
+    QVariantMap vmTemp = m_vaSysCfg.toMap();
+    m_pTestMgr->StartOneTest(vmTemp["LineName"].toString(),
+            vmTemp["Station"].toString(), m_strUser, mapSN, lstSelPrj.at(0));
+
 }
