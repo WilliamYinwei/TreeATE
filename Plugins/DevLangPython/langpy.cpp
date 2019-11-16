@@ -14,6 +14,8 @@
 #include "langpy.h"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QDateTime>
 
 LangPy::LangPy()
 {
