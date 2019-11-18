@@ -17,7 +17,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 
-LangPy::LangPy()
+LangPy::LangPy():m_sharedMemory("TreeATE_python_script")
 {
     PythonQt::init();
     m_mainModule = PythonQt::self()->getMainModule();
@@ -41,14 +41,18 @@ bool LangPy::loadScript(const QStringList &scriptFiles)
         itor != scriptFiles.rend(); ++itor)
     {
         QString scrFile = *itor;
-        QFileInfo fInfoPy(scrFile);
-        QFileInfo fileInfo(scrFile + "c");
-        if(!fileInfo.exists() || fInfoPy.lastModified() > fileInfo.lastModified()) {
-            QString script = "import py_compile\r\npy_compile.compile('" + scrFile + "')";
-            m_mainModule.evalScript(script);
-            if(PythonQt::self()->hadError()) {
-                m_lastErr = TA_TR("Error at parser the python script");
-                return false;
+        // concurrent load python file(py)
+        if (m_sharedMemory.create(1) && m_sharedMemory.error() != QSharedMemory::AlreadyExists)
+        {
+            QFileInfo fInfoPy(scrFile);
+            QFileInfo fileInfo(scrFile + "c");
+            if(!fileInfo.exists() || fInfoPy.lastModified() > fileInfo.lastModified()) {
+                QString script = "import py_compile\r\npy_compile.compile('" + scrFile + "')";
+                m_mainModule.evalScript(script);
+                if(PythonQt::self()->hadError()) {
+                    m_lastErr = TA_TR("Error at parser the python script");
+                    return false;
+                }
             }
         }
         m_mainModule.evalFile(scrFile);

@@ -15,6 +15,8 @@
 #include "imutlilang.h"
 #include "pythonqt.h"
 
+#include <QSharedMemory>
+
 class LangPy : public IMutliLang
 {
     Q_OBJECT
@@ -31,6 +33,7 @@ protected slots:
     void strOut(const QString& out);
 private:
     PythonQtObjectPtr m_mainModule;
+    QSharedMemory m_sharedMemory;
 };
 
 #endif // LANGPY_H
