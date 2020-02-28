@@ -2,7 +2,7 @@
 TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品或半成品测试自动化的一种开源软件工具平台。
 
 ## 目标
-对接工业物联网，打造简单易用的开源自动化测试软件工具。
+对接工业物联网，打造简单易用的工厂自动化测试开源软件工具。
 
 ## 系统架构
 ![TreeATE系统架构图](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/arch.png)
@@ -62,10 +62,6 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 在构建的目录下启动TreeATE.exe即可。例如作者的开发构建目录为：
 D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
 
-技术交流群
+技术交流
 -------------------------------------------------------------------------------
-QQ：499722676
-
-加入TreeATE开源开发
--------------------------------------------------------------------------------
-willage.yin@163.com
+QQ：226406709
