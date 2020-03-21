@@ -52,3 +52,4 @@ RESOURCES += \
     res.qrc
 
 CONFIG += qscintilla2
+DEFINES += QT_MESSAGELOGCONTEXT

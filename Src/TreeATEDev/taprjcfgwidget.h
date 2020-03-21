@@ -32,7 +32,7 @@ public:
 
     bool OpenPrjCfgFile(const QString& strFile);
     bool SavePrjCfgFile();
-    void CopyPublicPara(const QVariantList& vlPara);
+    QVariantList CopyPublicPara(const QString &strTPFileName);
 
     QAbstractItemModel* GetPluginModel();
     QAbstractItemModel* GetPrjInstModel();
@@ -48,7 +48,6 @@ private:
     QStandardItemModel* m_prjInstModel;
     QString             m_strFileName;
     QVariantMap         m_vmPrjCfg;
-    QVariantList        m_vlPublicPara;
     QLineEdit*          m_editName;
     QLineEdit*          m_editDesc;
     QLineEdit*          m_editRegex;

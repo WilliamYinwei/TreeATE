@@ -140,8 +140,11 @@ void MainWindow::on_action_About_triggered()
     dlg.exec();
 }
 
-bool MainWindow::OpenProjectFile(const QString& strPrjFile)
+bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
 {
+    if(m_strProjectFile == strPrjFile)
+        return false;
+
     QFile prjFile(strPrjFile);
 
     if(!prjFile.open(QIODevice::ReadOnly)) {
@@ -183,8 +186,11 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile)
     m_scriptEdit->SetScriptData(scrFile.readAll());
     scrFile.close();
 
-    m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
-                                    + fileInfo.completeBaseName() + ".tpx");
+    if(bTPX) {
+        m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
+                                        + fileInfo.completeBaseName() + ".tpx");
+    }
+
     m_pProMgrWidget->SetPublicPara(m_pUnitModel->GetPublicPara());
     m_pProMgrWidget->SetModels(m_pUnitModel->GetPublicModels());
     m_pProMgrWidget->SetPrjVersion(m_pUnitModel->GetPrjVersion());
@@ -241,7 +247,21 @@ void MainWindow::on_testitems_clicked(const QModelIndex& index)
 
 void MainWindow::on_model_file_clicked(const QModelIndex& index)
 {
-    m_pProMgrWidget->SetCurrentView(m_fileSysModel->filePath(index));
+    QT_TRY
+    {
+        QString strFile = m_fileSysModel->filePath(index);
+        m_pProMgrWidget->SetCurrentView(strFile);
+        QFileInfo fInfo(strFile);
+        QString strSuffix = fInfo.completeSuffix();
+        strSuffix = strSuffix.toLower();
+        if(strSuffix == "tp") {
+            OpenProjectFile(strFile, false);
+        }
+    }
+    QT_CATCH(...)
+    {
+        QMessageBox::warning(this, "Exception", "open tp file");
+    }
 }
 
 void MainWindow::on_menuView_Show()
@@ -275,6 +295,7 @@ void MainWindow::on_action_Save_triggered()
     m_pUnitModel->SetPublicPara(m_pProMgrWidget->GetPublicPara());
     m_pUnitModel->SetPrjVersion(m_pProMgrWidget->GetPrjVersion());
 
+    // save the .tp file
     QVariant vPrj = m_pUnitModel->GetPrjData();
     if(vPrj.isValid()) {
         QFile scrFile(m_strProjectFile);
@@ -290,6 +311,7 @@ void MainWindow::on_action_Save_triggered()
         bSave = true;
     }
 
+    // save the .tpx file
     if(m_pProMgrWidget->SavePrjCfgFile())
         bSave = true;
 

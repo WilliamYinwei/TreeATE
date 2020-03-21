@@ -62,6 +62,7 @@
 #include "testunititem.h"
 
 #include <QStringList>
+#include <QDebug>
 
 TestUnitItem::TestUnitItem(const QVector<QVariant> &data, TestUnitItem *parent)
 {
@@ -138,12 +139,22 @@ TestUnitItem *TestUnitItem::parent()
 
 bool TestUnitItem::removeChildren(int position, int count)
 {
-    if (position < 0 || position + count > m_childItems.size())
-        return false;
+    QT_TRY {
+        if (position < 0 || position + count > m_childItems.size())
+            return false;
 
-    for (int row = 0; row < count; ++row)
-        delete m_childItems.takeAt(position);
-
+        for (int row = 0; row < count; ++row) {
+            TestUnitItem* item = m_childItems.takeAt(position);
+            if(item) {
+                item->removeChildren(0, item->childCount());
+                //delete item;
+            }
+        }
+    }
+    QT_CATCH(...)
+    {
+        qDebug() << "exception remove Children of the TestUnitItem";
+    }
     return true;
 }
 
@@ -163,10 +174,17 @@ bool TestUnitItem::removeColumns(int position, int columns)
 
 bool TestUnitItem::setData(int column, const QVariant &value)
 {
-    if (column < 0 || column >= m_itemData.size())
-        return false;
+    QT_TRY {
+        if (column < 0 || column >= m_itemData.size())
+            return false;
 
-    m_itemData[column] = value;
+        m_itemData[column] = value;
+    }
+    QT_CATCH(...)
+    {
+        qDebug() << "exception: " + QString::number(column);
+    }
+
     return true;
 }
 

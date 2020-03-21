@@ -87,6 +87,7 @@ public:
     bool Exit();
     QString GetPrjPath();
     void ActiveWindows(int n);
+    bool IsTesting(const QString& who);
 
 private:
     void addUnitItems(const QString& who, const QJsonObject& objData);
@@ -127,6 +128,7 @@ private:
     bool            m_bIsLoaded;
     QMap<QString, QStringList>  m_mapLstPara;
     QMap<QString, qint32>      m_mapLoopCount;
+    QMap<QString, bool>        m_mapTesting;
     QDockWidget*    m_dockLoopProgress;
     QMap<QString, QProgressBar*> m_mapLoopProgress;
     bool    m_bCheckboxEnable;

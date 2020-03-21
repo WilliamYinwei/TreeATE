@@ -181,8 +181,22 @@ QStringList TestManger::SeletedPrj()
     return lstSel;
 }
 
+bool TestManger::IsTesting(const QString& who)
+{
+    auto itorStatus = m_mapTesting.find(who);
+    if(itorStatus != m_mapTesting.end()) {
+        return itorStatus.value();
+    }
+    return false;
+}
+
 void TestManger::on_startTesting(const QString& who)
 {
+    if(IsTesting(who)) {
+        qDebug() << "It's testing now, don't start test again.";
+        return;
+    }
+
     auto itor = m_prcTestEngine.find(who);
     if(itor == m_prcTestEngine.end())
         return;
@@ -212,6 +226,8 @@ void TestManger::on_startTesting(const QString& who)
 
     itor.value()->setProcessEnvironment(m_env);
     itor.value()->start("TestEngine", m_mapLstPara[who]);
+    m_mapTesting[who] = itor.value()->waitForStarted(3000);
+    qDebug() << "-------------------------Start Test for: " + who;
 }
 
 int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStation,
@@ -333,6 +349,7 @@ void TestManger::clearTempFile()
     m_lstTempFile.clear();
     m_mapLstPara.clear();
     m_mapLoopCount.clear();
+    m_mapTesting.clear();
 }
 
 void TestManger::UnloadUnits()
@@ -418,6 +435,7 @@ void TestManger::on_updateTestItemStatus(const QString& who,
 void TestManger::on_testEngineFinished(const QString& who, int nCode)
 {
     qDebug() << who << " --- TestManger::on_testEngineFinished: " << nCode;
+    m_mapTesting[who] = false;
     m_treeWidget->expandAll();
     for (int column = 0; column < m_treeWidget->columnCount(); ++column)
         m_treeWidget->resizeColumnToContents(column);

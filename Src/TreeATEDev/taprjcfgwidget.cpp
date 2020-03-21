@@ -23,6 +23,7 @@
 #include <QMessageBox>
 #include <QJsonParseError>
 #include <QJsonDocument>
+#include <QFileInfo>
 
 TAPrjCfgWidget::TAPrjCfgWidget(QWidget *parent) : QWidget(parent)
 {
@@ -160,11 +161,14 @@ bool TAPrjCfgWidget::SavePrjCfgFile()
 
         item = m_prjInstModel->item(i, 1);
         if(item) {
-            vmInst.insert("File", item->text());
+            vmInst.insert("File", item->text());            
+            // from tp file
+            QVariantList vl = CopyPublicPara(item->text());
+            if(!vl.isEmpty()) {
+                vmInst.insert("Parameter", vl);
+            }
         }
 
-        // from CopyPublicPara
-        vmInst.insert("Parameter", m_vlPublicPara);
         vlInst.append(vmInst);
     }
 
@@ -208,9 +212,28 @@ bool TAPrjCfgWidget::SavePrjCfgFile()
     return true;
 }
 
-void TAPrjCfgWidget::CopyPublicPara(const QVariantList& vlPara)
+QVariantList TAPrjCfgWidget::CopyPublicPara(const QString& strTPFileName)
 {
-    m_vlPublicPara = vlPara;
+    QVariantList vlPara;
+    QFileInfo finfo(m_strFileName);
+    QString strTPFile = finfo.absolutePath() + "/" + strTPFileName;
+
+    QFile prjFile(strTPFile);
+
+    if(!prjFile.open(QIODevice::ReadOnly)) {
+        QString errStr = prjFile.errorString() + ": " + strTPFile;
+        QMessageBox::warning(this, tr("Warning"), errStr);
+        return vlPara;
+    }
+
+    QJsonParseError jsErr;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(prjFile.readAll(), &jsErr);
+    prjFile.close();
+
+    QVariant vaPrj = jsonDoc.toVariant();
+    QVariantMap vmPrj = vaPrj.toMap();
+    QVariantMap vmPublic = vmPrj["Public"].toMap();
+    return vmPublic["Parameter"].toList();
 }
 
 QAbstractItemModel* TAPrjCfgWidget::GetPluginModel()

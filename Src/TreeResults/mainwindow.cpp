@@ -26,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {    
-    ui->setupUi(this);    
+    ui->setupUi(this);
+    showMaximized();
     setWindowState(Qt::WindowMaximized);
 
     m_pLeBarcode = new QLineEdit(this);

@@ -287,8 +287,8 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
         }
         else {
             m_prjCfgWidget->hide();
-            modelObj = m_tmModels;
-            modelPara = m_tmPublicPara;
+            modelObj = (QAbstractItemModel*)m_tmModels;
+            modelPara = (QAbstractItemModel*)m_tmPublicPara;
         }
 
         m_tvModels->blockSignals(true);
@@ -446,7 +446,6 @@ bool TAPropertyMgrWidget::OpenPrjCfgFile(const QString& strFile)
 
 bool TAPropertyMgrWidget::SavePrjCfgFile()
 {
-    m_prjCfgWidget->CopyPublicPara(GetPublicPara());
     return m_prjCfgWidget->SavePrjCfgFile();
 }
 

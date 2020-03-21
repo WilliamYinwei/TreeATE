@@ -31,11 +31,15 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QSizePolicy>
+#include <QFileSystemWatcher>
+#include <QReadWriteLock>
+#include <QReadLocker>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
+{    
     m_strAppDir = qApp->applicationDirPath();
     m_strPreSN = "";
     m_isNetworkBreak = false;
@@ -107,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     openSysCfg();
     unLoad();
+    openLogFile();
 }
 
 MainWindow::~MainWindow()
@@ -141,7 +146,54 @@ MainWindow::~MainWindow()
         delete m_pEditWin;
     }
 
+    if(m_pLogFile) {
+        m_pLogFile->close();
+        delete m_pLogFile;
+    }
+
     delete ui;
+}
+
+void MainWindow::openLogFile()
+{
+    QString strLogDir = qApp->applicationDirPath() + "\\Log\\TestEngine";
+    QDir dir(strLogDir);
+    if(!dir.exists())
+    {
+        ui->textBrowser_Log->append(tr("Not found the TestEngin log directory."));
+        return;
+    }
+
+    m_pFSWatcher = new QFileSystemWatcher();
+    connect(m_pFSWatcher, SIGNAL(directoryChanged(QString)), this,
+            SLOT(on_directory_changed(QString)));
+    connect(m_pFSWatcher, SIGNAL(fileChanged(QString)), this,
+            SLOT(on_file_changed(QString)));
+
+    QDateTime currDate = QDateTime::currentDateTime();
+    QString fName = currDate.toString("yyyy-MM-dd");
+    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    m_pFSWatcher->addPath(fName);
+
+    m_pLogFile = new QFile(fName);
+    m_pLogFile->open(QIODevice::ReadOnly);
+    m_tsLogFile.setDevice(m_pLogFile);
+
+}
+
+void MainWindow::on_directory_changed(QString dir)
+{
+
+}
+
+void MainWindow::on_file_changed(QString file)
+{
+    Q_UNUSED(file)
+    QString str = m_tsLogFile.readAll();
+    if(!str.isEmpty()) {
+        ui->textBrowser_Log->append(str);
+        m_tsLogFile.seek(m_tsLogFile.pos());
+    }
 }
 
 void MainWindow::unLoad()
@@ -217,6 +269,7 @@ void MainWindow::on_actionPlay_triggered()
         return;
     }
     QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
+
     QMap<QString, QString> mapSN;
     int nCnt = lstSelPrj.count();
     if(nCnt == 1) {
@@ -262,6 +315,16 @@ void MainWindow::on_actionPlay_triggered()
         return;
     }
     else {  // many test projects need SN
+        QString strPrjName = m_leTotalSN->text().trimmed();
+        if(strPrjName.isEmpty()) {
+            on_start_unit(lstSelPrj.at(0));
+            return;
+        }
+        if(lstSelPrj.contains(strPrjName)) {
+            on_start_unit(strPrjName);
+            return;
+        }
+
         ManyBarcodeDlg mbDlg(this);
         mbDlg.SetProjectName(lstSelPrj);
         mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
@@ -349,6 +412,11 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->action_Edit->setEnabled(true);
         break;
     }
+}
+
+void MainWindow::on_testingForTotal()
+{
+    on_updateTotalStatus(Testing, 0);
 }
 
 void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
@@ -871,8 +939,23 @@ void MainWindow::on_start_curr_uint()
         on_start_unit(item->text(0));
 }
 
+bool MainWindow::on_testing(const QString &who)
+{
+    if(m_pTestMgr)
+        return m_pTestMgr->IsTesting(who);
+    return false;
+}
+
+QReadWriteLock g_readLock;
+
 void MainWindow::on_start_unit(const QString &who)
 {
+    QReadLocker locker(&g_readLock);
+    if(m_pTestMgr->IsTesting(who)) {
+        qDebug() << "It's testing now, don't start test again.";
+        return;
+    }
+
     QStringList lstSelPrj;
 
     if(!who.isEmpty()) {
