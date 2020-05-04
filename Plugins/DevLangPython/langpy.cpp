@@ -36,7 +36,7 @@ void LangPy::strOut(const QString &out)
 }
 
 bool LangPy::loadScript(const QStringList &scriptFiles)
-{
+{    
     for(QStringList::const_reverse_iterator itor = scriptFiles.rbegin();
         itor != scriptFiles.rend(); ++itor)
     {

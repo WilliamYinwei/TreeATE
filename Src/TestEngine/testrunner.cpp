@@ -100,6 +100,42 @@ bool TestRunner::initScript(const QString& prjPath)
             return false;
         }
     }
+    else if(UnitMgr::Cpp == lang) {
+        if(m_pCurretLang)
+            delete m_pCurretLang;
+
+        QDir dir;
+        dir.setPath(qApp->applicationDirPath());
+        QStringList cppDlls = dir.entryList(QStringList() << "DevLangCpp*.dll", QDir::Files);
+        if(cppDlls.count() <= 0) {
+            m_lastErr = TA_TR("Can't found the DevLangCpp*.dll");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+        const QString strDllFile(cppDlls.at(0));
+        QLibrary myLib(strDllFile);
+        if(!myLib.load()) {
+            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        CreateInst myFunction = (CreateInst) myLib.resolve("CreateLanguageInst");
+        if (NULL == myFunction)
+        {
+            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        m_pCurretLang = (IMutliLang*)myFunction("cpp");
+        if(m_pCurretLang == NULL)
+        {
+            m_lastErr = TA_TR("The current language is NULL.");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+    }
 
     // load script
     if(!m_pCurretLang->loadScript(m_pUnitMgr->getScript())) {

@@ -151,7 +151,7 @@ bool TALocalSocket::returnFromServer(int mSecs, QString &data)
         return false;
     }
 
-    QByteArray buf = m_lsClient->readAll();    
+    QByteArray buf = m_lsClient->readAll();
     // is Async Reply, success to receive at server
     if(((uchar)buf.at(0) == TA_LOCAL_START_REP) && buf.at(1) == TA_LOCAL_FLAG_SYNC) {
         int rLen = buf.at(2);

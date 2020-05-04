@@ -30,7 +30,8 @@ public:
 
     typedef enum eTaLang{
         JavaScript,
-        Python
+        Python,
+        Cpp
     }TaLang;
 
     bool LoadUnitConfig(const QString& strFileName);
