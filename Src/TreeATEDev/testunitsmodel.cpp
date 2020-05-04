@@ -309,8 +309,7 @@ bool TestUnitsModel::SetPrjData(const QVariant& data)
     m_rootUnit->removeChildren(0, 1); // only one
     if(m_rootUnit->columnCount() > 2) {
         m_rootUnit->removeColumns(2, m_rootUnit->columnCount() - 2);
-    }
-
+    }    
     blockSignals(false); // block end
 
     QVariantMap vmPrj = data.toMap();

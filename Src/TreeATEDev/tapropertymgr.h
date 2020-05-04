@@ -72,12 +72,12 @@ private:
     QString             m_strPrjPath;
     QString             m_strPrjName;
     QString             m_strCurrName;
-    QListWidget*        m_lvFunction;
+    QListWidget*        m_lvFunction;   // function list of the test component
     QLabel*             m_labelImage;
-    QTableView*         m_tvPublicPara;
-    QTableView*         m_tvModels;
-    QStandardItemModel* m_tmPublicPara;
-    QStandardItemModel* m_tmModels;
+    QTableView*         m_tvPublicPara; // This View is the test project's public parameter
+    QTableView*         m_tvModels;     // test component view
+    QStandardItemModel* m_tmPublicPara; // public parameter's model
+    QStandardItemModel* m_tmModels;     // test component model
     TaScriptEdit*       m_scriptEdit;
     QStringList         m_lstApis;
     QSplitter*          m_splitter;

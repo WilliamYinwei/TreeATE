@@ -181,8 +181,22 @@ QStringList TestManger::SeletedPrj()
     return lstSel;
 }
 
+bool TestManger::IsTesting(const QString& who)
+{
+    auto itorStatus = m_mapTesting.find(who);
+    if(itorStatus != m_mapTesting.end()) {
+        return itorStatus.value();
+    }
+    return false;
+}
+
 void TestManger::on_startTesting(const QString& who)
 {
+    if(IsTesting(who)) {
+        qDebug() << "It's testing now, don't start test again.";
+        return;
+    }
+
     auto itor = m_prcTestEngine.find(who);
     if(itor == m_prcTestEngine.end())
         return;
@@ -212,6 +226,77 @@ void TestManger::on_startTesting(const QString& who)
 
     itor.value()->setProcessEnvironment(m_env);
     itor.value()->start("TestEngine", m_mapLstPara[who]);
+    m_mapTesting[who] = itor.value()->waitForStarted(3000);
+    qDebug() << "-------------------------Start Test for: " + who;
+}
+
+int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStation,
+                  const QString& strUser,
+                  const QMap<QString, QString> &mapSN, const QString& who)
+{
+    int nSelectedCnt = 0;
+    QMap<QString, TestProcess*>::iterator itor = m_prcTestEngine.find(who);
+    if(itor == m_prcTestEngine.end())
+        return nSelectedCnt;
+
+    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
+    if(NULL == parentItem)
+        return nSelectedCnt;
+
+    QTemporaryFile* tempFile = new QTemporaryFile();
+    m_lstTempFile.append(tempFile);
+    if(!tempFile->open())
+        return nSelectedCnt;
+
+    QFileInfo infoPrj(m_strPrjName);
+    QTextStream in(tempFile);
+
+    QTreeWidgetItemIterator itorItem(parentItem);
+    quint32 nCount = 0;
+    while(*itorItem) {
+        QTreeWidgetItem* item = *itorItem;
+
+        // path of test unit with selected
+        if(m_bCheckboxEnable || item->checkState(0) != Qt::Unchecked) {
+            QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
+            in << line;
+            nSelectedCnt++;
+        }
+        ++itorItem;
+        nCount++;
+        if(nCount >= itor.value()->getUnitsCount()) {
+            break;
+        }
+    }
+    tempFile->close();
+
+    if(parentItem->checkState(0) == Qt::Unchecked)
+        return nSelectedCnt;
+
+    // public parameter
+    QTemporaryFile* tempParaFile = new QTemporaryFile();
+    if(!tempParaFile->open())
+        return nSelectedCnt;
+
+    QJsonObject objPara = m_prjMgr.getTestProjPara(who);
+    tempParaFile->write(QJsonDocument::fromVariant(objPara.toVariantMap()).toJson());
+    tempParaFile->close();
+
+    QStringList lstPara;
+    lstPara << infoPrj.absolutePath() + "/" + m_prjMgr.getTestPrjFileName(who)
+            << "-m"
+            << tempFile->fileName()
+            << (m_prjMgr.getFailedToStop() ? "-S" : "")
+            << "-s" << strStation
+            << "-w" << strWorkLine
+            << "-u" << strUser
+            << "-b" << mapSN[who]
+            << "-p"
+            << tempParaFile->fileName();
+    m_mapLstPara.insert(who, lstPara);
+
+    emit startTesting(who);
+    return nSelectedCnt;
 }
 
 int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
@@ -238,63 +323,7 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
         m_mapLoopCount.insert(who, nCnt);
         m_mapLoopProgress[who]->setRange(0, nCnt);
 
-        QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-        if(NULL == parentItem)
-            continue;
-
-        QTemporaryFile* tempFile = new QTemporaryFile();
-        m_lstTempFile.append(tempFile);
-        if(!tempFile->open())
-            continue;
-
-        QFileInfo infoPrj(m_strPrjName);
-        QTextStream in(tempFile);
-
-        QTreeWidgetItemIterator itorItem(parentItem);
-        quint32 nCount = 0;
-        while(*itorItem) {
-            QTreeWidgetItem* item = *itorItem;
-
-            // path of test unit with selected
-            if(m_bCheckboxEnable || item->checkState(0) != Qt::Unchecked) {
-                QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
-                in << line;
-                nSelectedCnt++;
-            }
-            ++itorItem;
-            nCount++;
-            if(nCount >= itor.value()->getUnitsCount()) {
-                break;
-            }
-        }
-        tempFile->close();
-
-        if(parentItem->checkState(0) == Qt::Unchecked)
-            continue;
-
-        // public parameter
-        QTemporaryFile* tempParaFile = new QTemporaryFile();
-        if(!tempParaFile->open())
-            continue;
-
-        QJsonObject objPara = m_prjMgr.getTestProjPara(who);
-        tempParaFile->write(QJsonDocument::fromVariant(objPara.toVariantMap()).toJson());
-        tempParaFile->close();
-
-        QStringList lstPara;
-        lstPara << infoPrj.absolutePath() + "/" + m_prjMgr.getTestPrjFileName(who)
-                << "-m"
-                << tempFile->fileName()
-                << (m_prjMgr.getFailedToStop() ? "-S" : "")
-                << "-s" << strStation
-                << "-w" << strWorkLine
-                << "-u" << strUser
-                << "-b" << mapSN[who]
-                << "-p"
-                << tempParaFile->fileName();
-        m_mapLstPara.insert(who, lstPara);
-
-        emit startTesting(who);
+        nSelectedCnt += StartOneTest(strWorkLine, strStation, strUser, mapSN, who);
     }
 
     return nSelectedCnt;
@@ -320,6 +349,7 @@ void TestManger::clearTempFile()
     m_lstTempFile.clear();
     m_mapLstPara.clear();
     m_mapLoopCount.clear();
+    m_mapTesting.clear();
 }
 
 void TestManger::UnloadUnits()
@@ -405,6 +435,7 @@ void TestManger::on_updateTestItemStatus(const QString& who,
 void TestManger::on_testEngineFinished(const QString& who, int nCode)
 {
     qDebug() << who << " --- TestManger::on_testEngineFinished: " << nCode;
+    m_mapTesting[who] = false;
     m_treeWidget->expandAll();
     for (int column = 0; column < m_treeWidget->columnCount(); ++column)
         m_treeWidget->resizeColumnToContents(column);
@@ -443,7 +474,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     // for loop testing
     auto itor = m_mapLoopCount.find(who);
     if(itor != m_mapLoopCount.end()) {
-        quint32 nCnt = itor.value() - 1;
+        qint32 nCnt = itor.value() - 1;
 
         m_mapLoopCount[who] = nCnt;
 

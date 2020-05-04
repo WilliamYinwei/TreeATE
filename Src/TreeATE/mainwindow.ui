@@ -101,7 +101,7 @@
      <x>0</x>
      <y>0</y>
      <width>401</width>
-     <height>17</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -139,7 +139,6 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="action_Help"/>
-    <addaction name="actionHelp_for_project"/>
     <addaction name="separator"/>
     <addaction name="action_About"/>
    </widget>
@@ -301,7 +300,7 @@
    <property name="minimumSize">
     <size>
      <width>300</width>
-     <height>68</height>
+     <height>93</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -337,7 +336,7 @@
    <property name="minimumSize">
     <size>
      <width>100</width>
-     <height>33</height>
+     <height>38</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -448,11 +447,6 @@
   <action name="action_Help">
    <property name="text">
     <string>&amp;Help...</string>
-   </property>
-  </action>
-  <action name="actionHelp_for_project">
-   <property name="text">
-    <string>Help for &amp;project...</string>
    </property>
   </action>
   <action name="action_About">

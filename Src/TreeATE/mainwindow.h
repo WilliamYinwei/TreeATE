@@ -29,6 +29,7 @@ class MainWindow;
 }
 
 class QLineEdit;
+class QFileSystemWatcher;
 
 class MainWindow : public QMainWindow
 {
@@ -97,6 +98,19 @@ private slots:
 
     void on_status_HistoryRst(eTestStatus nStatus);
 
+    void on_treeWidget_Units_customContextMenuRequested(const QPoint &pos);
+
+    void on_start_curr_uint();
+
+    void on_directory_changed(QString);
+
+    void on_file_changed(QString);
+
+public slots:
+    void on_start_unit(const QString& who);
+    void on_testingForTotal();
+    bool on_testing(const QString& who);
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent* e);
@@ -109,6 +123,7 @@ private:
     void showPara(const QString& who);
     void openSysCfg();
     bool getNeedCheckNetwork();
+    void openLogFile();
 
 private:
     Ui::MainWindow  *ui;
@@ -131,6 +146,9 @@ private:
     QString         m_strPreSN;
     bool            m_isNetworkBreak;
     int             m_LogoutTimeCnt;
+    QFileSystemWatcher* m_pFSWatcher;
+    QTextStream     m_tsLogFile;
+    QFile*          m_pLogFile;
 };
 
 #endif // MAINWINDOW_H

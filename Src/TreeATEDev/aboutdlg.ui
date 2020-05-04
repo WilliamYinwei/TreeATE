@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>264</width>
-    <height>104</height>
+    <width>323</width>
+    <height>140</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,14 +59,14 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Version: 1.1.0 </string>
+          <string>Version: 1.2.2</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Copyright 2019 David Yin</string>
+          <string>Copyright 2020 David Yin</string>
          </property>
         </widget>
        </item>

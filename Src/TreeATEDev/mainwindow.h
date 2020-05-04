@@ -39,7 +39,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool OpenProjectFile(const QString& strPrjFile);
+    bool OpenProjectFile(const QString& strPrjFile, bool bTPX = true);
     void SetNewPrjDisabled();
 
 public slots:
@@ -104,17 +104,17 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    TaScriptEdit*   m_scriptEdit;
-    QTreeView*      m_tvModelsView;
-    QFileSystemModel* m_fileSysModel;
-    QTreeView*      m_tvTestItems;
-    TestUnitsModel* m_pUnitModel;
-    TAPropertyMgrWidget*    m_pProMgrWidget;
+    TaScriptEdit*   m_scriptEdit;       // script edit
+    QTreeView*      m_tvModelsView;     // file system view
+    QFileSystemModel* m_fileSysModel;   // file system model
+    QTreeView*      m_tvTestItems;      // test items view
+    TestUnitsModel* m_pUnitModel;       // test items model
+    TAPropertyMgrWidget*    m_pProMgrWidget; // project property manage widget
     QString         m_strScriptFile;
     QString         m_strProjectFile;
-    QMenu*          m_popMenuModelFile;
+    QMenu*          m_popMenuModelFile; // option menu of the file system view
     QAction*        m_actionRemoveFile;
-    QLabel*         m_labelPrjPath;
+    QLabel*         m_labelPrjPath;     // project path name on the status bar
     DlgFind*        m_pFindDlg;
 };
 

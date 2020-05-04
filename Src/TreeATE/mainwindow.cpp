@@ -1,7 +1,7 @@
 ﻿///
 /// @brief         TreeATE's main window
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU GPL v3
 ///
 /// Distributed under the GNU GPL v3 License
@@ -31,11 +31,15 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QSizePolicy>
+#include <QFileSystemWatcher>
+#include <QReadWriteLock>
+#include <QReadLocker>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
+{    
     m_strAppDir = qApp->applicationDirPath();
     m_strPreSN = "";
     m_isNetworkBreak = false;
@@ -64,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_labelUser = new QLabel(tr("User name"), this);
     m_labelTime = new QLabel(tr("Current Time"), this);
     m_labelHistoryRst = new QLabel("History Result", this);
-    statusBar()->addWidget(m_labelPath, 1);    
+    statusBar()->addWidget(m_labelPath, 1);
     statusBar()->addPermanentWidget(m_labelHistoryRst, 0);
     statusBar()->addPermanentWidget(m_labelUser, 1);
     statusBar()->addPermanentWidget(m_labelTime, 0);
@@ -99,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(m_labelStationName);
 
     m_pPluginsMgr = new PluginsMgr(this);
+    m_pPluginsMgr->AddModelObj("TreeATE_GUI", this);
 
     m_pResultsWin = new QProcess(this);
     m_pEditWin = new QProcess(this);
@@ -106,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     openSysCfg();
     unLoad();
+    openLogFile();
 }
 
 MainWindow::~MainWindow()
@@ -140,7 +146,54 @@ MainWindow::~MainWindow()
         delete m_pEditWin;
     }
 
+    if(m_pLogFile) {
+        m_pLogFile->close();
+        delete m_pLogFile;
+    }
+
     delete ui;
+}
+
+void MainWindow::openLogFile()
+{
+    QString strLogDir = qApp->applicationDirPath() + "\\Log\\TestEngine";
+    QDir dir(strLogDir);
+    if(!dir.exists())
+    {
+        ui->textBrowser_Log->append(tr("Not found the TestEngin log directory."));
+        return;
+    }
+
+    m_pFSWatcher = new QFileSystemWatcher();
+    connect(m_pFSWatcher, SIGNAL(directoryChanged(QString)), this,
+            SLOT(on_directory_changed(QString)));
+    connect(m_pFSWatcher, SIGNAL(fileChanged(QString)), this,
+            SLOT(on_file_changed(QString)));
+
+    QDateTime currDate = QDateTime::currentDateTime();
+    QString fName = currDate.toString("yyyy-MM-dd");
+    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    m_pFSWatcher->addPath(fName);
+
+    m_pLogFile = new QFile(fName);
+    m_pLogFile->open(QIODevice::ReadOnly);
+    m_tsLogFile.setDevice(m_pLogFile);
+
+}
+
+void MainWindow::on_directory_changed(QString dir)
+{
+
+}
+
+void MainWindow::on_file_changed(QString file)
+{
+    Q_UNUSED(file)
+    QString str = m_tsLogFile.readAll();
+    if(!str.isEmpty()) {
+        ui->textBrowser_Log->append(str);
+        m_tsLogFile.seek(m_tsLogFile.pos());
+    }
 }
 
 void MainWindow::unLoad()
@@ -216,6 +269,7 @@ void MainWindow::on_actionPlay_triggered()
         return;
     }
     QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
+
     QMap<QString, QString> mapSN;
     int nCnt = lstSelPrj.count();
     if(nCnt == 1) {
@@ -261,6 +315,16 @@ void MainWindow::on_actionPlay_triggered()
         return;
     }
     else {  // many test projects need SN
+        QString strPrjName = m_leTotalSN->text().trimmed();
+        if(strPrjName.isEmpty()) {
+            on_start_unit(lstSelPrj.at(0));
+            return;
+        }
+        if(lstSelPrj.contains(strPrjName)) {
+            on_start_unit(strPrjName);
+            return;
+        }
+
         ManyBarcodeDlg mbDlg(this);
         mbDlg.SetProjectName(lstSelPrj);
         mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
@@ -332,7 +396,7 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
     case Failed:
     case Pass:
     case Exception:
-    case Ready:        
+    case Ready:
         ui->actionLoading->setEnabled(true);
         ui->actionClose->setEnabled(true);
         ui->actionPlay->setEnabled(true);
@@ -348,6 +412,11 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->action_Edit->setEnabled(true);
         break;
     }
+}
+
+void MainWindow::on_testingForTotal()
+{
+    on_updateTotalStatus(Testing, 0);
 }
 
 void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
@@ -852,4 +921,61 @@ void MainWindow::changeEvent(QEvent* e)
 void MainWindow::on_action_Help_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/article/details/86063014"));
+}
+
+void MainWindow::on_treeWidget_Units_customContextMenuRequested(const QPoint &pos)
+{
+    Q_UNUSED(pos)
+    QMenu* popMenu = new QMenu(ui->treeWidget_Units);
+    QAction* pStart = popMenu->addAction(tr("Start test"));
+    connect(pStart, SIGNAL(triggered(bool)), this, SLOT(on_start_curr_uint()));
+    popMenu->exec(QCursor::pos());
+}
+
+void MainWindow::on_start_curr_uint()
+{
+    QTreeWidgetItem* item = ui->treeWidget_Units->currentItem();
+    if(item)
+        on_start_unit(item->text(0));
+}
+
+bool MainWindow::on_testing(const QString &who)
+{
+    if(m_pTestMgr)
+        return m_pTestMgr->IsTesting(who);
+    return false;
+}
+
+QReadWriteLock g_readLock;
+
+void MainWindow::on_start_unit(const QString &who)
+{
+    QReadLocker locker(&g_readLock);
+    if(m_pTestMgr->IsTesting(who)) {
+        qDebug() << "It's testing now, don't start test again.";
+        return;
+    }
+
+    QStringList lstSelPrj;
+
+    if(!who.isEmpty()) {
+        lstSelPrj << who;
+    }
+    else {
+        return;
+    }
+
+    ManyBarcodeDlg mbDlg(this);
+    mbDlg.SetProjectName(lstSelPrj);
+    mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
+    if(QDialog::Accepted != mbDlg.exec())
+        return;
+    QMap<QString, QString> mapSN = mbDlg.GetPrjsBarcodes();
+
+    ui->textBrowser_Log->append("Start: " + mapSN.values().join(","));
+
+    QVariantMap vmTemp = m_vaSysCfg.toMap();
+    m_pTestMgr->StartOneTest(vmTemp["LineName"].toString(),
+            vmTemp["Station"].toString(), m_strUser, mapSN, lstSelPrj.at(0));
+
 }
