@@ -2,11 +2,11 @@
 /// @brief         Test runner, parse the mutli-language and configure file
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "stdinc.h"
@@ -93,6 +93,42 @@ bool TestRunner::initScript(const QString& prjPath)
         }
 
         m_pCurretLang = (IMutliLang*)myFunction("py");
+        if(m_pCurretLang == NULL)
+        {
+            m_lastErr = TA_TR("The current language is NULL.");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+    }
+    else if(UnitMgr::Cpp == lang) {
+        if(m_pCurretLang)
+            delete m_pCurretLang;
+
+        QDir dir;
+        dir.setPath(qApp->applicationDirPath());
+        QStringList cppDlls = dir.entryList(QStringList() << "DevLangCpp*.dll", QDir::Files);
+        if(cppDlls.count() <= 0) {
+            m_lastErr = TA_TR("Can't found the DevLangCpp*.dll");
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+        const QString strDllFile(cppDlls.at(0));
+        QLibrary myLib(strDllFile);
+        if(!myLib.load()) {
+            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        CreateInst myFunction = (CreateInst) myLib.resolve("CreateLanguageInst");
+        if (NULL == myFunction)
+        {
+            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
+            TA_OUT_DEBUG_INFO << m_lastErr;
+            return false;
+        }
+
+        m_pCurretLang = (IMutliLang*)myFunction("cpp");
         if(m_pCurretLang == NULL)
         {
             m_lastErr = TA_TR("The current language is NULL.");

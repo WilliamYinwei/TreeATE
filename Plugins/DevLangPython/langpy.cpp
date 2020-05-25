@@ -3,11 +3,11 @@
 /// @brief         parser test for Python
 /// @author        David Yin  2019-01 willage.yin@163.com
 ///
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "stdinc.h"
@@ -36,7 +36,7 @@ void LangPy::strOut(const QString &out)
 }
 
 bool LangPy::loadScript(const QStringList &scriptFiles)
-{
+{    
     for(QStringList::const_reverse_iterator itor = scriptFiles.rbegin();
         itor != scriptFiles.rend(); ++itor)
     {

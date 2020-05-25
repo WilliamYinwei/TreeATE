@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TreeATE"
-#define MyAppVersion "1.2.2"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "David Yin"
 #define MyAppURL "https://blog.csdn.net/vivasoft/column/info/31202"
 #define MyAppExeName "TreeATE.exe"
@@ -37,6 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\*"; DestDir: "{app}"; Flags: recursesubdirs replacesameversion
 Source: "..\Example\TestDemo\*"; DestDir: "{app}\Example\TestDemo\"; Flags: recursesubdirs
 Source: "..\Example\TestDemoPy\*"; DestDir: "{app}\Example\TestDemoPy\"; Flags: recursesubdirs
+Source: "..\Example\TestCppDemo\*"; DestDir: "{app}\Example\TestCppDemo\"; Flags: recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

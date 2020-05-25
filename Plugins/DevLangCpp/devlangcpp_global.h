@@ -1,0 +1,12 @@
+#ifndef DEVLANGCPP_GLOBAL_H
+#define DEVLANGCPP_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(DEVLANGCPP_LIBRARY)
+#  define DEVLANGCPPSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define DEVLANGCPPSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // DEVLANGCPP_GLOBAL_H

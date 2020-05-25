@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    LocalSqlite
+    LocalSqlite \
+    TestCppDemo

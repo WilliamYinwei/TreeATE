@@ -1,0 +1,79 @@
+{
+    "BarCodeReg": "abc\\d{1}",
+    "Desc": "It's demo test",
+    "GUIPlugins": [
+        {
+            "Com": "GUI_TA_MsgBox.dll",
+            "Name": "msg"
+        }
+    ],
+    "Instance": [
+        {
+            "File": "TestCppDemo.tp",
+            "Name": "Demo11",
+            "Parameter": [
+                {
+                    "Desc": "asd",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "111",
+                    "Name": "Gdd",
+                    "Value": "111"
+                },
+                {
+                    "Desc": "all of this",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                }
+            ]
+        },
+        {
+            "File": "TestCppDemo.tp",
+            "Name": "Demo2",
+            "Parameter": [
+                {
+                    "Desc": "asd",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "111",
+                    "Name": "Gdd",
+                    "Value": "111"
+                },
+                {
+                    "Desc": "all of this",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                }
+            ]
+        },
+        {
+            "File": "TestCppDemo.tp",
+            "Name": "Demo3",
+            "Parameter": [
+                {
+                    "Desc": "asd",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "111",
+                    "Name": "Gdd",
+                    "Value": "111"
+                },
+                {
+                    "Desc": "all of this",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                }
+            ]
+        }
+    ],
+    "LoopCount": 1,
+    "Name": "TestDemos",
+    "failedToStop": false,
+    "stoppedForLoop": false
+}

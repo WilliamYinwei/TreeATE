@@ -2,11 +2,11 @@
 /// @brief         Load and manage the test items.
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "stdinc.h"
@@ -69,12 +69,20 @@ bool UnitMgr::LoadUnitConfig(const QString& strFileName)
     // This file name same to the configure file name
     QString strJs = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".js";
     QString strPy = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".py";
+    QString strCppDll = m_strPrjPath + "/" + cfgFileInfo.completeBaseName() + ".dll";
 
     QFileInfo scpFileInfo(strJs);
     if(scpFileInfo.isFile()){
         m_scriptFiles.append(strJs);
         m_currLang = UnitMgr::JavaScript;
         return loadScriptCom(getModelList(), m_strPrjPath, "js");
+    }
+
+    scpFileInfo.setFile(strCppDll);
+    if(scpFileInfo.isFile()) {
+        m_scriptFiles.append(strCppDll);
+        m_currLang = UnitMgr::Cpp;
+        return true;
     }
 
     // try again for python
@@ -170,26 +178,6 @@ bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath
         {
             m_scriptFiles.append(strScriptFile);
         }
-
-
-        /*
-        QFile scriptFile(strScriptFile);
-        if (!scriptFile.open(QIODevice::ReadOnly))
-        {
-            m_lastErr = strScriptFile + scriptFile.errorString();
-            return false;
-        }
-
-        QByteArray bData(scriptFile.readAll());
-        // process unicode
-        if(!bData.isEmpty() && bData.at(0) == 0x0E)
-        {
-            bData = bData.remove(0, 1);
-            bData = QByteArray::fromBase64(bData);
-        }
-        QString contents(bData);
-        scriptFile.close();
-        script += contents;*/
     }
 
     return true;

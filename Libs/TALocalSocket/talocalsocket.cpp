@@ -2,11 +2,11 @@
 /// @brief         Protocol of TreeATE between GUI and models
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "talocalsocket.h"
@@ -151,7 +151,7 @@ bool TALocalSocket::returnFromServer(int mSecs, QString &data)
         return false;
     }
 
-    QByteArray buf = m_lsClient->readAll();    
+    QByteArray buf = m_lsClient->readAll();
     // is Async Reply, success to receive at server
     if(((uchar)buf.at(0) == TA_LOCAL_START_REP) && buf.at(1) == TA_LOCAL_FLAG_SYNC) {
         int rLen = buf.at(2);

@@ -2,11 +2,11 @@
 /// @brief         TestEngine main
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "stdinc.h"
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(customMessageHandler);
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("TestEngine");
-    QCoreApplication::setApplicationVersion("1.1.0");
+    QCoreApplication::setApplicationVersion("1.3.0");
 
     MainTask mainTask(&app);
     QTimer::singleShot(0, &mainTask, SLOT(run()));

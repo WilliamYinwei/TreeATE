@@ -7,8 +7,8 @@ IDI_ICON1 ICON DISCARDABLE "ATE_dev.ico"
 #endif
 
 VS_VERSION_INFO VERSIONINFO
-    FILEVERSION 1,2,2,1
-    PRODUCTVERSION 1,2,2,1
+    FILEVERSION 1,2,2,2
+    PRODUCTVERSION 1,2,2,2
     FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
     FILEFLAGS VS_FF_DEBUG
@@ -25,12 +25,12 @@ VS_VERSION_INFO VERSIONINFO
             BEGIN
                 VALUE "CompanyName", "David Yin\0"
                 VALUE "FileDescription", "TreeATE Developer Tools for TreeATE\0"
-                VALUE "FileVersion", "1,2,2,1"
-                VALUE "ProductVersion", "1,2,2,1"
+                VALUE "FileVersion", "1,2,2,2"
+                VALUE "ProductVersion", "1,2,2,2"
                 VALUE "LegalCopyright", "Copyright 2020(C) David Yin\0"
-                VALUE "LegalTrademarks", "Tree ATE\0"
+                VALUE "LegalTrademarks", "TreeATE Dev\0"
                 VALUE "OriginalFilename", "TreeATEDev.exe\0"
-                VALUE "ProductName", "TreeATE\0"
+                VALUE "ProductName", "TreeATE Dev\0"
                 VALUE "InternalName", "TreeATEDev.exe\0"
            END
         END
