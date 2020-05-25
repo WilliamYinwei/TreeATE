@@ -2,11 +2,11 @@
 /// @brief         login the TreeATE dialog
 /// @author        David Yin  2018-12 willage.yin@163.com
 /// 
-/// @license       GNU GPL v3
+/// @license       GNU LGPL v3
 ///
-/// Distributed under the GNU GPL v3 License
+/// Distributed under the GNU LGPL v3 License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
 #include "login.h"
