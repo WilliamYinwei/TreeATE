@@ -229,23 +229,29 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         QString path = runLst.at(i);
 
         QString strScriptFunc = "setup_";
+        QString strSeparator = "================================================== ";
         bool bTeardown = false;
         if(path.at(0) == QChar('>')) {
             path = path.remove(0, 1);
             strScriptFunc = "teardown_";
             bTeardown = true;
+            strSeparator = "-------------------------------------------------- ";
         }
 
         QJsonObject objUnit = m_pUnitMgr->getUnitObj(path);
         TA_UNIT_TYPE eType = (TA_UNIT_TYPE)objUnit["Type"].toInt();
 
+        QString strUnitName = objUnit["Name"].toString();
+        std::cerr << strSeparator.toStdString()
+                  << strUnitName.toStdString()
+                  << std::endl;
         switch(eType) {
         case eTestProject:
         case eTestSuite:
-            strScriptFunc += objUnit["Name"].toString();
+            strScriptFunc += strUnitName;
             break;
         case eTestCase:
-            strScriptFunc = "test_" + objUnit["Name"].toString();
+            strScriptFunc = "test_" + strUnitName;
             break;
         }
 

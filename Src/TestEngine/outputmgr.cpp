@@ -237,7 +237,9 @@ bool OutputMgr::UploadResult()
 
             if(!uploadRst(QJsonValue::fromVariant(jsonDoc.toVariant()))) {
                 bFileLoad = false;
-                break;
+                // Fix the # bug
+                fRst.close();
+                return false;
             }
         }
         fRst.close();
