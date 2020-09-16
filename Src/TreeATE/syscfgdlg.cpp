@@ -80,10 +80,6 @@ void SysCfgDlg::SetSysConfig(const QVariant &sysCfg)
     {
         ui->comboBox_lang->setCurrentText(varMapCfg["Language"].toString());
     }
-    if(varMapCfg["CheckNetwork"].isValid())
-    {
-        ui->checkBox_network->setChecked(varMapCfg["CheckNetwork"].toBool());
-    }
     if(varMapCfg["Logout"].isValid())
     {
         ui->spinBox->setValue(varMapCfg["Logout"].toInt());
@@ -100,7 +96,6 @@ QVariantMap SysCfgDlg::GetDataValue()
     varMapCfg.insert("Station", ui->lineEdit_Station->text());
     varMapCfg.insert("Server", ui->lineEdit_Server->text());
     varMapCfg.insert("Language", ui->comboBox_lang->currentText());
-    varMapCfg.insert("CheckNetwork", ui->checkBox_network->isChecked());
     varMapCfg.insert("Logout", ui->spinBox->value());
 
     QVariantList vlPrj;

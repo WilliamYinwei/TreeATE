@@ -149,6 +149,7 @@ private:
     QFileSystemWatcher* m_pFSWatcher;
     QTextStream     m_tsLogFile;
     QFile*          m_pLogFile;
+    eTestStatus     m_totalStatus;
 };
 
 #endif // MAINWINDOW_H

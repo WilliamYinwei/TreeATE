@@ -237,7 +237,9 @@ bool OutputMgr::UploadResult()
 
             if(!uploadRst(QJsonValue::fromVariant(jsonDoc.toVariant()))) {
                 bFileLoad = false;
-                break;
+                fRst.close();
+                cerr << endl << "Failed to upload the history results to server, please check the network." << endl;
+                return false;
             }
         }
         fRst.close();

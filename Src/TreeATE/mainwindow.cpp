@@ -211,6 +211,7 @@ void MainWindow::SetCurrUser(const QString& strUser)
 
 void MainWindow::loadUnits(const QString& strPrjName)
 {
+    m_totalStatus = Unload; // initizate to status of the Unload
     QString strTitle;
     if(m_pTestMgr->LoadTestUnits(strPrjName, strTitle)) {
         foreach(auto dock, m_pTestMgr->GetDockWidgetList()) {
@@ -338,6 +339,7 @@ void MainWindow::on_actionPlay_triggered()
     QVariantMap vmTemp = m_vaSysCfg.toMap();
     int nSelectedCnt = m_pTestMgr->StartTest(vmTemp["LineName"].toString(),
             vmTemp["Station"].toString(), m_strUser, mapSN);
+    m_totalStatus = Unload; // initizate to status of the Unload '0'
     on_startLoading(nSelectedCnt);
 }
 
@@ -432,6 +434,10 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
     else {
         ui->progressBar->setValue(n);
     }
+
+    if(eStatus < m_totalStatus)
+        return;
+    m_totalStatus = eStatus;
 
     enableForStatus(eStatus);
 
