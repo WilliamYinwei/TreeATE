@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>131</height>
+    <width>391</width>
+    <height>161</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,28 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QCheckBox" name="checkBox_regex">
        <property name="text">
         <string>Use regular expressions</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Seach</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="checkBox_whole">
+       <property name="text">
+        <string>Whole worlds only</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
       <widget class="QCheckBox" name="checkBox_case">
        <property name="text">
         <string>Case sensitive</string>
@@ -46,17 +60,17 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="checkBox_whole">
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="checkBox_replace">
        <property name="text">
-        <string>Whole worlds only</string>
+        <string>Replace</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Seach for</string>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_replace">
+       <property name="enabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

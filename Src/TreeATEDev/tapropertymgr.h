@@ -44,6 +44,8 @@ public:
     void SetPrjVersion(const QString& strVer);
     QString GetPrjVersion();
     bool SavePrjCfgFile();
+    void RenameFilePrj(const QString& strNewName);
+    QString GetPrjName();
 
 signals:
     void propertyIsChanged();

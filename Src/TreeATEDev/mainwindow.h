@@ -96,7 +96,9 @@ private slots:
 
     void on_actionFind_triggered();
 
-    void on_dlgFind(QString text, bool wo, bool ca, bool re);
+    void on_dlgFind(QString text, QString reText, bool wo, bool ca, bool re, bool replace);
+
+    void on_actionRename_triggered();
 
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);

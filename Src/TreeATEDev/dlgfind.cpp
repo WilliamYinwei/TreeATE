@@ -15,12 +15,20 @@
 
 #include <QActionEvent>
 #include <QMessageBox>
+#include <QPushButton>
 
 DlgFind::DlgFind(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DlgFind)
 {
     ui->setupUi(this);
+    QPushButton* pApply = ui->buttonBox->button(QDialogButtonBox::Apply);
+    pApply->setAutoDefault(true);
+    pApply->setDefault(true);
+
+    QPushButton* pClose = ui->buttonBox->button(QDialogButtonBox::Close);
+    pClose->setAutoDefault(false);
+    pClose->setDefault(false);
 }
 
 DlgFind::~DlgFind()
@@ -52,6 +60,14 @@ void DlgFind::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button && button->text() == "Apply")
     {
-        emit seachForText(GetFindText(), IsWhole(), IsCase(), IsRegEx());
+        emit seachForText(GetFindText(),
+                          ui->lineEdit_replace->text(),
+                          IsWhole(), IsCase(), IsRegEx(),
+                          ui->checkBox_replace->isChecked());
     }
+}
+
+void DlgFind::on_checkBox_replace_clicked(bool checked)
+{
+    ui->lineEdit_replace->setEnabled(checked);
 }

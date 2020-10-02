@@ -36,6 +36,8 @@ public:
 
     QAbstractItemModel* GetPluginModel();
     QAbstractItemModel* GetPrjInstModel();
+    void RenameFilePrj(const QString& strNewName);
+    QString GetDefaultPrjName();
 
 signals:
     void dataHasChanged();

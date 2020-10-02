@@ -89,8 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->verticalLayout_main->addWidget(splitterMain);
 
     m_pFindDlg = new DlgFind(this);
-    connect(m_pFindDlg, SIGNAL(seachForText(QString,bool,bool,bool)), this,
-            SLOT(on_dlgFind(QString,bool,bool,bool)));
+    connect(m_pFindDlg, SIGNAL(seachForText(QString,QString,bool,bool,bool,bool)), this,
+            SLOT(on_dlgFind(QString,QString,bool,bool,bool,bool)));
 
     m_fileSysModel = new QFileSystemModel();
     m_fileSysModel->setReadOnly(false);
@@ -145,15 +145,25 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
     if(m_strProjectFile == strPrjFile)
         return false;
 
-    QFile prjFile(strPrjFile);
+    QFileInfo fileInfo(strPrjFile);
+    if(bTPX) {  // is tpx file
+        m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
+                                        + fileInfo.completeBaseName() + ".tpx");
+        // get tp file name from tpx
+        m_strProjectFile = fileInfo.absolutePath() + "/" + m_pProMgrWidget->GetPrjName();
+    }
+    else { // is tp file
+        m_strProjectFile == strPrjFile;
+    }
+
+    QFile prjFile(m_strProjectFile);
 
     if(!prjFile.open(QIODevice::ReadOnly)) {
-        QString errStr = prjFile.errorString() + ": " + strPrjFile;
+        QString errStr = prjFile.errorString() + ": " + m_strProjectFile;
         QMessageBox::warning(this, tr("Warning"), errStr);
         return false;
     }
 
-    m_strProjectFile = strPrjFile;
 
     QJsonParseError jsErr;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(prjFile.readAll(), &jsErr);
@@ -163,7 +173,7 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
     m_pUnitModel->SetPrjData(vaPrj);
     m_tvTestItems->expandAll();
 
-    QFileInfo fileInfo(strPrjFile);
+    fileInfo.setFile(m_strProjectFile);
     QString scriptFileJs = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".js";
     QString scriptFilePy = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".py";
     fileInfo.setFile(scriptFileJs);
@@ -186,10 +196,6 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
     m_scriptEdit->SetScriptData(scrFile.readAll());
     scrFile.close();
 
-    if(bTPX) {
-        m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
-                                        + fileInfo.completeBaseName() + ".tpx");
-    }
 
     m_pProMgrWidget->SetPublicPara(m_pUnitModel->GetPublicPara());
     m_pProMgrWidget->SetModels(m_pUnitModel->GetPublicModels());
@@ -214,7 +220,7 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
 void MainWindow::on_action_Open_triggered()
 {
     QString fileName =
-        QFileDialog::getOpenFileName(this, tr("Open project file"), "",  tr("Test Project(*.tp)"));
+        QFileDialog::getOpenFileName(this, tr("Open project file"), "",  tr("Test Project(*.tpx)"));
     if(fileName.isEmpty())
         return;
 
@@ -585,6 +591,7 @@ void MainWindow::on_actionRemove_modelFile()
 void MainWindow::SetNewPrjDisabled()
 {
     ui->action_New->setDisabled(true);
+    ui->actionRename->setDisabled(true);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -664,11 +671,49 @@ void MainWindow::on_actionFind_triggered()
     }
 }
 
-void MainWindow::on_dlgFind(QString text, bool wo, bool ca, bool re)
+void MainWindow::on_dlgFind(QString text, QString reText,
+                            bool wo, bool ca, bool re, bool replace)
 {
     m_scriptEdit->GetScriptEdit()->activateWindow();
     if(!m_scriptEdit->GetScriptEdit()->findFirst(text, re, ca, wo, true))
     {
         QMessageBox::information(this, "Info", "Not found: " + text);
+        return;
+    }
+    if(replace)
+    {
+        m_scriptEdit->GetScriptEdit()->replaceSelectedText(reText);
+    }
+}
+
+void MainWindow::on_actionRename_triggered()
+{
+    QFileInfo info(m_strProjectFile);
+    QString strDistPath = info.absolutePath() + "/";
+    QString oldFileName = info.baseName();
+    bool ok = false;
+    QString newFileName = QInputDialog::getText(this, "Rename", "Current name is: " + oldFileName +
+                                                "\r\n* Will be closed this system",
+                          QLineEdit::Normal, "", &ok);
+    if(ok && !oldFileName.isEmpty()) {
+        m_strProjectFile = strDistPath + newFileName + ".tp";
+        QFileInfo fileInfo;
+        QString scriptFileJs = strDistPath + oldFileName + ".js";
+        fileInfo.setFile(scriptFileJs);
+        if(fileInfo.isFile()) {
+            m_strScriptFile = strDistPath + newFileName + ".js";
+        }
+        else {
+            m_strScriptFile = strDistPath + newFileName + ".py";
+            scriptFileJs = strDistPath + oldFileName + ".py";
+        }
+
+        QFile::rename(scriptFileJs, m_strScriptFile);
+        QFile::rename(strDistPath + oldFileName + ".tp", m_strProjectFile);
+
+        m_pProMgrWidget->RenameFilePrj(newFileName);
+
+        QFile::rename(strDistPath + oldFileName + ".tpx", strDistPath + newFileName + ".tpx");
+        close();
     }
 }

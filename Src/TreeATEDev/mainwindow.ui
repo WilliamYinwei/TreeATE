@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>17</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProject">
@@ -47,6 +47,7 @@
     </property>
     <addaction name="action_New"/>
     <addaction name="action_Open"/>
+    <addaction name="actionRename"/>
     <addaction name="action_Save"/>
     <addaction name="separator"/>
     <addaction name="actionImport"/>
@@ -149,7 +150,7 @@
   </widget>
   <action name="action_New">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new.png</normaloff>:/new.png</iconset>
    </property>
    <property name="text">
@@ -161,7 +162,7 @@
   </action>
   <action name="action_Open">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/open.png</normaloff>:/open.png</iconset>
    </property>
    <property name="text">
@@ -173,7 +174,7 @@
   </action>
   <action name="action_Save">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/save.png</normaloff>:/save.png</iconset>
    </property>
    <property name="text">
@@ -195,7 +196,7 @@
   </action>
   <action name="actionImport">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/input.png</normaloff>:/input.png</iconset>
    </property>
    <property name="text">
@@ -204,7 +205,7 @@
   </action>
   <action name="action_Export">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/output.png</normaloff>:/output.png</iconset>
    </property>
    <property name="text">
@@ -213,7 +214,7 @@
   </action>
   <action name="actionShrink_items_Ctrl">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
@@ -228,7 +229,7 @@
   </action>
   <action name="actionSpread_items_Ctrl">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
@@ -278,7 +279,7 @@
   </action>
   <action name="actionUpItem">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/up.png</normaloff>:/up.png</iconset>
    </property>
    <property name="text">
@@ -287,7 +288,7 @@
   </action>
   <action name="actionDownItem">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/down.png</normaloff>:/down.png</iconset>
    </property>
    <property name="text">
@@ -301,14 +302,26 @@
   </action>
   <action name="actionFind">
    <property name="text">
-    <string>Find...</string>
+    <string>Find/Replace...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
    </property>
   </action>
+  <action name="actionReplace_Project_Name">
+   <property name="text">
+    <string>Replace Project Name ...</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="text">
+    <string>Rename...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -148,6 +148,25 @@ bool TAPrjCfgWidget::OpenPrjCfgFile(const QString& strFile)
     return true;
 }
 
+void TAPrjCfgWidget::RenameFilePrj(const QString& strNewName)
+{
+    for(int i = 0; i < m_prjInstModel->rowCount(); i++) {
+        QStandardItem* item = m_prjInstModel->item(i, 1);
+        item->setText(strNewName + ".tp");
+    }
+    QFileInfo finfo(m_strFileName);
+    m_strFileName = finfo.absolutePath() + "/" + strNewName + ".tpx";
+}
+
+QString TAPrjCfgWidget::GetDefaultPrjName()
+{
+    for(int i = 0; i < m_prjInstModel->rowCount(); i++) {
+        QStandardItem* item = m_prjInstModel->item(i, 1);
+        return item->text();
+    }
+    return "";
+}
+
 bool TAPrjCfgWidget::SavePrjCfgFile()
 {
     // project instance
