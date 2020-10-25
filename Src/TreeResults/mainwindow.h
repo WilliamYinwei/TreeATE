@@ -15,6 +15,7 @@
 
 #include <QMainWindow>
 #include <QSqlDatabase>
+#include <QMap>
 
 namespace Ui {
 class MainWindow;
@@ -45,6 +46,8 @@ private slots:
 
     void on_barcode_return_triggered();
 
+    void on_actionExport_triggered();
+
 private:
     int GetResultsCount();
     int GetPageCnt();
@@ -59,6 +62,9 @@ private:
     QSqlDatabase            m_dbSqlite;
     class QLineEdit*        m_pLeBarcode;
     class QLabel*           m_pLabelPageNum;
+    QMap<QString, QString>  m_mpPrjItems;
+    QMap<QString, QString>  m_mpCaseItems;
+    QMap<QString, QString>  m_mpDetailItems;
 
     int     m_currentPage;
     int     m_totalPage;

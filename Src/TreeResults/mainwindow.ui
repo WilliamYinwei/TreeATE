@@ -55,6 +55,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionExport"/>
    <addaction name="actionFirstPage"/>
    <addaction name="actionPrevPage"/>
    <addaction name="actionNextPage"/>
@@ -197,6 +198,18 @@
    </property>
    <property name="toolTip">
     <string>Last Page</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/output.png</normaloff>:/output.png</iconset>
+   </property>
+   <property name="text">
+    <string>Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Export results</string>
    </property>
   </action>
  </widget>
