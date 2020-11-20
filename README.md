@@ -1,3 +1,7 @@
+[![Github issues](https://img.shields.io/github/issues/WilliamYinwei/TreeATE)](https://github.com/WilliamYinwei/TreeATE/issues)
+[![Github release (latest SemVer)](https://img.shields.io/github/v/release/WilliamYinwei/TreeATE)](https://github.com/WilliamYinwei/TreeATE/releases/latest)
+[![Github All Releases](https://img.shields.io/github/downloads/WilliamYinwei/TreeATE/total)](https://github.com/WilliamYinwei/TreeATE/releases)
+
 # TreeATE
 TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品或半成品测试自动化的一种开源软件工具平台。
 
