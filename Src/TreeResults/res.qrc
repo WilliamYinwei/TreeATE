@@ -6,5 +6,6 @@
         <file>FristPage.png</file>
         <file>LastPage.png</file>
         <file>ate_rst.ico</file>
+        <file>output.png</file>
     </qresource>
 </RCC>

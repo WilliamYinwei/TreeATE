@@ -27,7 +27,8 @@ public:
     explicit DlgFind(QWidget *parent = 0);
     ~DlgFind();
 signals:
-    void seachForText(const QString& text, bool wo, bool ca, bool re);
+    void seachForText(const QString& text, const QString& reText,
+                      bool wo, bool ca, bool re, bool replace);
 
 protected:
     QString GetFindText();
@@ -38,6 +39,8 @@ protected:
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
+
+    void on_checkBox_replace_clicked(bool checked);
 
 private:
     Ui::DlgFind *ui;    

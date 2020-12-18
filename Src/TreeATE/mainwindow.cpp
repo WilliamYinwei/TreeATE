@@ -435,11 +435,11 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
         ui->progressBar->setValue(n);
     }
 
+    enableForStatus(eStatus);
+
     if(eStatus < m_totalStatus)
         return;
     m_totalStatus = eStatus;
-
-    enableForStatus(eStatus);
 
     QString strStatus;
     QString strStyle;
@@ -883,7 +883,7 @@ void MainWindow::on_action_Edit_triggered()
         QString strPath = m_labelPath->text();
         QFileInfo info(strPath);
         if(info.isFile()) {
-            lstPara << strPath.remove(strPath.length() - 1, 1); // remove the x (.tpx), need *.tp file
+            lstPara << strPath;
         }
         m_pEditWin->start("TreeATEDev.exe", lstPara);
         if(!m_pEditWin->waitForStarted(3000))

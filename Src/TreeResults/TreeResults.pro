@@ -16,12 +16,15 @@ CONFIG(debug, debug|release): DESTDIR = ../../bind
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    tasqlquerymodel.cpp
+    tasqlquerymodel.cpp \
+    dlgexport.cpp
 
 HEADERS  += mainwindow.h \
-    tasqlquerymodel.h
+    tasqlquerymodel.h \
+    dlgexport.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dlgexport.ui
 
 RC_FILE += ate_rst.rc
 

@@ -174,7 +174,7 @@ TAPropertyMgrWidget::~TAPropertyMgrWidget()
 
 void TAPropertyMgrWidget::SetPublicPara(const QVariantList& vlPara)
 {
-    m_tmPublicPara->clear();
+    m_tmPublicPara->removeRows(0, m_tmPublicPara->rowCount());
     for(int i = 0; i < vlPara.count(); i++) {
         QVariantMap vmPara = vlPara.at(i).toMap();
         m_tmPublicPara->setItem(i, 0, new QStandardItem(vmPara["Name"].toString()));
@@ -330,9 +330,24 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
     }
 }
 
+void TAPropertyMgrWidget::RenameFilePrj(const QString& strNewName)
+{
+    if(m_prjCfgWidget) {
+        m_prjCfgWidget->RenameFilePrj(strNewName);
+    }
+}
+
+QString TAPropertyMgrWidget::GetPrjName()
+{
+    if(m_prjCfgWidget) {
+        return m_prjCfgWidget->GetDefaultPrjName();
+    }
+    return "";
+}
+
 void TAPropertyMgrWidget::SetModels(const QVariantList& vlModels)
 {
-    m_tmModels->clear();
+    m_tmModels->removeRows(0, m_tmModels->rowCount());
     for(int i = 0; i < vlModels.count(); i++) {
         QVariantMap vmPara = vlModels.at(i).toMap();
         m_tmModels->setItem(i, 0, new QStandardItem(vmPara["Obj"].toString()));

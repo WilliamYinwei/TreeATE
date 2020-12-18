@@ -1,3 +1,7 @@
+[![Github issues](https://img.shields.io/github/issues/WilliamYinwei/TreeATE)](https://github.com/WilliamYinwei/TreeATE/issues)
+[![Github release (latest SemVer)](https://img.shields.io/github/v/release/WilliamYinwei/TreeATE)](https://github.com/WilliamYinwei/TreeATE/releases/latest)
+[![Github All Releases](https://img.shields.io/github/downloads/WilliamYinwei/TreeATE/total)](https://github.com/WilliamYinwei/TreeATE/releases)
+
 # TreeATE
 TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品或半成品测试自动化的一种开源软件工具平台。
 
@@ -53,6 +57,21 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 在Windows系统环境变量中添加如下2个环境变量，根据Python27的安装路径，例如
 * PYTHON_PATH  C:\Python27\
 * PYTHON_LIB  C:\Python27\libs\
+
+## 部署
+在开始菜单中找到Qt 5.7 32-bit for Desktop(MSVC 2013)命令行窗口进入构建的目录。
+例如：D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
+再执行以下命令
+* windeployqt TestEngine.exe
+* windeployqt TreeATE.exe
+* windeployqt TreeATEDev.exe
+* windeployqt TreeResults.exe
+
+### 打包成安装文件
+依赖 Inno Setup
+* 通过 Inno Setup 打开 Setup/Setup.iss文件
+* 找到第37行，根据本地实际输出的构建目录替换掉路径D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin
+* 再执行Build>>Compile(Ctrl+F9)或Run(F9)
 
 运行
 -------------------------------------------------------------------------------

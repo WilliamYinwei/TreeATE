@@ -13,6 +13,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tasqlquerymodel.h"
+#include "dlgexport.h"
 
 #include <QSqlQueryModel>
 #include <QSqlQuery>
@@ -21,6 +22,9 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QSqlError>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -63,6 +67,31 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView_detail->setAlternatingRowColors(true);
 
     ui->tableView_case->setMinimumHeight(300);
+
+    m_mpPrjItems.insert("Name of project", "tp.name");
+    m_mpPrjItems.insert("Path/Long Name of project", "tp.longname");
+    m_mpPrjItems.insert("Description of project", "tp.desc");
+    m_mpPrjItems.insert("Barcode/SN", "tp.barcode");
+    m_mpPrjItems.insert("Start time of project", "tp.time");
+    m_mpPrjItems.insert("Spend time of project", "tp.spend");
+    m_mpPrjItems.insert("User", "tp.user");
+    m_mpPrjItems.insert("Result of project", "tp.rst");
+    m_mpPrjItems.insert("Version", "tp.version");
+    m_mpPrjItems.insert("Working line", "tp.workingline");
+    m_mpPrjItems.insert("Station", "tp.station");
+
+    m_mpCaseItems.insert("Name of cases", "td.tc_name");
+    m_mpCaseItems.insert("Path/Long Name of cases", "td.tc_path");
+    m_mpCaseItems.insert("Start time of cases", "td.tc_time");
+    m_mpCaseItems.insert("Description of cases", "td.tc_desc");
+    m_mpCaseItems.insert("Result of cases", "td.tc_rst");
+    m_mpCaseItems.insert("Spend time of cases", "td.tc_spend");
+
+    m_mpDetailItems.insert("Name of details", "td.dr_name");
+    m_mpDetailItems.insert("Value/Description", "td.dr_value");
+    m_mpDetailItems.insert("Time of details", "td.dr_time");
+    m_mpDetailItems.insert("Standard", "td.dr_standard");
+    m_mpDetailItems.insert("Result of details", "td.dr_rst");
 }
 
 MainWindow::~MainWindow()
@@ -228,4 +257,104 @@ void MainWindow::on_actionSearch_triggered()
 void MainWindow::on_barcode_return_triggered()
 {
     on_actionSearch_triggered();
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    // query the old names
+    QSqlQuery query(m_dbSqlite);
+    query.prepare("SELECT DISTINCT name FROM TestProject");
+    if(!query.exec()) {
+        QMessageBox::warning(this, "Warnning", "No data in local database.");
+        return;
+    }
+    QStringList lstPrjName;
+    while(query.next()) {
+        lstPrjName.append(query.value(0).toString());
+    }
+
+    DlgExport dlgExport;
+    dlgExport.InitProjectName(lstPrjName, m_mpPrjItems.keys(),
+                              m_mpCaseItems.keys(), m_mpDetailItems.keys());
+    if(QDialog::Accepted != dlgExport.exec())
+        return;
+
+    QStringList strLstItems = dlgExport.GetSelectedItems();
+    if(strLstItems.isEmpty()) {
+        QMessageBox::warning(this, "Warnning", "Must be select one item.");
+        return;
+    }
+
+    QString strPrjName = dlgExport.GetProjectName();
+    if(strPrjName.isEmpty()) {
+        QMessageBox::warning(this, "Warnning", "Must be select project name.");
+        return;
+    }
+
+    QStringList sqlItems;
+    foreach(QString strItem, strLstItems) {
+        auto itor = m_mpPrjItems.find(strItem);
+        if(itor != m_mpPrjItems.end()) {
+            sqlItems.append(*itor);
+        }
+        else {
+            itor = m_mpCaseItems.find(strItem);
+            if(itor != m_mpCaseItems.end()) {
+                sqlItems.append(*itor);
+            }
+            else {
+                itor = m_mpDetailItems.find(strItem);
+                if(itor != m_mpDetailItems.end())
+                    sqlItems.append(*itor);
+            }
+        }
+    }
+
+    QString sqlQuery = "SELECT " + QString(sqlItems.join(','));
+    sqlQuery += " FROM TestProject AS tp \
+    LEFT JOIN (SELECT tc.parentId AS parentId, \
+    tc.name AS tc_name, \
+    tc.longname AS tc_path, \
+    tc.time AS tc_time, \
+    tc.desc AS tc_desc, \
+    tc.spend AS tc_spend, \
+    tc.rst AS tc_rst, \
+    der.name AS dr_name, \
+    der.time AS dr_time, \
+    der.desc AS dr_value, \
+    der.standard AS dr_standard, \
+    der.rst AS dr_rst \
+    FROM TestCase AS tc LEFT JOIN DetailRst AS der ON der.parentId = tc.id) AS td \
+    ON td.parentId = tp.id \
+    WHERE tp.time > datetime('" + dlgExport.GetStartTime() + "')";
+    sqlQuery += " AND tp.time < datetime('" + dlgExport.GetEndTime() + "') AND tp.name = '" + strPrjName + "'";
+
+    // export to csv file
+    QSqlQuery sqlRst(m_dbSqlite);
+    if(!sqlRst.exec(sqlQuery)) {
+        QMessageBox::critical(this, "Error", sqlRst.lastError().text());
+        return;
+    }
+
+    QFile file(dlgExport.GetExportFileName());
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::critical(this, "Error", file.errorString());
+        return;
+    }
+
+    QTextStream out(&file);
+    out.setCodec("ANSI");
+    out << strLstItems.join(',') << "\n";
+    const int columCnt = strLstItems.count();
+    QStringList strLine;
+    while(sqlRst.next()) {
+        strLine.clear();
+        for(int i = 0; i < columCnt; i++)
+            strLine.append(sqlRst.value(i).toString());
+        out << strLine.join(',') << "\n";
+    }
+    out.flush();
+    file.close();
+    QMessageBox::information(this, "Information", "Success to export: " + dlgExport.GetExportFileName());
 }
