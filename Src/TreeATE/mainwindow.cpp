@@ -435,11 +435,11 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
         ui->progressBar->setValue(n);
     }
 
+    enableForStatus(eStatus);
+
     if(eStatus < m_totalStatus)
         return;
     m_totalStatus = eStatus;
-
-    enableForStatus(eStatus);
 
     QString strStatus;
     QString strStyle;
