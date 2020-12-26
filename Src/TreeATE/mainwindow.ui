@@ -31,47 +31,10 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTreeWidget" name="treeWidget_Units">
-      <column>
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Path</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Description</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Status</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Result</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Standard</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Start Time</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Elapsed Time</string>
-       </property>
-      </column>
+     <widget class="QMdiArea" name="mdiArea">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
      </widget>
     </item>
     <item>
@@ -101,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>401</width>
-     <height>23</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -148,6 +111,10 @@
     </property>
     <addaction name="actionShrink_items"/>
     <addaction name="actionSpread_items"/>
+    <addaction name="separator"/>
+    <addaction name="actionTandem"/>
+    <addaction name="actionTile_View"/>
+    <addaction name="actionTab_View"/>
     <addaction name="separator"/>
     <addaction name="actionWindows"/>
    </widget>
@@ -239,6 +206,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="leftMargin">
         <number>6</number>
        </property>
@@ -249,7 +219,7 @@
         <number>6</number>
        </property>
        <property name="bottomMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="label_propertyName">
@@ -266,7 +236,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
-           <height>20</height>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -519,6 +489,33 @@
     <string>&amp;Devlop...</string>
    </property>
   </action>
+  <action name="actionTile_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Tile View</string>
+   </property>
+  </action>
+  <action name="actionTab_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tab View</string>
+   </property>
+  </action>
+  <action name="actionTandem">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tandem View</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -530,7 +527,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>treeWidget_Units</tabstop>
   <tabstop>textBrowser_Log</tabstop>
   <tabstop>tableWidget_Property</tabstop>
   <tabstop>pushButton_SaveCfg</tabstop>

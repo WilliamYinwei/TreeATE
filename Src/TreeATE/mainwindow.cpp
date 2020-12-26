@@ -35,6 +35,8 @@
 #include <QFileSystemWatcher>
 #include <QReadWriteLock>
 #include <QReadLocker>
+#include <QBrush>
+#include <QMdiSubWindow>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -42,23 +44,28 @@ MainWindow::MainWindow(QWidget *parent) :
 {    
     m_strAppDir = qApp->applicationDirPath();
     m_strPreSN = "";
-    m_isNetworkBreak = false;
     m_LogoutTimeCnt = 0;
 
     ui->setupUi(this);
     ui->textBrowser_Log->document()->setMaximumBlockCount(1000);
     ui->textBrowser_Log->moveCursor(QTextCursor::End);
 
-    ui->treeWidget_Units->hideColumn(TA_COLUMN_UNIT_PATH);
-    ui->treeWidget_Units->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->treeWidget_Units->setItemDelegateForColumn(TA_COLUMN_TEST_STATUS,
-                                                   new StatusDelegate(this));
+    ui->mdiArea->setViewMode(QMdiArea::TabbedView);
+    ui->mdiArea->setTabsMovable(true);
+    ui->mdiArea->setTabsClosable(false);
+    ui->mdiArea->setTabPosition(QTabWidget::South);
+    ui->mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);    
+
+    QBrush bg(Qt::SolidPattern);
+    bg.setColor(QColor(0x385f85)); // value:0x385f85 reference the blue.qss
+    ui->mdiArea->setBackground(bg);
 
     connect(ui->menu_View, SIGNAL(aboutToShow()), this, SLOT(on_menuView_Show()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->progressBar, SIGNAL(valueChanged(int)), this, SLOT(on_progressValueChanged(int)));
 
-    m_pTestMgr = new TestManger(ui->treeWidget_Units, ui->textBrowser_Log, this);
+    m_pTestMgr = new TestManger(ui->mdiArea, ui->textBrowser_Log, this);
     connect(m_pTestMgr, SIGNAL(updateTotalStatus(eTestStatus, int)), this,
             SLOT(on_updateTotalStatus(eTestStatus, int)));
     connect(m_pTestMgr, SIGNAL(statusHisRst(eTestStatus)), this, SLOT(on_status_HistoryRst(eTestStatus)));
@@ -92,7 +99,6 @@ MainWindow::MainWindow(QWidget *parent) :
     labelSN->setFixedHeight(48);
     labelSN->setFixedWidth(48);
     labelSN->setToolTip(tr("Please scan the barcode to load or play."));
-    QWidget::setTabOrder(m_leTotalSN, ui->treeWidget_Units);
 
     ui->mainToolBar->addWidget(labelSN);
     ui->mainToolBar->addWidget(m_leTotalSN);
@@ -198,6 +204,7 @@ void MainWindow::on_file_changed(QString file)
 
 void MainWindow::unLoad()
 {
+    m_totalStatus = Unload;
     m_pTestMgr->UnloadUnits();
     m_pPluginsMgr->UnloadPluginObj();
     on_updateTotalStatus(Unload, 0);
@@ -261,14 +268,7 @@ void MainWindow::on_actionLoading_triggered()
 }
 
 void MainWindow::on_actionPlay_triggered()
-{
-    if(getNeedCheckNetwork() && m_isNetworkBreak) {
-        QMessageBox::critical(this, tr("Critical"),
-                              tr("Can't test, Please check the network and reload the test project before that."));
-        // history result
-        m_pTestMgr->ActiveWindows(1);
-        return;
-    }
+{    
     QStringList lstSelPrj = m_pTestMgr->SeletedPrj();
 
     QMap<QString, QString> mapSN;
@@ -316,16 +316,6 @@ void MainWindow::on_actionPlay_triggered()
         return;
     }
     else {  // many test projects need SN
-        QString strPrjName = m_leTotalSN->text().trimmed();
-        if(strPrjName.isEmpty()) {
-            on_start_unit(lstSelPrj.at(0));
-            return;
-        }
-        if(lstSelPrj.contains(strPrjName)) {
-            on_start_unit(strPrjName);
-            return;
-        }
-
         ManyBarcodeDlg mbDlg(this);
         mbDlg.SetProjectName(lstSelPrj);
         mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
@@ -352,11 +342,9 @@ void MainWindow::on_status_HistoryRst(eTestStatus nStatus)
 {
     if(m_labelHistoryRst) {
         if(nStatus != Pass) {
-            m_isNetworkBreak = true;
             m_labelHistoryRst->setStyleSheet("background-color: rgb(255, 191, 0); margin:0.5px; color: rgb(140, 0, 0);");
         }
         else {
-            m_isNetworkBreak = false;
             m_labelHistoryRst->setStyleSheet("");
         }
     }
@@ -375,7 +363,6 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->actionShrink_items->setEnabled(false);
         ui->actionSpread_items->setEnabled(false);
         ui->actionOption->setEnabled(false);
-        ui->treeWidget_Units->setEnabled(true);
         m_leTotalSN->setEnabled(true);
         m_leTotalSN->setFocus();
         m_leTotalSN->selectAll();
@@ -391,7 +378,6 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->actionShrink_items->setEnabled(true);
         ui->actionSpread_items->setEnabled(true);
         ui->actionOption->setEnabled(false);
-        ui->treeWidget_Units->setEnabled(false);
         m_leTotalSN->setEnabled(false);
         ui->action_Edit->setEnabled(false);
         break;
@@ -407,7 +393,6 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
         ui->actionShrink_items->setEnabled(true);
         ui->actionSpread_items->setEnabled(true);
         ui->actionOption->setEnabled(true);
-        ui->treeWidget_Units->setEnabled(true);
         m_leTotalSN->setEnabled(true);
         m_leTotalSN->setFocus();
         m_leTotalSN->selectAll();
@@ -416,10 +401,6 @@ void MainWindow::enableForStatus(eTestStatus eStatus)
     }
 }
 
-void MainWindow::on_testingForTotal()
-{
-    on_updateTotalStatus(Testing, 0);
-}
 
 void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
 {
@@ -506,113 +487,9 @@ void MainWindow::on_actionClose_triggered()
     unLoad();
 }
 
-void MainWindow::on_treeWidget_Units_itemClicked(QTreeWidgetItem *item, int column)
-{
-    if(NULL == item)
-        return;
-
-    if(item->parent() == NULL) {// is not top level items
-        showPara(item->text(TA_COLUMN_UNIT_NAME));
-    }
-
-    if(column != 0)
-        return;
-
-    // clicked the items check box
-    if(Qt::Checked == item->checkState(0))
-    { // selected
-        int count = item->childCount();
-        if (count > 0)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                //child items selected
-                item->child(i)->setCheckState(0, Qt::Checked);
-                int x = item->child(i)->childCount();
-                for(int j = 0; j < x; j++)
-                {
-                    item->child(i)->child(j)->setCheckState(0, Qt::Checked);
-                }
-            }
-        }
-    }
-    else if(Qt::Unchecked == item->checkState(0))
-    { // unselected
-
-        int count = item->childCount();
-        if (count > 0)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                item->child(i)->setCheckState(0, Qt::Unchecked);
-                int x = item->child(i)->childCount();
-                for(int j = 0; j < x; j++)
-                {
-                    item->child(i)->child(j)->setCheckState(0, Qt::Unchecked);
-                }
-            }
-        }
-    }
-
-    updateParentItemClicked(item->parent());
-}
-
-void MainWindow::updateParentItemClicked(QTreeWidgetItem *parent)
-{
-    if (parent == NULL)
-    {
-        return;
-    }
-
-    // count of checkd on childs
-    int selectedCount = 0;
-    int selPartially = 0;
-    int childCount = parent->childCount();
-    for (int i = 0; i < childCount; i++)
-    {
-        QTreeWidgetItem *childItem = parent->child(i);
-        Qt::CheckState state = childItem->checkState(0);
-        if (state == Qt::Checked)
-        {
-            selectedCount++;
-        }
-        else if(state == Qt::PartiallyChecked)
-        {
-            selPartially++;
-        }
-    }
-
-    if (selectedCount <= 0 && selPartially <= 0)
-    {
-        parent->setCheckState(0, Qt::Unchecked);
-    }else if((selectedCount > 0 && selectedCount < childCount) ||
-             selPartially > 0)
-    {
-        //Partially Checked
-        parent->setCheckState(0, Qt::PartiallyChecked);
-    }else if(selectedCount == childCount)
-    {
-        //Checked
-        parent->setCheckState(0, Qt::Checked);
-    }
-
-    updateParentItemClicked(parent->parent());
-}
-
 void MainWindow::on_actionStop_triggered()
 {
     m_pTestMgr->StopTest();
-}
-
-void MainWindow::on_treeWidget_Units_itemChanged(QTreeWidgetItem *item, int column)
-{
-    if(NULL == item)
-        return;
-
-    if(column > 1)
-    {
-        ui->treeWidget_Units->scrollToItem(item, QAbstractItemView::PositionAtCenter);
-    }
 }
 
 void MainWindow::on_actionSpread_items_triggered()
@@ -929,59 +806,57 @@ void MainWindow::on_action_Help_triggered()
     QDesktopServices::openUrl(QUrl("https://blog.csdn.net/vivasoft/article/details/86063014"));
 }
 
-void MainWindow::on_treeWidget_Units_customContextMenuRequested(const QPoint &pos)
+void MainWindow::on_mdiArea_subWindowActivated(QMdiSubWindow *arg1)
 {
-    Q_UNUSED(pos)
-    QMenu* popMenu = new QMenu(ui->treeWidget_Units);
-    QAction* pStart = popMenu->addAction(tr("Start test"));
-    connect(pStart, SIGNAL(triggered(bool)), this, SLOT(on_start_curr_uint()));
-    popMenu->exec(QCursor::pos());
+    if(arg1) {
+        showPara(arg1->windowTitle());
+    }
 }
 
-void MainWindow::on_start_curr_uint()
-{
-    QTreeWidgetItem* item = ui->treeWidget_Units->currentItem();
-    if(item)
-        on_start_unit(item->text(0));
+void MainWindow::on_actionTile_View_triggered()
+{    
+    if(ui->mdiArea) {
+        ui->mdiArea->tileSubWindows();
+        ui->actionTile_View->setChecked(true);
+        ui->actionTab_View->setChecked(false);
+        ui->actionTandem->setChecked(false);
+    }
 }
 
-bool MainWindow::on_testing(const QString &who)
+void MainWindow::on_actionTab_View_triggered()
 {
-    if(m_pTestMgr)
-        return m_pTestMgr->IsTesting(who);
-    return false;
+    if(ui->mdiArea) {
+        ui->mdiArea->setViewMode(QMdiArea::TabbedView);
+        ui->actionTile_View->setChecked(false);
+        ui->actionTab_View->setChecked(true);
+        ui->actionTandem->setChecked(false);
+    }
 }
 
-QReadWriteLock g_readLock;
-
-void MainWindow::on_start_unit(const QString &who)
+void MainWindow::on_actionTandem_triggered()
 {
-    QReadLocker locker(&g_readLock);
-    if(m_pTestMgr->IsTesting(who)) {
-        qDebug() << "It's testing now, don't start test again.";
-        return;
+    if(ui->mdiArea) {
+        ui->actionTandem->setChecked(true);
+        ui->actionTile_View->setChecked(false);
+        ui->actionTab_View->setChecked(false);
+
+        ui->mdiArea->setViewMode(QMdiArea::SubWindowView);
+        const int nCnt = ui->mdiArea->subWindowList().size();
+        if(nCnt <= 0) {
+            return;
+        }
+
+        const int minWidth = 200;
+        QSize mdiSize = ui->mdiArea->size();
+        int width = mdiSize.width() / nCnt;
+        width = width < minWidth ? minWidth : width;
+        QSize subWinSize = QSize(width, mdiSize.height());
+        int i = 0;
+        foreach(QMdiSubWindow* pSubWin, ui->mdiArea->subWindowList()) {
+            ui->mdiArea->subWindowActivated(pSubWin);
+            pSubWin->resize(subWinSize);
+            pSubWin->move(width * i, 0/*pSubWin->pos().y()*/);
+            i++;
+        }
     }
-
-    QStringList lstSelPrj;
-
-    if(!who.isEmpty()) {
-        lstSelPrj << who;
-    }
-    else {
-        return;
-    }
-
-    ManyBarcodeDlg mbDlg(this);
-    mbDlg.SetProjectName(lstSelPrj);
-    mbDlg.SetBarcodeReg(m_pTestMgr->GetMgr().getBarCodeReg().trimmed());
-    if(QDialog::Accepted != mbDlg.exec())
-        return;
-    QMap<QString, QString> mapSN = mbDlg.GetPrjsBarcodes();
-
-    ui->textBrowser_Log->append("Start: " + mapSN.values().join(","));
-
-    QVariantMap vmTemp = m_vaSysCfg.toMap();
-    m_pTestMgr->StartOneTest(vmTemp["LineName"].toString(),
-            vmTemp["Station"].toString(), m_strUser, mapSN, lstSelPrj.at(0));
-
 }

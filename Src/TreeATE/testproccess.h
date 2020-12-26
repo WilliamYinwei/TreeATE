@@ -27,7 +27,7 @@ public:
     quint32 getUnitsCount();
 
 signals:
-    void updateTestItemStatus(const QString& who, const QJsonObject& objData, quint32 nCnt);
+    void updateTestItemStatus(const QString& who, const QJsonObject& objData);
     void testEngineFinished(const QString& who, int nCode);
 
 private slots:

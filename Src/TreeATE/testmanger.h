@@ -15,6 +15,7 @@
 
 #include "testproccess.h"
 #include "projectmgr.h"
+#include "tadefine.h"
 
 #include <QObject>
 #include <QTreeWidget>
@@ -24,16 +25,8 @@
 #include <QList>
 #include <QDockWidget>
 #include <QProgressBar>
+#include <QMdiArea>
 
-
-#define TA_COLUMN_UNIT_NAME     0
-#define TA_COLUMN_UNIT_PATH     1
-#define TA_COLUMN_UNIT_DESC     2
-#define TA_COLUMN_TEST_STATUS   3
-#define TA_COLUMN_TEST_RST      4
-#define TA_COLUMN_TEST_STAND    5
-#define TA_COLUMN_START_TIME    6
-#define TA_COLUMN_SPEND_TIME    7
 
 #define TA_ERR_UPLOAD_HRST      -9
 #define TA_LIST_OK          10000
@@ -48,6 +41,10 @@
 #define TA_STATUS_BC_EXCE   "background-color: rgb(255, 191, 0);font: 56pt \"Arial\"; color: rgb(140, 0, 0);"
 #define TA_STATUS_BC_NA     "font: 56pt \"Arial\";"
 
+#define TA_TAB_STATUS_FAIL   QColor(255, 0, 10)
+#define TA_TAB_STATUS_OK     QColor(0, 170, 10)
+#define TA_TAB_STATUS_EXCE   QColor(255, 191, 0)
+
 enum eTestStatus{
     Unload = 0,
     Loading = 1,
@@ -58,12 +55,13 @@ enum eTestStatus{
     Exception
 };
 
+class TATreeWidget;
 
 class TestManger : public QObject
 {
     Q_OBJECT
 public:
-    explicit TestManger(QTreeWidget* pWidget, QTextBrowser* pBrower, QObject *parent = 0);
+    explicit TestManger(QMdiArea* pMdi, QTextBrowser* pBrower, QObject *parent = 0);
     virtual ~TestManger();
 
     bool LoadTestUnits(const QString& strPrjFile, QString &strTitle);
@@ -91,11 +89,14 @@ public:
 
 private:
     void addUnitItems(const QString& who, const QJsonObject& objData);
-    void startItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt);
-    void updateItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt);
-    void detailItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt);
+    void startItemsData(const QString& who, const QJsonObject& objData);
+    void updateItemsData(const QString& who, const QJsonObject& objData);
+    void detailItemsData(const QString& who, const QJsonObject& objData);
     void clearTempFile();
     QDockWidget* createLoopProgress(const QStringList& lstPrj);
+    void clearTabIcon();
+    void setTabIconUUT(const QString &who, const QIcon& icon, const QColor &textColor);
+    TATreeWidget* findTreeWidget(const QString& who);
 
 signals:
     void updateTotalStatus(eTestStatus, int n);
@@ -105,7 +106,7 @@ signals:
 
 private slots:
     void on_updateTestItemStatus(const QString& who,
-                                 const QJsonObject& objData, quint32 nCnt);
+                                 const QJsonObject& objData);
     void on_testEngineFinished(const QString& who, int nCode);
     void on_startTesting(const QString& who);
 
@@ -117,12 +118,11 @@ private:
     QList<QDockWidget*>             m_lstDockWidget;
     QString         m_strPrjName;
     ProjectMgr      m_prjMgr;
-    QMap<QString, int>          m_whoPrj;
     QMap<QString, eTestStatus>  m_mpPrjTestStatus;
     eTestStatus     m_rstLevel;     // total result level
     quint32         m_nTestingCnt;
-    QTreeWidget*    m_treeWidget;
-    QTextBrowser*   m_textBrower;
+    QMdiArea*       m_mdiArea;
+    QTextBrowser*   m_logTextBrower;
     QString         m_strPrjPath;
     QProcessEnvironment m_env;
     bool            m_bIsLoaded;

@@ -14,23 +14,31 @@
         <translation>TreeATE</translation>
     </message>
     <message>
+        <location filename="../aboutdialog.ui" line="78"/>
+        <source>Copyright 2020 David Yin</source>
+        <translation>版权所有 2020 David Yin</translation>
+    </message>
+    <message>
         <location filename="../aboutdialog.ui" line="85"/>
         <source>Email: willage.yin@163.com</source>
         <translation>电子邮箱:willage.yin@163.com</translation>
     </message>
     <message>
-        <location filename="../aboutdialog.ui" line="78"/>
+        <location filename="../aboutdialog.ui" line="92"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;License: &lt;a href=&quot;https://www.gnu.org/licenses/lgpl-3.0.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GNU LGPL v3&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Copyright 2019 David Yin</source>
-        <translation>版权所有 2019 David Yin</translation>
+        <translation type="vanished">版权所有 2019 David Yin</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Email: willage.yin@163.com&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="vanished">电子邮箱 willage.yin@163.com</translation>
     </message>
     <message>
-        <location filename="../aboutdialog.ui" line="92"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;License: &lt;a href=&quot;https://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;许可证: &lt;a href=&quot;https://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;许可证: &lt;a href=&quot;https://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GNU GPL v3&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -41,119 +49,131 @@
         <translation>TreeATE</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="37"/>
-        <location filename="../mainwindow.ui" line="226"/>
+        <location filename="../mainwindow.ui" line="72"/>
+        <source>&amp;TreeATE</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="192"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="42"/>
         <source>Path</source>
-        <translation>路径</translation>
+        <translation type="vanished">路径</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="47"/>
-        <location filename="../mainwindow.ui" line="236"/>
+        <location filename="../mainwindow.ui" line="202"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="52"/>
-        <location filename="../mainwindow.ui" line="344"/>
+        <location filename="../mainwindow.ui" line="313"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="57"/>
         <source>Result</source>
-        <translation>结果</translation>
+        <translation type="vanished">结果</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="62"/>
         <source>Standard</source>
-        <translation>标准</translation>
+        <translation type="vanished">标准</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="67"/>
         <source>Start Time</source>
-        <translation>开始时间</translation>
+        <translation type="vanished">开始时间</translation>
     </message>
     <message>
         <source>Spend Time</source>
         <translation type="vanished">花费时间</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="109"/>
         <source>&amp;Users</source>
-        <translation>用户(&amp;U)</translation>
+        <translation type="vanished">用户(&amp;U)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="117"/>
+        <location filename="../mainwindow.ui" line="80"/>
         <source>&amp;Projects</source>
         <translation>测试工程(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="131"/>
+        <location filename="../mainwindow.ui" line="94"/>
         <source>&amp;System</source>
         <translation>系统(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="139"/>
+        <location filename="../mainwindow.ui" line="102"/>
         <source>&amp;Help</source>
         <translation>帮助(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="148"/>
+        <location filename="../mainwindow.ui" line="110"/>
         <source>&amp;View</source>
         <translation>视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="178"/>
+        <location filename="../mainwindow.ui" line="144"/>
         <source>Main Toolbar</source>
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="197"/>
-        <location filename="../mainwindow.ui" line="430"/>
+        <location filename="../mainwindow.ui" line="163"/>
+        <location filename="../mainwindow.ui" line="399"/>
         <source>Property</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="231"/>
+        <location filename="../mainwindow.ui" line="197"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="281"/>
+        <location filename="../mainwindow.ui" line="250"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="308"/>
+        <location filename="../mainwindow.ui" line="277"/>
         <source>Log</source>
         <translation>日志</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="385"/>
+        <location filename="../mainwindow.ui" line="354"/>
         <source>&amp;Loading...</source>
         <translation>加载(&amp;L)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="394"/>
+        <location filename="../mainwindow.ui" line="363"/>
         <source>&amp;Play</source>
         <translation>测试(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="397"/>
+        <location filename="../mainwindow.ui" line="366"/>
         <source>Play</source>
         <translation>测试</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="497"/>
+        <source>&amp;Tile View</source>
+        <translation>平铺视图(&amp;T)</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="508"/>
+        <source>Tab View</source>
+        <translation>标签全屏视图</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="516"/>
+        <source>Tandem View</source>
+        <translation>并排视图</translation>
     </message>
     <message>
         <source>&amp;Chinese</source>
         <translation type="vanished">中文(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="409"/>
+        <location filename="../mainwindow.ui" line="378"/>
         <source>&amp;Stop</source>
         <translation>停止(&amp;S)</translation>
     </message>
@@ -162,94 +182,92 @@
         <translation type="vanished">语言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="72"/>
         <source>Elapsed Time</source>
-        <translation>用时</translation>
+        <translation type="vanished">用时</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="412"/>
+        <location filename="../mainwindow.ui" line="381"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="427"/>
+        <location filename="../mainwindow.ui" line="396"/>
         <source>Proper&amp;ty...</source>
         <translation>属性(&amp;T)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="435"/>
+        <location filename="../mainwindow.ui" line="404"/>
         <source>&amp;Close</source>
         <translation>关闭(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="440"/>
+        <location filename="../mainwindow.ui" line="409"/>
         <source>&amp;Login...</source>
         <translation>登录(&amp;L)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="445"/>
+        <location filename="../mainwindow.ui" line="414"/>
         <source>E&amp;xit</source>
         <translation>退出(&amp;x)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="450"/>
+        <location filename="../mainwindow.ui" line="419"/>
         <source>&amp;Help...</source>
         <translation>帮助(&amp;H)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="455"/>
         <source>Help for &amp;project...</source>
-        <translation>测试工程帮助(&amp;P)...</translation>
+        <translation type="vanished">测试工程帮助(&amp;P)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="460"/>
+        <location filename="../mainwindow.ui" line="424"/>
         <source>&amp;About...</source>
         <translation>关于(&amp;A)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="465"/>
+        <location filename="../mainwindow.ui" line="429"/>
         <source>&amp;Log</source>
         <translation>日志(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="470"/>
+        <location filename="../mainwindow.ui" line="434"/>
         <source>&amp;Output</source>
         <translation>输出(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="479"/>
-        <location filename="../mainwindow.ui" line="482"/>
+        <location filename="../mainwindow.ui" line="443"/>
+        <location filename="../mainwindow.ui" line="446"/>
         <source>Spread items</source>
         <translation>展开测试项</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="494"/>
-        <location filename="../mainwindow.ui" line="497"/>
+        <location filename="../mainwindow.ui" line="458"/>
+        <location filename="../mainwindow.ui" line="461"/>
         <source>Shrink items</source>
         <translation>收缩测试项</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="505"/>
+        <location filename="../mainwindow.ui" line="469"/>
         <source>System o&amp;ptions...</source>
         <translation>系统选项(&amp;p)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="510"/>
+        <location filename="../mainwindow.ui" line="474"/>
         <source>&amp;Option...</source>
         <translation>选项(&amp;O)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="515"/>
+        <location filename="../mainwindow.ui" line="479"/>
         <source>&amp;Results...</source>
         <translation>本地测试结果(&amp;R)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="520"/>
+        <location filename="../mainwindow.ui" line="484"/>
         <source>Windows</source>
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="525"/>
+        <location filename="../mainwindow.ui" line="489"/>
         <source>&amp;Devlop...</source>
         <translation>开发(&amp;D)...</translation>
     </message>
@@ -258,116 +276,119 @@
         <translation type="vanished">英语(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="63"/>
+        <location filename="../mainwindow.cpp" line="74"/>
         <source>Path of test project</source>
         <translation>测试工程路径</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="64"/>
+        <location filename="../mainwindow.cpp" line="75"/>
         <source>User name</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="65"/>
+        <location filename="../mainwindow.cpp" line="76"/>
         <source>Current Time</source>
         <translation>当前时间</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="90"/>
+        <location filename="../mainwindow.cpp" line="101"/>
         <source>Please scan the barcode to load or play.</source>
         <translation>请扫码加载测试工程或开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="98"/>
+        <location filename="../mainwindow.cpp" line="108"/>
         <source>Line and station name.</source>
         <translation>产线和工位名称.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="212"/>
-        <location filename="../mainwindow.cpp" line="231"/>
-        <location filename="../mainwindow.cpp" line="792"/>
+        <location filename="../mainwindow.cpp" line="169"/>
+        <source>Not found the TestEngin log directory.</source>
+        <translation>没有找到TestEngine日志文件夹</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="286"/>
+        <location filename="../mainwindow.cpp" line="744"/>
         <source>Critical</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="213"/>
         <source>Can&apos;t test, Please check the network and reload the test project before that.</source>
-        <translation>不能测试，请检查网络后重新加载测试工程</translation>
+        <translation type="vanished">不能测试，请检查网络后重新加载测试工程</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="232"/>
+        <location filename="../mainwindow.cpp" line="287"/>
         <source>Please scan the barcode for the correct rules, refer the project option.</source>
         <translation>请根据工程选项中的条码规则扫描正确的条码.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="241"/>
-        <location filename="../mainwindow.cpp" line="260"/>
+        <location filename="../mainwindow.cpp" line="296"/>
+        <location filename="../mainwindow.cpp" line="315"/>
         <source>Warning</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="241"/>
+        <location filename="../mainwindow.cpp" line="296"/>
         <source>Please scan the product&apos;s barcode to play.</source>
         <translation>请扫产品条码开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="246"/>
+        <location filename="../mainwindow.cpp" line="301"/>
         <source>Question</source>
         <translation>询问</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="247"/>
+        <location filename="../mainwindow.cpp" line="302"/>
         <source>The same barcode to play, are you sure?</source>
         <translation>该条码刚才已测试，确定是否重测</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="260"/>
+        <location filename="../mainwindow.cpp" line="315"/>
         <source>Please selected the test item to play.</source>
         <translation>请选择测试项开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="360"/>
-        <location filename="../mainwindow.cpp" line="374"/>
+        <location filename="../mainwindow.cpp" line="412"/>
+        <location filename="../mainwindow.cpp" line="430"/>
         <source>Unload</source>
         <translation>未加载</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="378"/>
+        <location filename="../mainwindow.cpp" line="434"/>
         <source>Loading...</source>
         <translation>加载中...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="383"/>
+        <location filename="../mainwindow.cpp" line="439"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="387"/>
+        <location filename="../mainwindow.cpp" line="443"/>
         <source>GO...</source>
         <translation>测试中...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="397"/>
+        <location filename="../mainwindow.cpp" line="453"/>
         <source>ERROR</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="702"/>
+        <location filename="../mainwindow.cpp" line="654"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="782"/>
+        <location filename="../mainwindow.cpp" line="734"/>
         <source>Info</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="782"/>
+        <location filename="../mainwindow.cpp" line="734"/>
         <source>No matching loadable test project, refer the System options.</source>
         <translation>没有匹配可加载的测试工程，请参考系统选项.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="793"/>
+        <location filename="../mainwindow.cpp" line="745"/>
         <source>Please scan the SN for the correct rules, refer the project option.</source>
         <translation>请根据工程选项中的条码规则扫描正确的条码.</translation>
     </message>
@@ -443,7 +464,7 @@
         <translation>创建GUI插件实例失败.</translation>
     </message>
     <message>
-        <location filename="../pluginsmgr.cpp" line="199"/>
+        <location filename="../pluginsmgr.cpp" line="204"/>
         <source>Script exception at line(%1):%2</source>
         <translation>脚本异常在(%1)行:%2</translation>
     </message>
@@ -514,7 +535,7 @@
         <translation>TreeATE正在运行.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="202"/>
+        <location filename="../mainwindow.cpp" line="263"/>
         <source>Open Test Project</source>
         <translation>打开测试工程</translation>
     </message>
@@ -567,50 +588,101 @@
         <translation>小时</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="135"/>
         <source>Check Item:</source>
-        <translation>检查项</translation>
+        <translation type="vanished">检查项</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="142"/>
         <source>Need check the network</source>
-        <translation>需要检查网络</translation>
+        <translation type="vanished">需要检查网络</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="167"/>
+        <location filename="../syscfgdlg.ui" line="150"/>
         <source>Logout time:</source>
         <translation>登录超时</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="180"/>
+        <location filename="../syscfgdlg.ui" line="163"/>
         <source>Barcode RegEx</source>
         <translation>产品条码正则匹配式</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="185"/>
+        <location filename="../syscfgdlg.ui" line="168"/>
         <source>Project Path</source>
         <translation>测试项目路径和名称</translation>
     </message>
 </context>
 <context>
+    <name>TATreeWidget</name>
+    <message>
+        <location filename="../tatreewidget.cpp" line="22"/>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="23"/>
+        <source>Path</source>
+        <translation>路径</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="24"/>
+        <source>Description</source>
+        <translation>描述</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="25"/>
+        <source>Status</source>
+        <translation>状态</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="26"/>
+        <source>Result</source>
+        <translation>结果</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="27"/>
+        <source>Standard</source>
+        <translation>标准</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="28"/>
+        <source>Start Time</source>
+        <translation>开始时间</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="29"/>
+        <source>Elapsed Time</source>
+        <translation>用时</translation>
+    </message>
+</context>
+<context>
     <name>TestManger</name>
     <message>
-        <location filename="../testmanger.cpp" line="227"/>
+        <location filename="../testmanger.cpp" line="62"/>
+        <source>Loop progress</source>
+        <translation>整体循环测试进度</translation>
+    </message>
+    <message>
+        <location filename="../testmanger.cpp" line="121"/>
+        <source>Upload histroy results</source>
+        <translation>上传历史结果状态</translation>
+    </message>
+    <message>
+        <location filename="../testmanger.cpp" line="285"/>
         <source>Question</source>
         <translation>询问</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="228"/>
+        <location filename="../testmanger.cpp" line="286"/>
         <source>It&apos;s loop test, are you sure?</source>
         <translation>循环测试，确定开始吗?</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="640"/>
+        <location filename="../testmanger.cpp" line="585"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="641"/>
+        <location filename="../testmanger.cpp" line="586"/>
         <source>Warning: Testing now, an error may occur when quit. Are you quit?</source>
         <translation>警告:测试中，退出将引发未知错误，是否退出？</translation>
     </message>
@@ -618,12 +690,12 @@
 <context>
     <name>TestProcess</name>
     <message>
-        <location filename="../testproccess.cpp" line="42"/>
+        <location filename="../testproccess.cpp" line="43"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../testproccess.cpp" line="43"/>
+        <location filename="../testproccess.cpp" line="44"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>

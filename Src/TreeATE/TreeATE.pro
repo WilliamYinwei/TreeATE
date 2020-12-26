@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     talineedit.cpp \
     manybarcodedlg.cpp \
     pluginsmgr.cpp \
-    tasizedockwidget.cpp
+    tasizedockwidget.cpp \
+    tatreewidget.cpp
 
 HEADERS  += mainwindow.h \
     testproccess.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     manybarcodedlg.h \
     pluginsmgr.h \
     tadefine.h \
-    tasizedockwidget.h
+    tasizedockwidget.h \
+    tatreewidget.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

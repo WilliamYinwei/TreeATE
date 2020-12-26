@@ -79,7 +79,7 @@ QDockWidget::title {
 }
 
 QDockWidget::close-button:hover, QDockWidget::float-button:hover {
-    background: red;
+    background: #385f85;
 }
 
 QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
@@ -95,7 +95,7 @@ QPushButton:disabled {
 }
 
 QPushButton:hover, QTabBar::tab:hover {
-    background-color: red;
+    background-color: #385f85;
 }
 
 QPushButton:pressed {
@@ -123,12 +123,12 @@ QTabWidget::tab-bar {
     it reads QTabBar _not_ QTabWidget */
 QTabBar::tab {
     background: #2f4f6f;
-        padding: 8px;
-        border-right: 2px solid #223A51;
+    padding: 8px;
+    border-right: 2px solid #223A51;
 }
 
 QTabBar::tab:selected {
-    background: green;
+    background: #385f85;
 }
 
 QAbstractItemView {
@@ -177,11 +177,11 @@ QMenuBar::item:selected, QMenuBar::item:pressed { /* when selected using mouse o
 }
 
 QMenu::item:selected {
-        background: red;
+    background: red;
 }
 
 QMenu::item:disabled {
-        color: gray;
+    color: gray;
 }
 
 QProgressBar {

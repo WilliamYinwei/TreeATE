@@ -14,14 +14,29 @@
         ],
         "Parameter": [
             {
-                "Desc": "asd",
+                "Desc": "测试员可修改的参数1",
                 "Name": "Gabc",
                 "Value": "123"
             },
             {
-                "Desc": "all of this",
+                "Desc": "测试员可修改的参数1",
                 "Name": "Gall",
                 "Value": "22.3"
+            },
+            {
+                "Desc": "测试(测试套启动)",
+                "Name": "g_rstSetupSuite",
+                "Value": "0"
+            },
+            {
+                "Desc": "测试(测试套退出)",
+                "Name": "g_rstExitSuite",
+                "Value": "0"
+            },
+            {
+                "Desc": "测试(测试项)",
+                "Name": "g_rstTest",
+                "Value": "0"
             }
         ]
     },
@@ -79,5 +94,5 @@
             ]
         }
     ],
-    "Ver": "1.1.0"
+    "Ver": "2.1.0"
 }
