@@ -225,6 +225,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
     bool bSuccess = true;
 
+    QString strLastExceptionFunc;
     for(int i = 0; i < runLst.count(); i++){
         QString path = runLst.at(i);
 
@@ -269,6 +270,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             m_lastErr = m_pCurretLang->getLastErr();
             rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
             bSuccess = false;
+            strLastExceptionFunc = strScriptFunc;
             break;
         }
 
@@ -299,7 +301,11 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         itor != lstTeardown.rend(); ++itor) {
         QString path = *itor;
         QJsonObject objUnit = m_pUnitMgr->getUnitObj(path);
-        int iRet = m_pCurretLang->executeScript(strScriptFunc + objUnit["Name"].toString(),
+        QString strTeardownFunc = strScriptFunc + objUnit["Name"].toString();
+        if(strTeardownFunc == strLastExceptionFunc)
+            continue;
+
+        int iRet = m_pCurretLang->executeScript(strTeardownFunc,
                 m_pUnitMgr->getLocalParameter(objUnit));
         // recovery the public parameter
         m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
@@ -308,7 +314,6 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         if(iRet < 0) {            
             rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
             bSuccess = false;
-            break;
         }
         else {
             // result of teardown
