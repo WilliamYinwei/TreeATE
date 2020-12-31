@@ -118,6 +118,7 @@ private:
     QAction*        m_actionRemoveFile;
     QLabel*         m_labelPrjPath;     // project path name on the status bar
     DlgFind*        m_pFindDlg;
+    QString         m_strWorkpath;      // project work path
 };
 
 #endif // MAINWINDOW_H

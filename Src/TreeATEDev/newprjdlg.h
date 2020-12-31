@@ -24,16 +24,17 @@ class NewPrjDlg : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewPrjDlg(QWidget *parent = 0);
+    explicit NewPrjDlg(const QString& workpath, QWidget *parent = 0);
     ~NewPrjDlg();
 
     QStringList GetNewProjectFiles();
     QString GetScriptSuffix();
+    QString GetWorkpath();
 
 private slots:
     void on_pushButton_clicked();
 
-private:
+private:    
     Ui::NewPrjDlg *ui;
 };
 

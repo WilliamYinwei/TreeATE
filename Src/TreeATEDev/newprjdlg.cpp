@@ -15,12 +15,12 @@
 
 #include <QFileDialog>
 
-NewPrjDlg::NewPrjDlg(QWidget *parent) :
+NewPrjDlg::NewPrjDlg(const QString &workpath, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewPrjDlg)
 {
     ui->setupUi(this);
-    ui->lineEdit_workpath->setText(qApp->applicationDirPath());
+    ui->lineEdit_workpath->setText(workpath);
     ui->radioButton_js->setChecked(true);
 }
 
@@ -61,4 +61,12 @@ QString NewPrjDlg::GetScriptSuffix()
     if(ui->radioButton_py->isChecked())
         suffix = "py";
     return suffix;
+}
+
+QString NewPrjDlg::GetWorkpath()
+{
+    if(ui->lineEdit_workpath) {
+        return ui->lineEdit_workpath->text();
+    }
+    return "";
 }

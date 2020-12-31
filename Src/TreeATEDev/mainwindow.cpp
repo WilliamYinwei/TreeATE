@@ -34,6 +34,8 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QDesktopServices>
+#include <QDebug>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -42,6 +44,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowState(Qt::WindowMaximized);
     ui->action_Save->setEnabled(false);
+
+    QString appStrPath = qApp->applicationDirPath();
+
+    QSettings cfgDev(appStrPath + "/Config/Dev.ini", QSettings::IniFormat);
+    cfgDev.beginGroup("New");
+    QString strIniPath = cfgDev.value("workpath").toString();
+    m_strWorkpath = strIniPath.isEmpty() ? appStrPath + "/Example/" : strIniPath;
+    cfgDev.endGroup();
 
     m_labelPrjPath = new QLabel(this);
     statusBar()->addWidget(m_labelPrjPath);
@@ -125,6 +135,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    QString appStrPath = qApp->applicationDirPath();
+    QSettings cfgDev(appStrPath + "/Config/Dev.ini", QSettings::IniFormat);
+    cfgDev.beginGroup("New");
+    cfgDev.setValue("workpath", m_strWorkpath);
+    cfgDev.endGroup();
+
     if(m_scriptEdit) {
         delete m_scriptEdit;
     }
@@ -147,20 +163,20 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
 
     QFileInfo fileInfo(strPrjFile);
     if(bTPX) {  // is tpx file
-        m_pProMgrWidget->SetProjectPath(fileInfo.absolutePath() + "/"
-                                        + fileInfo.completeBaseName() + ".tpx");
+        QString strPrj = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + ".tpx";
+        m_pProMgrWidget->SetProjectPath(strPrj);
         // get tp file name from tpx
         m_strProjectFile = fileInfo.absolutePath() + "/" + m_pProMgrWidget->GetPrjName();
     }
     else { // is tp file
-        m_strProjectFile == strPrjFile;
+        m_strProjectFile = strPrjFile;
     }
 
     QFile prjFile(m_strProjectFile);
 
     if(!prjFile.open(QIODevice::ReadOnly)) {
         QString errStr = prjFile.errorString() + ": " + m_strProjectFile;
-        QMessageBox::warning(this, tr("Warning"), errStr);
+        QMessageBox::warning(this, tr("Warning") + " - Open project file", errStr);
         return false;
     }
 
@@ -190,7 +206,7 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
 
     if(!scrFile.open(QIODevice::ReadOnly)) {
         QString errStr = scrFile.errorString() + ": " + m_strScriptFile;
-        QMessageBox::warning(this, tr("Warning"), errStr);
+        QMessageBox::warning(this, tr("Warning") + " - Open script file", errStr);
         return false;
     }    
     m_scriptEdit->SetScriptData(scrFile.readAll());
@@ -220,7 +236,7 @@ bool MainWindow::OpenProjectFile(const QString& strPrjFile, bool bTPX)
 void MainWindow::on_action_Open_triggered()
 {
     QString fileName =
-        QFileDialog::getOpenFileName(this, tr("Open project file"), "",  tr("Test Project(*.tpx)"));
+        QFileDialog::getOpenFileName(this, tr("Open project file"), m_strWorkpath,  tr("Test Project(*.tpx)"));
     if(fileName.isEmpty())
         return;
 
@@ -621,13 +637,14 @@ void MainWindow::on_action_New_triggered()
         return;
     }
 
-    NewPrjDlg dlg;
+    NewPrjDlg dlg(m_strWorkpath);
     if(QDialog::Accepted == dlg.exec())
     {
         QStringList lstFiles = dlg.GetNewProjectFiles();
         if(lstFiles.count() == 3) // *.tp ; *.tpx ; *.js
         {
-            QFileInfo info(lstFiles.at(0));
+            m_strWorkpath = dlg.GetWorkpath();
+            QFileInfo info(lstFiles.at(0)); // *.tp
             QDir dir(info.absolutePath());
             if(dir.exists()) {
                 if(QMessageBox::No == QMessageBox::question(this, tr("Question"),
@@ -649,11 +666,21 @@ void MainWindow::on_action_New_triggered()
                 QVariantMap vmData;
                 vmData.insert("Name", info.completeBaseName());
                 vmData.insert("Desc", tr("Please deleted it before at edit"));
+
+                // 0: *.tp; 1: *.tpx; 2: *.js/*.py
+                if(strFile.indexOf("tpx") > 0) { // is tpx file
+                    QVariantMap vmInst;
+                    vmInst.insert("File", info.completeBaseName() + ".tp");
+                    vmInst.insert("Name", info.completeBaseName());
+                    QVariantList vlInst;
+                    vlInst.append(vmInst);
+                    vmData.insert("Instance", vlInst);
+                }
                 file.write(QJsonDocument::fromVariant(vmData).toJson());
                 file.close();
             }
 
-            OpenProjectFile(lstFiles.at(0));
+            OpenProjectFile(lstFiles.at(1)); // *.tpx
         }
     }
 }
