@@ -50,8 +50,6 @@ private slots:
 
     void on_actionClose_triggered();
 
-    void on_treeWidget_Units_itemClicked(QTreeWidgetItem *item, int column);
-
     void on_progressValueChanged(int n);
 
     void on_actionStop_triggered();
@@ -59,8 +57,6 @@ private slots:
     void on_updateTotalStatus(eTestStatus eStatus, int n);
 
     void on_startLoading(int nCnt);
-
-    void on_treeWidget_Units_itemChanged(QTreeWidgetItem *item, int column);
 
     void on_actionSpread_items_triggered();
 
@@ -98,18 +94,17 @@ private slots:
 
     void on_status_HistoryRst(eTestStatus nStatus);
 
-    void on_treeWidget_Units_customContextMenuRequested(const QPoint &pos);
-
-    void on_start_curr_uint();
-
     void on_directory_changed(QString);
 
     void on_file_changed(QString);
 
-public slots:
-    void on_start_unit(const QString& who);
-    void on_testingForTotal();
-    bool on_testing(const QString& who);
+    void on_mdiArea_subWindowActivated(QMdiSubWindow *arg1);
+
+    void on_actionTile_View_triggered();
+
+    void on_actionTab_View_triggered();
+
+    void on_actionTandem_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -144,7 +139,6 @@ private:
     QProcess*       m_pEditWin;
     QStringList     m_lstLangFiles;
     QString         m_strPreSN;
-    bool            m_isNetworkBreak;
     int             m_LogoutTimeCnt;
     QFileSystemWatcher* m_pFSWatcher;
     QTextStream     m_tsLogFile;

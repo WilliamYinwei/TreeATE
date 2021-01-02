@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(customMessageHandler);
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("TestEngine");
-    QCoreApplication::setApplicationVersion("1.3.0");
+    QCoreApplication::setApplicationVersion("2.1.0");
 
     MainTask mainTask(&app);
     QTimer::singleShot(0, &mainTask, SLOT(run()));

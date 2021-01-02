@@ -13,44 +13,17 @@
             "Name": "Demo11",
             "Parameter": [
                 {
-                    "Desc": "asd",
+                    "Desc": "全局参数1",
                     "Name": "Gabc",
                     "Value": "123"
                 },
                 {
-                    "Desc": "all of this",
-                    "Name": "Gall",
-                    "Value": "22.3"
-                }
-            ]
-        },
-        {
-            "File": "TestDemo.tp",
-            "Name": "Demo2",
-            "Parameter": [
-                {
-                    "Desc": "asd",
-                    "Name": "Gabc",
-                    "Value": "123"
+                    "Desc": "全局参数2",
+                    "Name": "Gdd",
+                    "Value": "111"
                 },
                 {
-                    "Desc": "all of this",
-                    "Name": "Gall",
-                    "Value": "22.3"
-                }
-            ]
-        },
-        {
-            "File": "TestDemo.tp",
-            "Name": "Demo3",
-            "Parameter": [
-                {
-                    "Desc": "asd",
-                    "Name": "Gabc",
-                    "Value": "123"
-                },
-                {
-                    "Desc": "all of this",
+                    "Desc": "全局参数3",
                     "Name": "Gall",
                     "Value": "22.3"
                 }

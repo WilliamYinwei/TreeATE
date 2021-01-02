@@ -39,6 +39,7 @@ TestProcess::TestProcess(const QString& titleName, QObject *parent):QProcess(par
 
     QWidget *dockWidgetContents = new QWidget(m_dockWidget);
     QTabWidget* pTabRun = new QTabWidget(dockWidgetContents);
+    pTabRun->setTabPosition(QTabWidget::East);
     pTabRun->addTab(m_tbErr, tr("Error"));
     pTabRun->addTab(m_tbRun, tr("Run"));
 
@@ -171,7 +172,7 @@ void TestProcess::on_readyReadStandardOutput()
         if(strLine.trimmed().isEmpty())
             continue;
         QJsonObject obj = parserStrLine(strLine);
-        emit updateTestItemStatus(m_strTitle, obj, m_nUnitsCount);
+        emit updateTestItemStatus(m_strTitle, obj);
     }
 }
 

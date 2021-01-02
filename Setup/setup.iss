@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TreeATE"
-#define MyAppVersion "2.0.2"
+#define MyAppVersion "2.1.0"
 #define MyAppPublisher "David Yin"
 #define MyAppURL "https://blog.csdn.net/vivasoft/column/info/31202"
 #define MyAppExeName "TreeATE.exe"
@@ -34,7 +34,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\*"; DestDir: "{app}"; Flags: recursesubdirs replacesameversion
+Source: "D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\*"; DestDir: "{app}"; Excludes: "*exp,*.lib,*.sqlite,*.txt"; Flags: recursesubdirs replacesameversion
 Source: "..\Example\TestDemo\*"; DestDir: "{app}\Example\TestDemo\"; Flags: recursesubdirs
 Source: "..\Example\TestDemoPy\*"; DestDir: "{app}\Example\TestDemoPy\"; Flags: recursesubdirs
 Source: "..\Example\TestCppDemo\*"; DestDir: "{app}\Example\TestCppDemo\"; Flags: recursesubdirs

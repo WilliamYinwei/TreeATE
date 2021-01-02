@@ -33,14 +33,14 @@ def setup_suite2():
 	__ate.OutputError("setup_suite2")
 	ret = __ate.GetProjectBarcode()
 	__ate.OutputError("GetProjectBarcode:" + ret)
-	return -2 #Exception
+	return int(g_rstSetupSuite)
 
 
 def teardown_suite2():
 	__ate.OutputError("teardown_suite2")
 	ret = __ate.GetProjectDesc()
 	__ate.OutputError("GetProjectDesc:" + ret)
-	return -2 #Exception
+	return int(g_rstExitSuite) #Exception
 
 def test_test1():
 	__ate.OutputError("test_test1")
@@ -48,7 +48,7 @@ def test_test1():
 	ret = ta.MsgBox("images/treeate.png", s, 0, 3000)
 	__ate.OutputError(ret)
 	__ate.OutputRst(Name2, Gabc, ret)
-	return -3 #Exception
+	return int(g_rstTest) #Exception
 
 def test_test2():
 	__ate.OutputError("test_test2")

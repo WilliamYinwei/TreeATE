@@ -342,7 +342,7 @@ QString TAPropertyMgrWidget::GetPrjName()
     if(m_prjCfgWidget) {
         return m_prjCfgWidget->GetDefaultPrjName();
     }
-    return "";
+    return m_strPrjName;
 }
 
 void TAPropertyMgrWidget::SetModels(const QVariantList& vlModels)

@@ -22,12 +22,15 @@
 #include <QDir>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QMdiSubWindow>
 
-TestManger::TestManger(QTreeWidget *pWidget, QTextBrowser *pBrower, QObject *parent): QObject(parent)
+#include "tatreewidget.h"
+
+TestManger::TestManger(QMdiArea *pMdi, QTextBrowser *pBrower, QObject *parent): QObject(parent)
 {
+    m_mdiArea = pMdi;
     m_parent = (QWidget*)parent;
-    m_treeWidget = pWidget;
-    m_textBrower = pBrower;
+    m_logTextBrower = pBrower;
     m_bIsLoaded = false;
     m_dockLoopProgress = NULL;
     m_pUploadRst = NULL;
@@ -56,7 +59,7 @@ void TestManger::ActiveWindows(int n)
 QDockWidget* TestManger::createLoopProgress(const QStringList& lstPrj)
 {
     QDockWidget* dockWidget = new QDockWidget(m_parent);
-    dockWidget->setWindowTitle("Loop progress");
+    dockWidget->setWindowTitle(tr("Loop progress"));
     dockWidget->setLayoutDirection(Qt::LayoutDirectionAuto);
     QWidget *dockWidgetContents = new QWidget(dockWidget);
     dockWidgetContents->setContentsMargins(0, 0, 0, 0);
@@ -94,9 +97,9 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
     m_strPrjName = strPrjFile;
     QFileInfo infoPrj(strPrjFile);
 
-    m_textBrower->append("Loading: " + strPrjFile);
+    m_logTextBrower->append("Loading: " + strPrjFile);
     if(!m_prjMgr.LoadProjectFile(strPrjFile)) {
-        m_textBrower->append(m_prjMgr.getLastError());
+        m_logTextBrower->append(m_prjMgr.getLastError());
         return false;
     }
 
@@ -115,7 +118,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
 
     // upload history results
     if(NULL == m_pUploadRst) {
-        m_pUploadRst = new TestProcess("Upload histroy results", (QObject*)m_parent);
+        m_pUploadRst = new TestProcess(tr("Upload histroy results"), (QObject*)m_parent);
 
         connect(m_pUploadRst, SIGNAL(testEngineFinished(QString, int)), this,
                 SLOT(on_testEngineFinished(QString, int)));
@@ -127,11 +130,22 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
     // loading test projects
     strTitle = m_prjMgr.getPrjName() + " - " + m_prjMgr.getPrjDescription();
     foreach (auto strName, lstName) {
-        m_textBrower->append("Loading: " + strName);
-        TestProcess* pTestPrj = new TestProcess(strName, (QObject*)m_parent);
 
-        connect(pTestPrj, SIGNAL(updateTestItemStatus(QString,QJsonObject,quint32)), this,
-                SLOT(on_updateTestItemStatus(QString,QJsonObject,quint32)));
+        m_logTextBrower->append("Loading: " + strName);
+        TestProcess* pTestPrj = new TestProcess(strName, (QObject*)m_parent);
+        TATreeWidget* pTW = new TATreeWidget();
+        QMdiSubWindow* pSubWin = m_mdiArea->addSubWindow(pTW);
+        if(pSubWin) {
+            pSubWin->setWindowTitle(strName);
+            // unallow closed
+            pSubWin->setWindowFlags(Qt::CustomizeWindowHint |
+                                    Qt::WindowMinimizeButtonHint |
+                                    Qt::WindowMaximizeButtonHint);
+            pSubWin->show();    // must be show
+        }
+
+        connect(pTestPrj, SIGNAL(updateTestItemStatus(QString,QJsonObject)), this,
+                SLOT(on_updateTestItemStatus(QString,QJsonObject)));
         connect(pTestPrj, SIGNAL(testEngineFinished(QString, int)), this,
                 SLOT(on_testEngineFinished(QString, int)));
 
@@ -168,13 +182,11 @@ QString TestManger::GetPrjPath()
 QStringList TestManger::SeletedPrj()
 {
     QStringList lstSel;
-    const int topCnt = m_treeWidget->topLevelItemCount();
-    for(int i = 0; i < topCnt; i++) {
-        QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(i);
-        if(NULL == parentItem)
-            continue;
-        if(parentItem->checkState(0) != Qt::Unchecked) {
-            lstSel.append(parentItem->text(0));
+    foreach(QMdiSubWindow* pSubWin, m_mdiArea->subWindowList())
+    {
+        if(pSubWin) {
+            TATreeWidget* pTreeWin = (TATreeWidget*)pSubWin->widget();
+            if(pTreeWin) lstSel << pTreeWin->seletedPrj();
         }
     }
 
@@ -201,28 +213,8 @@ void TestManger::on_startTesting(const QString& who)
     if(itor == m_prcTestEngine.end())
         return;
 
-    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-    if(NULL == parentItem)
-        return;
-
-    QTreeWidgetItemIterator itorItem(parentItem);
-    quint32 nCount = 0;
-    while(*itorItem) {
-        QTreeWidgetItem* item = *itorItem;
-
-        // clear old data before testing
-        item->setText(TA_COLUMN_TEST_STATUS, "");
-        item->setText(TA_COLUMN_TEST_RST, "");
-        item->setText(TA_COLUMN_TEST_STAND, "");
-        item->setText(TA_COLUMN_START_TIME, "");
-        item->setText(TA_COLUMN_SPEND_TIME, "");
-
-        ++itorItem;
-        nCount++;
-        if(nCount >= itor.value()->getUnitsCount()) {
-            break;
-        }
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->clearPrjStatus();
 
     itor.value()->setProcessEnvironment(m_env);
     itor.value()->start("TestEngine", m_mapLstPara[who]);
@@ -239,38 +231,17 @@ int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStati
     if(itor == m_prcTestEngine.end())
         return nSelectedCnt;
 
-    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-    if(NULL == parentItem)
-        return nSelectedCnt;
-
     QTemporaryFile* tempFile = new QTemporaryFile();
     m_lstTempFile.append(tempFile);
     if(!tempFile->open())
         return nSelectedCnt;
 
     QFileInfo infoPrj(m_strPrjName);
-    QTextStream in(tempFile);
-
-    QTreeWidgetItemIterator itorItem(parentItem);
-    quint32 nCount = 0;
-    while(*itorItem) {
-        QTreeWidgetItem* item = *itorItem;
-
-        // path of test unit with selected
-        if(m_bCheckboxEnable || item->checkState(0) != Qt::Unchecked) {
-            QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
-            in << line;
-            nSelectedCnt++;
-        }
-        ++itorItem;
-        nCount++;
-        if(nCount >= itor.value()->getUnitsCount()) {
-            break;
-        }
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) nSelectedCnt = pTree->seletedUnitItems(tempFile, m_bCheckboxEnable);
     tempFile->close();
 
-    if(parentItem->checkState(0) == Qt::Unchecked)
+    if(0 == nSelectedCnt)
         return nSelectedCnt;
 
     // public parameter
@@ -306,7 +277,9 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
     int nSelectedCnt = 0;
     m_nTestingCnt = 0;
 
+    clearTabIcon();
     clearTempFile();
+
     int nCnt = m_prjMgr.getLoopCounts();
     if(nCnt > 1) {
         if(QMessageBox::Yes != QMessageBox::question(m_parent, tr("Question"),
@@ -359,6 +332,10 @@ void TestManger::UnloadUnits()
     m_rstLevel = Unload;
     m_mpPrjTestStatus.clear();
 
+    if(m_mdiArea) {
+        m_mdiArea->closeAllSubWindows();
+    }
+
     if(m_pUploadRst) {
         delete m_pUploadRst;
         m_pUploadRst = NULL;
@@ -370,7 +347,6 @@ void TestManger::UnloadUnits()
     }
     m_prcTestEngine.clear();
 
-    m_treeWidget->clear();
     m_lstDockWidget.clear();
     m_bIsLoaded = false;
 
@@ -380,8 +356,39 @@ void TestManger::UnloadUnits()
     }    
 }
 
+void TestManger::clearTabIcon()
+{
+    QList<QTabBar*> tabBarLst = m_mdiArea->findChildren<QTabBar*>();
+    if(tabBarLst.size() == 1) {
+        QTabBar* tabBar = tabBarLst.at(0);
+        if(tabBar) {
+            for(int i = 0; i < tabBar->count(); i++) {
+                tabBar->setTabTextColor(i, QColor(255,255,255));
+                tabBar->setTabIcon(i, QIcon());
+            }
+        }
+    }
+}
+
+void TestManger::setTabIconUUT(const QString& who, const QIcon& icon, const QColor& textColor)
+{
+    QList<QTabBar*> tabBarLst = m_mdiArea->findChildren<QTabBar*>();
+    if(tabBarLst.size() == 1) {
+        QTabBar* tabBar = tabBarLst.at(0);
+        if(tabBar) {
+            for(int i = 0; i < tabBar->count(); i++) {
+                if(tabBar->tabText(i) == who) {
+                    tabBar->setTabTextColor(i, textColor);
+                    tabBar->setTabIcon(i, icon);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 void TestManger::on_updateTestItemStatus(const QString& who,
-                                 const QJsonObject& objData, quint32 nCnt)
+                                 const QJsonObject& objData)
 {
     if(objData.isEmpty())
         return;
@@ -401,21 +408,23 @@ void TestManger::on_updateTestItemStatus(const QString& who,
     }
     else if(status == "start") {
         m_rstLevel = Testing;
-        startItemsData(who, objData, nCnt);
+        startItemsData(who, objData);
         emit updateTotalStatus(Testing, 0);
     }
     else if(status == "update") {
         m_rstLevel = Testing;
-        updateItemsData(who, objData, nCnt);
+        updateItemsData(who, objData);
         emit updateTotalStatus(Testing, ++m_nTestingCnt);
     }
     else if(status == "detail") {
-        detailItemsData(who, objData, nCnt);
+        detailItemsData(who, objData);
     }
     else if(status == "over") {
         eTestStatus curLvl = Pass;
-        QTreeWidgetItem* item = m_treeWidget->topLevelItem(m_whoPrj[who]);
-        QString strStatus = item->text(TA_COLUMN_TEST_STATUS);
+
+        QString strStatus;
+        TATreeWidget* pTree = findTreeWidget(who);
+        if(pTree) strStatus = pTree->currentPrjStatus();
         if(strStatus == TA_STATUS_EXCE) {
             curLvl = Exception;
         }
@@ -436,9 +445,8 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
 {
     qDebug() << who << " --- TestManger::on_testEngineFinished: " << nCode;
     m_mapTesting[who] = false;
-    m_treeWidget->expandAll();
-    for (int column = 0; column < m_treeWidget->columnCount(); ++column)
-        m_treeWidget->resizeColumnToContents(column);
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->refreshExpandAll();
     if(nCode == TA_LIST_OK) {
         bool bReady = true;
         m_mpPrjTestStatus[who] = Ready;
@@ -465,6 +473,30 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
         return;
     }
 
+    QString strStatus;
+    if(pTree) strStatus = pTree->currentPrjStatus();
+    QString strPgBC = TA_PROGRESS_BC_OK;
+    QIcon icTabBC;
+    QColor tabTextColor(255, 255, 255);
+    if(strStatus == TA_STATUS_EXCE) {
+        strPgBC = TA_PROGRESS_BC_EXCE;
+        icTabBC = QIcon(QPixmap(":/exce.png"));
+        tabTextColor = TA_TAB_STATUS_EXCE;
+    }
+    else if(strStatus == TA_STATUS_FAIL) {
+        strPgBC = TA_PROGRESS_BC_FAIL;
+        icTabBC = QIcon(QPixmap(":/ng.png"));
+        tabTextColor = TA_TAB_STATUS_FAIL;
+    }
+    else if(strStatus == TA_STATUS_PASS) {
+        strPgBC = TA_PROGRESS_BC_OK;
+        icTabBC = QIcon(QPixmap(":/ok.png"));
+        tabTextColor = TA_TAB_STATUS_OK;
+    }
+
+    // update the SubWindow's TabBar icon or color
+    setTabIconUUT(who, icTabBC, tabTextColor);
+
     if(nCode) {
         m_rstLevel = Exception;
         emit updateTotalStatus(Exception, 0);
@@ -476,20 +508,8 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     if(itor != m_mapLoopCount.end()) {
         qint32 nCnt = itor.value() - 1;
 
-        m_mapLoopCount[who] = nCnt;
+        m_mapLoopCount[who] = nCnt;        
 
-        QTreeWidgetItem* item = m_treeWidget->topLevelItem(m_whoPrj[who]);
-        QString strStatus = item->text(TA_COLUMN_TEST_STATUS);
-        QString strPgBC = TA_PROGRESS_BC_OK;
-        if(strStatus == TA_STATUS_EXCE) {
-            strPgBC = TA_PROGRESS_BC_EXCE;
-        }
-        else if(strStatus == TA_STATUS_FAIL) {
-            strPgBC = TA_PROGRESS_BC_FAIL;
-        }
-        else if(strStatus == TA_STATUS_PASS) {
-            strPgBC = TA_PROGRESS_BC_OK;
-        }
         // It was enabled
         if(m_prjMgr.getStoppedForLoop() && strStatus != TA_STATUS_PASS) {
             return; // No need to loop testing when status was not pass
@@ -512,153 +532,47 @@ void TestManger::SetCheckboxEnable(bool bEnable)
 
 void TestManger::addUnitItems(const QString &who, const QJsonObject &objData)
 {
-    QString strDesc = objData["desc"].toString();
-    QString strPath = objData["path"].toString();
-
-    QStringList lstName = strPath.split('/');
-    int n = lstName.size();
-    if(n == 2)  // Test project
-    {
-        QStringList lstTP;
-        lstTP << who << strPath << strDesc;
-        QTreeWidgetItem* item = NULL;
-        lstTP << tr("") << tr("") << tr("") << tr("");
-        item = new QTreeWidgetItem(m_treeWidget, lstTP);
-        item->setCheckState(0, Qt::Checked);
-        m_whoPrj.insert(who, m_treeWidget->indexOfTopLevelItem(item));
-    }
-    else if( n == 3) // Test suite
-    {
-        QStringList lstTP;
-        lstTP << lstName.at(2) << strPath << strDesc;
-
-        QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-        QTreeWidgetItem* item = NULL;
-        lstTP << tr("") << tr("") << tr("") << tr("");
-        item = new QTreeWidgetItem(parentItem, lstTP);
-        item->setCheckState(0, Qt::Checked);
-        parentItem->addChild(item);
-    }
-    else if( n == 4) // Test case
-    {
-        QStringList lstTP;
-        lstTP << lstName.at(3) << strPath << strDesc;
-
-        QTreeWidgetItem* parentItem = NULL;
-        QTreeWidgetItem* rootItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-        for(int i = 0; i < rootItem->childCount(); i++)
-        {
-            if(rootItem->child(i)->text(TA_COLUMN_UNIT_PATH) ==
-                    "/" + lstName.at(1) + "/" + lstName.at(2))
-            {
-                parentItem = rootItem->child(i);
-                break;
-            }
-        }
-
-        if(parentItem)
-        {
-            QTreeWidgetItem* item = NULL;
-            lstTP << tr("") << tr("") << tr("") << tr("");
-            item = new QTreeWidgetItem(parentItem, lstTP);
-            item->setCheckState(0, Qt::Checked);
-            parentItem->addChild(item);
-        }
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->addUnitItems(who, objData);
 }
 
-void TestManger::startItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt)
+void TestManger::startItemsData(const QString& who, const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-    if(NULL == parentItem)
-        return;
-    QTreeWidgetItemIterator itor(parentItem);
-    quint32 n = 0;
-    while(*itor) {
-        QTreeWidgetItem* item = *itor;
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
-        if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
-            item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
-            item->setText(TA_COLUMN_START_TIME, objData["start"].toString());
-
-            SALabel* label = new SALabel(m_treeWidget);
-            label->StartMovie(":/running.gif");
-            label->setAlignment(Qt::AlignCenter);
-            m_treeWidget->setItemWidget(item, TA_COLUMN_TEST_STATUS, label);
-        }
-        ++itor;
-        n++;
-        if(n >= nCnt)
-            break;
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->startItemsData(objData);
 }
 
-void TestManger::updateItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt)
+void TestManger::updateItemsData(const QString& who, const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-    if(NULL == parentItem)
-        return;
-    QTreeWidgetItemIterator itor(parentItem);
-    quint32 n = 0;
-    while(*itor) {
-        QTreeWidgetItem* item = *itor;
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
-        if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
-            item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
-            item->setText(TA_COLUMN_SPEND_TIME, objData["spend"].toString());
-
-            m_treeWidget->setItemWidget(item, TA_COLUMN_TEST_STATUS, NULL);
-        }
-        ++itor;
-        n++;
-        if(n >= nCnt)
-            break;
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->updateItemsData(objData);
 }
 
-void TestManger::detailItemsData(const QString& who, const QJsonObject& objData, quint32 nCnt)
+void TestManger::detailItemsData(const QString& who, const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = m_treeWidget->topLevelItem(m_whoPrj[who]);
-    if(NULL == parentItem)
-        return;
-    QTreeWidgetItemIterator itor(parentItem);
-    quint32 n = 0;
-    while(*itor) {
-        QTreeWidgetItem* item = *itor;
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
-        if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
-            item->setText(TA_COLUMN_TEST_RST, objData["name"].toString() + "=" +
-                    objData["value"].toString());
-            item->setText(TA_COLUMN_TEST_STAND, objData["standard"].toString());
-        }
-        ++itor;
-        n++;
-        if(n >= nCnt)
-            break;
-    }
+    TATreeWidget* pTree = findTreeWidget(who);
+    if(pTree) pTree->detailItemsData(objData);
 }
 
 void TestManger::SpreadUnitItems()
 {
-    QTreeWidgetItemIterator itor(m_treeWidget);
-    while(*itor) {
-        QTreeWidgetItem* item = *itor;
-        if(item->parent() != NULL) {
-            item->setExpanded(true);
+    foreach(QMdiSubWindow* pSubWin, m_mdiArea->subWindowList())
+    {
+        if(pSubWin) {
+            TATreeWidget* pTreeWin = (TATreeWidget*)pSubWin->widget();
+            if(pTreeWin) pTreeWin->spreadUnitItems();
         }
-        ++itor;
     }
 }
 
 void TestManger::ShrinkUnitItems()
 {
-    QTreeWidgetItemIterator itor(m_treeWidget);
-    while(*itor) {
-        QTreeWidgetItem* item = *itor;
-        if(item->parent() != NULL) {
-            item->setExpanded(false);
+    foreach(QMdiSubWindow* pSubWin, m_mdiArea->subWindowList())
+    {
+        if(pSubWin) {
+            TATreeWidget* pTreeWin = (TATreeWidget*)pSubWin->widget();
+            if(pTreeWin) pTreeWin->shrinkUnitItems();
         }
-        ++itor;
     }
 }
 
@@ -707,4 +621,15 @@ void TestManger::SetPrjOption(const QString& prjName)
 
         m_prjMgr.SaveProjectFile(prjName);        
     }
+}
+
+TATreeWidget* TestManger::findTreeWidget(const QString& who)
+{
+    foreach(QMdiSubWindow* pSubWin, m_mdiArea->subWindowList())
+    {
+        if(pSubWin && pSubWin->windowTitle() == who) {
+            return (TATreeWidget*)pSubWin->widget();
+        }
+    }
+    return NULL;
 }

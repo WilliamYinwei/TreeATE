@@ -10,17 +10,32 @@
     "Instance": [
         {
             "File": "TestDemo.tp",
-            "Name": "Demo11",
+            "Name": "Demo1",
             "Parameter": [
                 {
-                    "Desc": "asd",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gabc",
                     "Value": "123"
                 },
                 {
-                    "Desc": "all of this",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gall",
                     "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
                 }
             ]
         },
@@ -29,14 +44,29 @@
             "Name": "Demo2",
             "Parameter": [
                 {
-                    "Desc": "asd",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gabc",
                     "Value": "123"
                 },
                 {
-                    "Desc": "all of this",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gall",
                     "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "-1"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
                 }
             ]
         },
@@ -45,20 +75,128 @@
             "Name": "Demo3",
             "Parameter": [
                 {
-                    "Desc": "asd",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gabc",
                     "Value": "123"
                 },
                 {
-                    "Desc": "all of this",
+                    "Desc": "测试员可修改的参数1",
                     "Name": "Gall",
                     "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "-1"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo4",
+            "Parameter": [
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "-1"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo5",
+            "Parameter": [
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "-1"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "1"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo6",
+            "Parameter": [
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "1"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
                 }
             ]
         }
     ],
     "LoopCount": 1,
     "Name": "TestDemos",
-    "failedToStop": false,
+    "failedToStop": true,
     "stoppedForLoop": false
 }
