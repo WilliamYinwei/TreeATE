@@ -48,16 +48,14 @@ TreeATE Dev界面预览
 TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编译TreeATE之前，你需要安装以下开发工具：
 * [qt-opensource-windows-x86-msvc2013-5.7.0](http://download.qt.io/archive/qt/5.7/5.7.0/qt-opensource-windows-x86-msvc2013-5.7.0.exe)	(L)GPL v3
 * [QScintilla_gpl-2.10.3](https://github.com/WilliamYinwei/qscintilla/releases/tag/v2.10.3) GPL v3
-  - 进入QT命令行模式  
 ```
+  // 进入QT命令行模式  
   cd qt4qt5
   qmake
-```
-  - 进入VS 2013 x86命令行模式
-``` 
-   cd qt4qt5
-   nmake
-   nmake install 
+  // 进入VS 2013 x86命令行模式
+  cd qt4qt5
+  nmake
+  nmake install 
 ```
 * [PythonQt 3.2.0](https://github.com/MeVisLab/pythonqt)	LGPL v2.1 
   - 这个可以先下载，不用先编译，因为3part中已默认生成了32位的DLL库文件
