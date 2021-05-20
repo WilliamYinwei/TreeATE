@@ -41,7 +41,6 @@ public:
 
     QString GetHostAddress();
     void SetCurrUser(const QString& strUser);
-    QString GetCurretLang();
 
 private slots:
     void on_actionLoading_triggered();
@@ -106,6 +105,10 @@ private slots:
 
     void on_actionTandem_triggered();
 
+    void dockWinCounts_Clear_triggered();
+
+    void updateCompletedCounts(quint32 nPass, quint32 nFail, quint32 nExce);
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent* e);
@@ -119,6 +122,7 @@ private:
     void openSysCfg();
     bool getNeedCheckNetwork();
     void openLogFile();
+    QDockWidget *createDockWinCounts();
 
 private:
     Ui::MainWindow  *ui;
@@ -144,6 +148,15 @@ private:
     QTextStream     m_tsLogFile;
     QFile*          m_pLogFile;
     eTestStatus     m_totalStatus;
+    // DockWidget for Counts
+    QDockWidget*    m_dockCounts;
+    QLabel*         m_labelPassCnts;
+    QLabel*         m_labelPassRate;
+    QLabel*         m_labelFailCnts;
+    QLabel*         m_labelFailRate;
+    QLabel*         m_labelExceCnts;
+    QLabel*         m_labelExceRate;
+    QLabel*         m_labelTotalCnts;
 };
 
 #endif // MAINWINDOW_H

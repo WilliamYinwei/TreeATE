@@ -116,7 +116,7 @@ QTabWidget::pane { /* The tab widget frame */
 }
 
 QTabWidget::tab-bar {
-    left: 8px; /* move to the right by 5px */
+   /* left: 8px;  move to the right by 5px */
 }
 
 /* Style the tab using the tab sub-control. Note that
@@ -191,4 +191,8 @@ QProgressBar {
 
 QProgressBar::chunk {
     background-color: #00F200;
+}
+
+QMdiSubWindow {
+    border: 1px solid grey;
 }

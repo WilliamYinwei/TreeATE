@@ -20,8 +20,6 @@
 #include <QWaitCondition>
 #include <QMetaType>
 
-QMutex g_mutex;
-
 typedef void* (*CreateInst)(const void*);
 
 ////////////////////////////////////////////////////////////////

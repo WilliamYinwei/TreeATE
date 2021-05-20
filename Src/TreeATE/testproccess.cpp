@@ -39,8 +39,8 @@ TestProcess::TestProcess(const QString& titleName, QObject *parent):QProcess(par
 
     QWidget *dockWidgetContents = new QWidget(m_dockWidget);
     QTabWidget* pTabRun = new QTabWidget(dockWidgetContents);
-    pTabRun->setTabPosition(QTabWidget::East);
-    pTabRun->addTab(m_tbErr, tr("Error"));
+    pTabRun->setTabPosition(QTabWidget::West);
+    pTabRun->addTab(m_tbErr, tr("Debug"));
     pTabRun->addTab(m_tbRun, tr("Run"));
 
     dockWidgetContents->setContentsMargins(0, 0, 0, 0);
@@ -166,7 +166,7 @@ void TestProcess::on_readyReadStandardOutput()
     QString strData = readAllStandardOutput();
     m_tbRun->append(strData);
 
-    QStringList lstData = strData.split("\r\n");
+    QStringList lstData = strData.split("\n");
     foreach(auto itor, lstData) {
         QString strLine = itor;
         if(strLine.trimmed().isEmpty())

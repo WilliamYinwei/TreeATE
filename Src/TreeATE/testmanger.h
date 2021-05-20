@@ -87,6 +87,13 @@ public:
     void ActiveWindows(int n);
     bool IsTesting(const QString& who);
 
+    void ClearCurrentCounts();
+
+public slots:
+    QString MsgBox(qint64 pid, const QString& strPic, const QString& strMsg, const int nType, const int mSec);
+    int AsyncMsgBox(qint64 pid,const QString& strPic, const QString& strMsg, const int nType, const int mSec);
+    bool CloseAsyncMsgBox(qint64 pid, int msgBoxId);
+
 private:
     void addUnitItems(const QString& who, const QJsonObject& objData);
     void startItemsData(const QString& who, const QJsonObject& objData);
@@ -103,6 +110,7 @@ signals:
     void startLoading(int nCnt);
     void startTesting(const QString& who);
     void statusHisRst(eTestStatus);
+    void updateCounts(quint32 nPass, quint32 nFail, quint32 nExce);
 
 private slots:
     void on_updateTestItemStatus(const QString& who,
@@ -114,6 +122,7 @@ private:
     QWidget*        m_parent;
     TestProcess*                    m_pUploadRst;
     QMap<QString, TestProcess*>     m_prcTestEngine;
+    QMap<qint64, QString>           m_mapTestWin;
     QList<QTemporaryFile*>          m_lstTempFile;
     QList<QDockWidget*>             m_lstDockWidget;
     QString         m_strPrjName;
@@ -132,6 +141,9 @@ private:
     QDockWidget*    m_dockLoopProgress;
     QMap<QString, QProgressBar*> m_mapLoopProgress;
     bool    m_bCheckboxEnable;
+    quint32         m_nPassCnts;
+    quint32         m_nFailCnts;
+    quint32         m_nExceCnts;
 };
 
 #endif // TESTMANGER_H

@@ -14,10 +14,18 @@
 
 #include <QTreeWidget>
 #include <QTemporaryFile>
+#include <QLabel>
 
 #include "tadefine.h"
 
-class TATreeWidget : public QTreeWidget
+#define TA_UUT_MAX_HEIGHT  60
+#define TA_UUT_SN_MAX_HEIGHT  20
+
+class TALabel;
+class TAcustomTreeWidget;
+class TAStandMsgBox;
+
+class TATreeWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -39,12 +47,28 @@ public:
     void updateItemsData(const QJsonObject& objData);
     void detailItemsData(const QJsonObject& objData);
 
+    void showTotalStatus(bool bShow, const QString& status, const QString& style);
+
+    void setSN(const QString& strSN);
+
 private:
     void updateParentItemClicked(QTreeWidgetItem *parent);
 
 private slots:
     void on_itemClicked(QTreeWidgetItem* item, int column);
     void on_itemChanged(QTreeWidgetItem *item, int column);
+    void on_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void on_statusClicked();
+
+public:
+    TAStandMsgBox* m_taMsgBox;
+
+private:
+    TALabel* m_lbStatus;
+    TALabel*  m_lbTitle;
+    TALabel*  m_lbSN;
+    TALabel*  m_lbSpendTime;
+    TAcustomTreeWidget* m_twTestPrj;
 };
 
 #endif // TATREEWIDGET_H

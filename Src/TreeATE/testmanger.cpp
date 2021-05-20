@@ -25,6 +25,7 @@
 #include <QMdiSubWindow>
 
 #include "tatreewidget.h"
+#include "tastandmsgbox.h"
 
 TestManger::TestManger(QMdiArea *pMdi, QTextBrowser *pBrower, QObject *parent): QObject(parent)
 {
@@ -37,6 +38,8 @@ TestManger::TestManger(QMdiArea *pMdi, QTextBrowser *pBrower, QObject *parent): 
     SetCheckboxEnable(false);
 
     connect(this, SIGNAL(startTesting(QString)), this, SLOT(on_startTesting(QString)), Qt::QueuedConnection);
+
+    ClearCurrentCounts();
 }
 
 TestManger::~TestManger()
@@ -138,9 +141,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
         if(pSubWin) {
             pSubWin->setWindowTitle(strName);
             // unallow closed
-            pSubWin->setWindowFlags(Qt::CustomizeWindowHint |
-                                    Qt::WindowMinimizeButtonHint |
-                                    Qt::WindowMaximizeButtonHint);
+            pSubWin->setWindowFlags(Qt::FramelessWindowHint);
             pSubWin->show();    // must be show
         }
 
@@ -218,8 +219,10 @@ void TestManger::on_startTesting(const QString& who)
 
     itor.value()->setProcessEnvironment(m_env);
     itor.value()->start("TestEngine", m_mapLstPara[who]);
-    m_mapTesting[who] = itor.value()->waitForStarted(3000);
-    qDebug() << "-------------------------Start Test for: " + who;
+    if(m_mapTesting[who] = itor.value()->waitForStarted(3000)) {
+        qDebug() << "-------------------------Start Test for: " + who;
+        m_mapTestWin.insert(itor.value()->processId(), who);
+    }
 }
 
 int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStation,
@@ -238,7 +241,10 @@ int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStati
 
     QFileInfo infoPrj(m_strPrjName);
     TATreeWidget* pTree = findTreeWidget(who);
-    if(pTree) nSelectedCnt = pTree->seletedUnitItems(tempFile, m_bCheckboxEnable);
+    if(pTree) {
+        nSelectedCnt = pTree->seletedUnitItems(tempFile, m_bCheckboxEnable);
+        pTree->setSN(mapSN[who]);
+    }
     tempFile->close();
 
     if(0 == nSelectedCnt)
@@ -267,6 +273,7 @@ int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStati
     m_mapLstPara.insert(who, lstPara);
 
     emit startTesting(who);
+
     return nSelectedCnt;
 }
 
@@ -346,6 +353,8 @@ void TestManger::UnloadUnits()
         delete itor.value();
     }
     m_prcTestEngine.clear();
+
+    m_mapTestWin.clear();
 
     m_lstDockWidget.clear();
     m_bIsLoaded = false;
@@ -441,6 +450,11 @@ void TestManger::on_updateTestItemStatus(const QString& who,
     }
 }
 
+void TestManger::ClearCurrentCounts()
+{
+    m_nPassCnts = m_nFailCnts = m_nExceCnts = 0;
+}
+
 void TestManger::on_testEngineFinished(const QString& who, int nCode)
 {
     qDebug() << who << " --- TestManger::on_testEngineFinished: " << nCode;
@@ -476,26 +490,35 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     QString strStatus;
     if(pTree) strStatus = pTree->currentPrjStatus();
     QString strPgBC = TA_PROGRESS_BC_OK;
+    QString strStsBC;
     QIcon icTabBC;
     QColor tabTextColor(255, 255, 255);
     if(strStatus == TA_STATUS_EXCE) {
         strPgBC = TA_PROGRESS_BC_EXCE;
+        strStsBC = TA_STATUS_BC_EXCE;
         icTabBC = QIcon(QPixmap(":/exce.png"));
         tabTextColor = TA_TAB_STATUS_EXCE;
+        m_nExceCnts++;
     }
     else if(strStatus == TA_STATUS_FAIL) {
         strPgBC = TA_PROGRESS_BC_FAIL;
+        strStsBC = TA_STATUS_BC_FAIL;
         icTabBC = QIcon(QPixmap(":/ng.png"));
         tabTextColor = TA_TAB_STATUS_FAIL;
+        m_nFailCnts++;
     }
     else if(strStatus == TA_STATUS_PASS) {
         strPgBC = TA_PROGRESS_BC_OK;
+        strStsBC = TA_STATUS_BC_OK;
         icTabBC = QIcon(QPixmap(":/ok.png"));
         tabTextColor = TA_TAB_STATUS_OK;
+        m_nPassCnts++;
     }
 
     // update the SubWindow's TabBar icon or color
     setTabIconUUT(who, icTabBC, tabTextColor);
+    pTree->showTotalStatus(true, strStatus, strStsBC);
+    emit updateCounts(m_nPassCnts, m_nFailCnts, m_nExceCnts);
 
     if(nCode) {
         m_rstLevel = Exception;
@@ -633,3 +656,45 @@ TATreeWidget* TestManger::findTreeWidget(const QString& who)
     }
     return NULL;
 }
+
+QString TestManger::MsgBox(qint64 pid, const QString& strPic, const QString& strMsg,
+               const int nType, const int mSec)
+{
+    auto itor = m_mapTestWin.find(pid);
+    if(itor != m_mapTestWin.end()) {
+        TATreeWidget* pSubWin = findTreeWidget(itor.value());
+        if(pSubWin) {
+            pSubWin->m_taMsgBox->SetShowData(strPic, strMsg, nType, mSec/1000);
+            pSubWin->m_taMsgBox->CloseDialog();
+            return pSubWin->m_taMsgBox->GetRetValue();
+        }
+    }
+    return "";
+}
+
+int TestManger::AsyncMsgBox(qint64 pid,const QString& strPic, const QString& strMsg,
+                const int nType, const int mSec)
+{
+    auto itor = m_mapTestWin.find(pid);
+    if(itor != m_mapTestWin.end()) {
+        TATreeWidget* pSubWin = findTreeWidget(itor.value());
+        if(pSubWin) {
+            pSubWin->m_taMsgBox->SetShowData(strPic, strMsg, nType, mSec/1000);
+        }
+    }
+    return 1;
+}
+
+bool TestManger::CloseAsyncMsgBox(qint64 pid, int msgBoxId)
+{
+    Q_UNUSED(msgBoxId)
+    auto itor = m_mapTestWin.find(pid);
+    if(itor != m_mapTestWin.end()) {
+        TATreeWidget* pSubWin = findTreeWidget(itor.value());
+        if(pSubWin) {
+            return pSubWin->m_taMsgBox->CloseDialog();
+        }
+    }
+    return false;
+}
+

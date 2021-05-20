@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QThread>
 
 #define TA_LOCALSQLITE_MODEL    "[LocalSqlite]: "
 #define TREEATE_TIME_FORMAT     "HH:mm:ss.zzz"
@@ -28,13 +29,18 @@
 
 OutputLocal::OutputLocal()
 {
-    m_dbSqlite = QSqlDatabase::addDatabase("QSQLITE", "sql_treeate_localsqlite");
-    QString strPath = qApp->applicationDirPath() + "/db/";
-    QDir dir(strPath);
-    if(!dir.exists())  {
-        dir.mkdir(strPath);
+    if(QSqlDatabase::contains("sql_treeate_localsqlite")) {
+        m_dbSqlite = QSqlDatabase::database("sql_treeate_localsqlite");
     }
-    m_dbSqlite.setDatabaseName(strPath + "treeate.sqlite");
+    else {
+        m_dbSqlite = QSqlDatabase::addDatabase("QSQLITE", "sql_treeate_localsqlite");
+        QString strPath = qApp->applicationDirPath() + "/db/";
+        QDir dir(strPath);
+        if(!dir.exists())  {
+            dir.mkdir(strPath);
+        }
+        m_dbSqlite.setDatabaseName(strPath + "treeate.sqlite");
+    }
 }
 
 bool OutputLocal::OpenOutput()
@@ -137,6 +143,9 @@ bool OutputLocal::OutputTestProjectRst(const TestProjectRst& tpr)
                               + "','" + tpr.m_strVersion + "','" + tpr.m_strLineName
                               + "','" + tpr.m_strBarcode + "'," + QString::number(tpr.m_nCount) + ")";
     QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    if(sqlQuery.isActive()) {
+        QThread::msleep(200);
+    }
     if(!sqlQuery.exec(insertSQL))
     {
         qDebug() << TA_LOCALSQLITE_MODEL << " Error:" << sqlQuery.lastError().text();
@@ -175,6 +184,9 @@ bool OutputLocal::UpdateTestProjectRst(const TestProjectRst& tpr)
             + "' where id = " + QString::number(itor.value());
 
     QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    if(sqlQuery.isActive()) {
+        QThread::msleep(200);
+    }
     if(!sqlQuery.exec(strUpdate))
     {
         qDebug() << TA_LOCALSQLITE_MODEL << strUpdate << " Error:" << sqlQuery.lastError().text();
@@ -238,6 +250,9 @@ bool OutputLocal::OutputTestCaseRst(const TestCaseRst& tcr, const QString& strPa
                               + "','" + tcr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "'," + QString::number(itor.value()) + ")";
     QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    if(sqlQuery.isActive()) {
+        QThread::msleep(200);
+    }
     if(!sqlQuery.exec(insertSQL))
     {
         qDebug() << TA_LOCALSQLITE_MODEL << insertSQL << " Error:" << sqlQuery.lastError().text();
@@ -272,6 +287,9 @@ bool OutputLocal::UpdateTestCaseRst(const TestCaseRst& tcr)
             + "' where id = " + QString::number(itor.value());
 
     QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    if(sqlQuery.isActive()) {
+        QThread::msleep(200);
+    }
     if(!sqlQuery.exec(strUpdate))
     {
         qDebug() << TA_LOCALSQLITE_MODEL << strUpdate << " Error:" <<sqlQuery.lastError().text();
@@ -304,6 +322,9 @@ bool OutputLocal::OutputDetailRst(const TestResult& tdr, const QString& strPathP
                               + "','" + tdr.m_strDesc + "','" + tdr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "','" + tdr.m_strStandard + "'," + QString::number(itor.value()) + ")";
     QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    if(sqlQuery.isActive()) {
+        QThread::msleep(200);
+    }
     if(!sqlQuery.exec(insertSQL))
     {
         qDebug() << TA_LOCALSQLITE_MODEL << insertSQL << " Error:" <<sqlQuery.lastError().text();

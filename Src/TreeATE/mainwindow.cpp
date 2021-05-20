@@ -37,11 +37,14 @@
 #include <QReadLocker>
 #include <QBrush>
 #include <QMdiSubWindow>
+#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{    
+{
+    setWindowFlags(Qt::WindowMinMaxButtonsHint);
+
     m_strAppDir = qApp->applicationDirPath();
     m_strPreSN = "";
     m_LogoutTimeCnt = 0;
@@ -69,12 +72,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_pTestMgr, SIGNAL(updateTotalStatus(eTestStatus, int)), this,
             SLOT(on_updateTotalStatus(eTestStatus, int)));
     connect(m_pTestMgr, SIGNAL(statusHisRst(eTestStatus)), this, SLOT(on_status_HistoryRst(eTestStatus)));
+    connect(m_pTestMgr, SIGNAL(updateCounts(quint32,quint32,quint32)), this, SLOT(updateCompletedCounts(quint32,quint32,quint32)));
 
     // statusBar
     m_labelPath = new QLabel(tr("Path of test project"), this);
     m_labelUser = new QLabel(tr("User name"), this);
     m_labelTime = new QLabel(tr("Current Time"), this);
-    m_labelHistoryRst = new QLabel("History Result", this);
+    m_labelHistoryRst = new QLabel(tr("History Result"), this);
+    m_labelHistoryRst->setToolTip(tr("Orange color indicates that there is local history result has not been uploaded to the server"));
     statusBar()->addWidget(m_labelPath, 1);
     statusBar()->addPermanentWidget(m_labelHistoryRst, 0);
     statusBar()->addPermanentWidget(m_labelUser, 1);
@@ -110,14 +115,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_pPluginsMgr = new PluginsMgr(this);
     m_pPluginsMgr->AddModelObj("TreeATE_GUI", this);
+    // TreeATE_Mutil_Sub is the TA_MutilMsgBox GUI Object
+    m_pPluginsMgr->AddModelObj("TreeATE_Mutil_Sub", m_pTestMgr);
 
     m_pResultsWin = new QProcess(this);
     m_pEditWin = new QProcess(this);
     connect(m_pEditWin, SIGNAL(finished(int)), this, SLOT(on_reload_testUnit()));
 
+    // Counts dock view
+    m_dockCounts = createDockWinCounts();
+    tabifyDockWidget(ui->dockWidget_Log, m_dockCounts);
+
     openSysCfg();
     unLoad();
     openLogFile();
+    setWindowState(Qt::WindowMaximized);
 }
 
 MainWindow::~MainWindow()
@@ -162,12 +174,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::openLogFile()
 {
-    QString strLogDir = qApp->applicationDirPath() + "\\Log\\TestEngine";
+    QString strLogDir = qApp->applicationDirPath() + "/Log/TestEngine";
     QDir dir(strLogDir);
     if(!dir.exists())
     {
-        ui->textBrowser_Log->append(tr("Not found the TestEngin log directory."));
-        return;
+        if(!dir.mkpath(strLogDir)) {
+            ui->textBrowser_Log->append(tr("Not found the TestEngine log directory."));
+            return;
+        }
     }
 
     m_pFSWatcher = new QFileSystemWatcher();
@@ -240,6 +254,8 @@ void MainWindow::loadUnits(const QString& strPrjName)
         else {
             m_pTestMgr->SetCheckboxEnable(false);
         }
+
+        on_actionTandem_triggered();
     }
 }
 
@@ -672,7 +688,7 @@ void MainWindow::openSysCfg()
     file.close();
 
     // list the language files at i18n/treeate
-    QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
+    QString strLangPath = m_strAppDir + "/i18n/treeate/";
     QDir dir(strLangPath);
     QStringList filters;
     filters << "*.qm";
@@ -778,12 +794,6 @@ void MainWindow::on_reload_testUnit()
         loadUnits(strFile);
 }
 
-QString MainWindow::GetCurretLang()
-{
-    QVariantMap vm = m_vaSysCfg.toMap();
-    return vm["Language"].toString();
-}
-
 bool MainWindow::getNeedCheckNetwork()
 {
     QVariantMap vm = m_vaSysCfg.toMap();
@@ -850,13 +860,121 @@ void MainWindow::on_actionTandem_triggered()
         QSize mdiSize = ui->mdiArea->size();
         int width = mdiSize.width() / nCnt;
         width = width < minWidth ? minWidth : width;
-        QSize subWinSize = QSize(width, mdiSize.height());
+        QSize subWinSize = QSize(width, mdiSize.height() - 6); // 6 size of edge
         int i = 0;
-        foreach(QMdiSubWindow* pSubWin, ui->mdiArea->subWindowList()) {
+        foreach(QMdiSubWindow* pSubWin, ui->mdiArea->subWindowList(QMdiArea::CreationOrder)) {
             ui->mdiArea->subWindowActivated(pSubWin);
             pSubWin->resize(subWinSize);
             pSubWin->move(width * i, 0/*pSubWin->pos().y()*/);
             i++;
         }
     }
+}
+
+QDockWidget* MainWindow::createDockWinCounts()
+{
+    QDockWidget* dockWidget = new QDockWidget(this);
+    dockWidget->setWindowTitle(tr("Counts"));
+    dockWidget->setLayoutDirection(Qt::LayoutDirectionAuto);
+    QWidget *dockWidgetContents = new QWidget(dockWidget);
+    dockWidgetContents->setContentsMargins(0, 0, 0, 0);
+    dockWidget->setWidget(dockWidgetContents);
+
+    QGridLayout* pGridLayout = new QGridLayout(dockWidgetContents);
+    pGridLayout->setContentsMargins(6, 6, 6, 6);
+
+    const QString strStyle = "font: 24pt \"Arial\";";
+    // Exception counts
+    QLabel* pLabel = new QLabel(dockWidgetContents);
+    pLabel->setText(tr("Exception Counts"));
+    m_labelExceCnts = new QLabel(dockWidgetContents);
+    m_labelExceCnts->setStyleSheet(strStyle);
+    m_labelExceRate = new QLabel(dockWidgetContents);
+    pGridLayout->addWidget(pLabel, 0, 0);
+    pGridLayout->addWidget(m_labelExceCnts, 1, 0);
+    pGridLayout->addWidget(m_labelExceRate, 2, 0);
+    pLabel->setAlignment(Qt::AlignCenter);
+    m_labelExceCnts->setAlignment(Qt::AlignCenter);
+    m_labelExceRate->setAlignment(Qt::AlignCenter);
+
+    // Fail counts
+    pLabel = new QLabel(dockWidgetContents);
+    pLabel->setText(tr("Fail Counts"));
+    m_labelFailCnts = new QLabel(dockWidgetContents);
+    m_labelFailCnts->setStyleSheet(strStyle);
+    m_labelFailRate = new QLabel(dockWidgetContents);
+    pGridLayout->addWidget(pLabel, 0, 1);
+    pGridLayout->addWidget(m_labelFailCnts, 1, 1);
+    pGridLayout->addWidget(m_labelFailRate, 2, 1);
+    pLabel->setAlignment(Qt::AlignCenter);
+    m_labelFailCnts->setAlignment(Qt::AlignCenter);
+    m_labelFailRate->setAlignment(Qt::AlignCenter);
+
+    // Pass counts
+    pLabel = new QLabel(dockWidgetContents);
+    pLabel->setText(tr("Pass Counts"));
+    m_labelPassCnts = new QLabel(dockWidgetContents);
+    m_labelPassCnts->setStyleSheet(strStyle);
+    m_labelPassRate = new QLabel(dockWidgetContents);
+    pGridLayout->addWidget(pLabel, 0, 2);
+    pGridLayout->addWidget(m_labelPassCnts, 1, 2);
+    pGridLayout->addWidget(m_labelPassRate, 2, 2);
+    pLabel->setAlignment(Qt::AlignCenter);
+    m_labelPassCnts->setAlignment(Qt::AlignCenter);
+    m_labelPassRate->setAlignment(Qt::AlignCenter);
+
+    // Total counts
+    pLabel = new QLabel(dockWidgetContents);
+    pLabel->setText(tr("Total Counts"));
+    m_labelTotalCnts = new QLabel(dockWidgetContents);
+    m_labelTotalCnts->setStyleSheet(strStyle);
+    pGridLayout->addWidget(pLabel, 0, 3);
+    pGridLayout->addWidget(m_labelTotalCnts, 1, 3);
+    pLabel->setAlignment(Qt::AlignCenter);
+    m_labelTotalCnts->setAlignment(Qt::AlignCenter);
+
+    // Clear button
+    QPushButton* pClearBtn = new QPushButton(dockWidgetContents);
+    pClearBtn->setText(tr("Clear"));
+    connect(pClearBtn, SIGNAL(clicked(bool)), SLOT(dockWinCounts_Clear_triggered()));
+    pGridLayout->addWidget(pClearBtn, 2, 3);
+
+    updateCompletedCounts(0, 0, 0);
+
+    return dockWidget;
+}
+
+void MainWindow::dockWinCounts_Clear_triggered()
+{
+    m_pTestMgr->ClearCurrentCounts();
+    updateCompletedCounts(0, 0, 0);
+}
+
+void MainWindow::updateCompletedCounts(quint32 nPass, quint32 nFail, quint32 nExce)
+{
+    const quint32 nTotal = nExce + nFail + nPass;
+    if(nTotal == 0) {
+        m_labelExceCnts->setText("0");
+        m_labelExceRate->setText("0.0%");
+
+        m_labelFailCnts->setText("0");
+        m_labelFailRate->setText("0.0%");
+
+        m_labelPassCnts->setText("0");
+        m_labelPassRate->setText("0.0%");
+
+        m_labelTotalCnts->setText("0");
+        return;
+    }
+
+    m_labelExceCnts->setText(QString::number(nExce));
+    m_labelExceRate->setText(QString::number((double)nExce / nTotal * 100, 'g', 4) + "%");
+
+    m_labelFailCnts->setText(QString::number(nFail));
+    m_labelFailRate->setText(QString::number((double)nFail / nTotal * 100, 'g', 4) + "%");
+
+    m_labelPassCnts->setText(QString::number(nPass));
+    m_labelPassRate->setText(QString::number((double)nPass / nTotal * 100, 'g', 4) + "%");
+
+    m_labelTotalCnts->setText(QString::number(nTotal));
 }
