@@ -15,8 +15,12 @@
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="78"/>
+        <source>Copyright 2021 David Yin</source>
+        <translation>版权所有 2021 David Yin </translation>
+    </message>
+    <message>
         <source>Copyright 2020 David Yin</source>
-        <translation>版权所有 2020 David Yin</translation>
+        <translation type="vanished">版权所有 2020 David Yin</translation>
     </message>
     <message>
         <location filename="../aboutdialog.ui" line="85"/>
@@ -276,38 +280,47 @@
         <translation type="vanished">英语(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="74"/>
+        <location filename="../mainwindow.cpp" line="78"/>
         <source>Path of test project</source>
         <translation>测试工程路径</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="75"/>
+        <location filename="../mainwindow.cpp" line="79"/>
         <source>User name</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="76"/>
+        <location filename="../mainwindow.cpp" line="80"/>
         <source>Current Time</source>
         <translation>当前时间</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="101"/>
+        <location filename="../mainwindow.cpp" line="81"/>
+        <source>History Result</source>
+        <translation>上传历史结果状态</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="82"/>
+        <source>Orange color indicates that there is local history result has not been uploaded to the server</source>
+        <translation>橙色表示本地历史记录结果尚未上传到服务器</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="106"/>
         <source>Please scan the barcode to load or play.</source>
         <translation>请扫码加载测试工程或开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="108"/>
+        <location filename="../mainwindow.cpp" line="113"/>
         <source>Line and station name.</source>
         <translation>产线和工位名称.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="169"/>
         <source>Not found the TestEngin log directory.</source>
-        <translation>没有找到TestEngine日志文件夹</translation>
+        <translation type="vanished">没有找到TestEngine日志文件夹</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="286"/>
-        <location filename="../mainwindow.cpp" line="744"/>
+        <location filename="../mainwindow.cpp" line="302"/>
+        <location filename="../mainwindow.cpp" line="760"/>
         <source>Critical</source>
         <translation>错误</translation>
     </message>
@@ -316,81 +329,116 @@
         <translation type="vanished">不能测试，请检查网络后重新加载测试工程</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="287"/>
+        <location filename="../mainwindow.cpp" line="182"/>
+        <source>Not found the TestEngine log directory.</source>
+        <translation>没有找到TestEngine的日志文件夹</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="303"/>
         <source>Please scan the barcode for the correct rules, refer the project option.</source>
         <translation>请根据工程选项中的条码规则扫描正确的条码.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="296"/>
-        <location filename="../mainwindow.cpp" line="315"/>
+        <location filename="../mainwindow.cpp" line="312"/>
+        <location filename="../mainwindow.cpp" line="331"/>
         <source>Warning</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="296"/>
+        <location filename="../mainwindow.cpp" line="312"/>
         <source>Please scan the product&apos;s barcode to play.</source>
         <translation>请扫产品条码开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="301"/>
+        <location filename="../mainwindow.cpp" line="317"/>
         <source>Question</source>
         <translation>询问</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="302"/>
+        <location filename="../mainwindow.cpp" line="318"/>
         <source>The same barcode to play, are you sure?</source>
         <translation>该条码刚才已测试，确定是否重测</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="315"/>
+        <location filename="../mainwindow.cpp" line="331"/>
         <source>Please selected the test item to play.</source>
         <translation>请选择测试项开始测试.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="412"/>
-        <location filename="../mainwindow.cpp" line="430"/>
+        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="../mainwindow.cpp" line="446"/>
         <source>Unload</source>
         <translation>未加载</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="434"/>
+        <location filename="../mainwindow.cpp" line="450"/>
         <source>Loading...</source>
         <translation>加载中...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="439"/>
+        <location filename="../mainwindow.cpp" line="455"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="443"/>
+        <location filename="../mainwindow.cpp" line="459"/>
         <source>GO...</source>
         <translation>测试中...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="453"/>
+        <location filename="../mainwindow.cpp" line="469"/>
         <source>ERROR</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="654"/>
+        <location filename="../mainwindow.cpp" line="670"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="734"/>
+        <location filename="../mainwindow.cpp" line="750"/>
         <source>Info</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="734"/>
+        <location filename="../mainwindow.cpp" line="750"/>
         <source>No matching loadable test project, refer the System options.</source>
         <translation>没有匹配可加载的测试工程，请参考系统选项.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="745"/>
+        <location filename="../mainwindow.cpp" line="761"/>
         <source>Please scan the SN for the correct rules, refer the project option.</source>
         <translation>请根据工程选项中的条码规则扫描正确的条码.</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="877"/>
+        <source>Counts</source>
+        <translation>计数</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="889"/>
+        <source>Exception Counts</source>
+        <translation>异常次数</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="902"/>
+        <source>Fail Counts</source>
+        <translation>不良次数</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="915"/>
+        <source>Pass Counts</source>
+        <translation>良品次数</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="928"/>
+        <source>Total Counts</source>
+        <translation>总次数</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="938"/>
+        <source>Clear</source>
+        <translation>清零</translation>
     </message>
 </context>
 <context>
@@ -444,27 +492,27 @@
 <context>
     <name>PluginsMgr</name>
     <message>
-        <location filename="../pluginsmgr.cpp" line="137"/>
+        <location filename="../pluginsmgr.cpp" line="135"/>
         <source>MsgServer was not init.</source>
         <translation>MsgServer没有初始化.</translation>
     </message>
     <message>
-        <location filename="../pluginsmgr.cpp" line="159"/>
+        <location filename="../pluginsmgr.cpp" line="157"/>
         <source>Failed to load the </source>
         <translation>加载Dll文件失败</translation>
     </message>
     <message>
-        <location filename="../pluginsmgr.cpp" line="166"/>
+        <location filename="../pluginsmgr.cpp" line="164"/>
         <source>Failed to resolve the </source>
         <translation>该文件不符合接口规则</translation>
     </message>
     <message>
-        <location filename="../pluginsmgr.cpp" line="173"/>
+        <location filename="../pluginsmgr.cpp" line="171"/>
         <source>Failed to create the instance.</source>
         <translation>创建GUI插件实例失败.</translation>
     </message>
     <message>
-        <location filename="../pluginsmgr.cpp" line="204"/>
+        <location filename="../pluginsmgr.cpp" line="202"/>
         <source>Script exception at line(%1):%2</source>
         <translation>脚本异常在(%1)行:%2</translation>
     </message>
@@ -530,12 +578,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="64"/>
+        <location filename="../main.cpp" line="89"/>
         <source>TreeATE is running.</source>
         <translation>TreeATE正在运行.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="263"/>
+        <location filename="../mainwindow.cpp" line="279"/>
         <source>Open Test Project</source>
         <translation>打开测试工程</translation>
     </message>
@@ -548,14 +596,18 @@
         <translation>系统选项</translation>
     </message>
     <message>
+        <location filename="../syscfgdlg.ui" line="69"/>
+        <source>Stages Name:</source>
+        <translation>工序名称：</translation>
+    </message>
+    <message>
         <location filename="../syscfgdlg.ui" line="76"/>
         <source>Station Name:</source>
         <translation>工站名称:</translation>
     </message>
     <message>
-        <location filename="../syscfgdlg.ui" line="69"/>
         <source>Line Name:</source>
-        <translation>产线名称:</translation>
+        <translation type="vanished">产线名称:</translation>
     </message>
     <message>
         <location filename="../syscfgdlg.ui" line="83"/>
@@ -614,75 +666,80 @@
 <context>
     <name>TATreeWidget</name>
     <message>
-        <location filename="../tatreewidget.cpp" line="22"/>
+        <location filename="../tatreewidget.cpp" line="30"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="23"/>
+        <location filename="../tatreewidget.cpp" line="31"/>
         <source>Path</source>
         <translation>路径</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="24"/>
+        <location filename="../tatreewidget.cpp" line="32"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="25"/>
+        <location filename="../tatreewidget.cpp" line="33"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="26"/>
+        <location filename="../tatreewidget.cpp" line="34"/>
         <source>Result</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="27"/>
+        <location filename="../tatreewidget.cpp" line="35"/>
         <source>Standard</source>
         <translation>标准</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="28"/>
+        <location filename="../tatreewidget.cpp" line="36"/>
         <source>Start Time</source>
         <translation>开始时间</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="29"/>
+        <location filename="../tatreewidget.cpp" line="37"/>
         <source>Elapsed Time</source>
         <translation>用时</translation>
+    </message>
+    <message>
+        <location filename="../tatreewidget.cpp" line="88"/>
+        <source>Spend time</source>
+        <translation>花费时间</translation>
     </message>
 </context>
 <context>
     <name>TestManger</name>
     <message>
-        <location filename="../testmanger.cpp" line="62"/>
+        <location filename="../testmanger.cpp" line="65"/>
         <source>Loop progress</source>
         <translation>整体循环测试进度</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="121"/>
+        <location filename="../testmanger.cpp" line="124"/>
         <source>Upload histroy results</source>
         <translation>上传历史结果状态</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="285"/>
+        <location filename="../testmanger.cpp" line="292"/>
         <source>Question</source>
         <translation>询问</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="286"/>
+        <location filename="../testmanger.cpp" line="293"/>
         <source>It&apos;s loop test, are you sure?</source>
         <translation>循环测试，确定开始吗?</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="585"/>
+        <location filename="../testmanger.cpp" line="608"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="586"/>
+        <location filename="../testmanger.cpp" line="609"/>
         <source>Warning: Testing now, an error may occur when quit. Are you quit?</source>
         <translation>警告:测试中，退出将引发未知错误，是否退出？</translation>
     </message>
@@ -690,9 +747,13 @@
 <context>
     <name>TestProcess</name>
     <message>
-        <location filename="../testproccess.cpp" line="43"/>
         <source>Error</source>
-        <translation>错误</translation>
+        <translation type="vanished">错误</translation>
+    </message>
+    <message>
+        <location filename="../testproccess.cpp" line="43"/>
+        <source>Debug</source>
+        <translation>调试</translation>
     </message>
     <message>
         <location filename="../testproccess.cpp" line="44"/>

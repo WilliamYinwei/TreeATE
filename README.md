@@ -47,11 +47,23 @@ TreeATE Dev界面预览
 
 TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编译TreeATE之前，你需要安装以下开发工具：
 * [qt-opensource-windows-x86-msvc2013-5.7.0](http://download.qt.io/archive/qt/5.7/5.7.0/qt-opensource-windows-x86-msvc2013-5.7.0.exe)	(L)GPL v3
-* [QScintilla_gpl-2.10.3](https://riverbankcomputing.com/software/qscintilla/download) GPL v3
+* [QScintilla_gpl-2.10.3](https://github.com/WilliamYinwei/qscintilla/releases/tag/v2.10.3) GPL v3
+```
+  // 进入QT命令行模式  
+  cd qt4qt5
+  qmake
+  // 进入VS 2013 x86命令行模式
+  cd qt4qt5
+  nmake
+  nmake install 
+```
 * [PythonQt 3.2.0](https://github.com/MeVisLab/pythonqt)	LGPL v2.1 
+  - 这个可以先下载，不用先编译，因为3part中已默认生成了32位的DLL库文件
 * [Python27 32位](https://www.python.org/ftp/python/2.7.15/python-2.7.15.msi) Python License (Python-2.0)
 
-关于以上工具的安装和配置请参见它们的帮助文档。
+**注意: 推荐统一采用32位编译，并选择Release配置运行**
+
+关于以上工具的安装和详细配置请参见它们的帮助文档。
 
 ### 设置环境变量
 在Windows系统环境变量中添加如下2个环境变量，根据Python27的安装路径，例如

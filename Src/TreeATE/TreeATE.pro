@@ -31,7 +31,10 @@ SOURCES += main.cpp\
     manybarcodedlg.cpp \
     pluginsmgr.cpp \
     tasizedockwidget.cpp \
-    tatreewidget.cpp
+    tatreewidget.cpp \
+    talabel.cpp \
+    tacustomtreewidget.cpp \
+    tastandmsgbox.cpp
 
 HEADERS  += mainwindow.h \
     testproccess.h \
@@ -49,7 +52,10 @@ HEADERS  += mainwindow.h \
     pluginsmgr.h \
     tadefine.h \
     tasizedockwidget.h \
-    tatreewidget.h
+    tatreewidget.h \
+    talabel.h \
+    tacustomtreewidget.h \
+    tastandmsgbox.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

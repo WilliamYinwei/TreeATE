@@ -92,6 +92,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mpDetailItems.insert("Time of details", "td.dr_time");
     m_mpDetailItems.insert("Standard", "td.dr_standard");
     m_mpDetailItems.insert("Result of details", "td.dr_rst");
+
+    setWindowState(Qt::WindowMaximized);
 }
 
 MainWindow::~MainWindow()

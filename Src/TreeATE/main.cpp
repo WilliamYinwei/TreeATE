@@ -20,8 +20,32 @@
 #include <QDir>
 #include <QDateTime>
 #include <QTranslator>
+#include <QDebug>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QVariantMap>
 
 extern void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext, const QString& str);
+
+QString getTranLang() {
+    QFile file(qApp->applicationDirPath() + "/Config/sys.cfg");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Truncate))
+    {
+        qWarning() << file.errorString();
+        return "";
+    }
+
+    QJsonParseError jsonErr;
+    QJsonDocument jsonDocCfg = QJsonDocument::fromJson(file.readAll(), &jsonErr);
+    if(jsonDocCfg.isNull())
+    {
+        qWarning() <<  file.fileName() + " " + jsonErr.errorString();
+        return "";
+    }
+
+    QVariantMap vm = jsonDocCfg.toVariant().toMap();
+    return vm["Language"].toString();
+}
 
 int main(int argc, char *argv[])
 {
@@ -44,13 +68,14 @@ int main(int argc, char *argv[])
         QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
 
         QTranslator trans;
-        MainWindow w;
-        if(trans.load(w.GetCurretLang(), strLangPath)) {
+        if(trans.load(getTranLang(), strLangPath)) {
             qApp->installTranslator(&trans);
         }
+
+        MainWindow w;
         w.showFullScreen();
 
-        login dlgLogin(&w);
+        login dlgLogin(NULL);
         dlgLogin.SetHost(w.GetHostAddress());
         if(dlgLogin.exec() == QDialog::Accepted)
         {

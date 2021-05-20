@@ -11,14 +11,22 @@
 
 #include <QTextStream>
 #include <QHeaderView>
+#include <QVBoxLayout>
+#include <QMessageBox>
+#include <QFontMetrics>
 
 #include "tatreewidget.h"
 #include "statusdelegate.h"
+#include "talabel.h"
+#include "tacustomtreewidget.h"
+#include "tastandmsgbox.h"
 
-TATreeWidget::TATreeWidget(QWidget *parent):QTreeWidget(parent)
+TATreeWidget::TATreeWidget(QWidget *parent):QWidget(parent)
 {
-    setColumnCount(TA_COLUMN_SPEND_TIME + 1);
-    QTreeWidgetItem* itemHeader = headerItem();
+    m_twTestPrj = new TAcustomTreeWidget(this);
+    setContentsMargins(2, 2, 2, 2);
+    m_twTestPrj->setColumnCount(TA_COLUMN_SPEND_TIME + 1);
+    QTreeWidgetItem* itemHeader = m_twTestPrj->headerItem();
     itemHeader->setText(TA_COLUMN_UNIT_NAME, tr("Name"));
     itemHeader->setText(TA_COLUMN_UNIT_PATH, tr("Path"));
     itemHeader->setText(TA_COLUMN_UNIT_DESC, tr("Description"));
@@ -28,19 +36,115 @@ TATreeWidget::TATreeWidget(QWidget *parent):QTreeWidget(parent)
     itemHeader->setText(TA_COLUMN_START_TIME, tr("Start Time"));
     itemHeader->setText(TA_COLUMN_SPEND_TIME, tr("Elapsed Time"));
 
-    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    m_twTestPrj->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    hideColumn(TA_COLUMN_UNIT_PATH);
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    setItemDelegateForColumn(TA_COLUMN_TEST_STATUS, new StatusDelegate(parent));
+    m_twTestPrj->hideColumn(TA_COLUMN_UNIT_PATH);
+    m_twTestPrj->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_twTestPrj->setItemDelegateForColumn(TA_COLUMN_TEST_STATUS, new StatusDelegate(parent));
 
-    connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(on_itemClicked(QTreeWidgetItem*,int)));
-    connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(on_itemChanged(QTreeWidgetItem*,int)));    
+    connect(m_twTestPrj, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(on_itemClicked(QTreeWidgetItem*,int)));
+    connect(m_twTestPrj, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(on_itemChanged(QTreeWidgetItem*,int)));
+    connect(m_twTestPrj, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(on_itemDoubleClicked(QTreeWidgetItem*,int)));
+
+    QVBoxLayout* pVLayout = new QVBoxLayout(this);
+    pVLayout->setDirection(QBoxLayout::TopToBottom);
+    pVLayout->setContentsMargins(0, 0, 0, 0);
+    m_lbTitle = new TALabel(this);
+    m_lbTitle->setFixedHeight(TA_UUT_MAX_HEIGHT);
+    m_lbTitle->setAlignment(Qt::AlignCenter);
+    m_lbTitle->setStyleSheet("font: 24pt \"Arial\";");
+
+    m_lbSN = new TALabel(this);
+    m_lbSN->setFixedHeight(TA_UUT_SN_MAX_HEIGHT);
+    m_lbSN->setAlignment(Qt::AlignCenter);
+    m_lbSN->setStyleSheet("font: 14pt \"Arial\";");
+
+    QVBoxLayout* pHVLayout = new QVBoxLayout(this);
+    pHVLayout->setContentsMargins(6, 6, 6, 6);
+    pHVLayout->addWidget(m_lbTitle);
+    pHVLayout->addWidget(m_lbSN);
+
+    pVLayout->addLayout(pHVLayout);
+
+    // Tree View
+    pVLayout->addWidget(m_twTestPrj);
+    m_twTestPrj->show();
+
+    // Mutil-Messagebox
+    m_taMsgBox = new TAStandMsgBox(this);
+    pVLayout->addWidget(m_taMsgBox);
+
+    // Status window
+    m_lbStatus = new TALabel(this);
+    m_lbStatus->setAlignment(Qt::AlignCenter);
+    pVLayout->addWidget(m_lbStatus);
+    m_lbStatus->hide();
+
+    // Spend time
+    m_lbSpendTime = new TALabel(this);
+    m_lbSpendTime->setAlignment(Qt::AlignCenter);
+    m_lbSpendTime->setFixedHeight(24);
+    m_lbSpendTime->setStyleSheet("font: 12pt \"Arial\";");
+    m_lbSpendTime->setToolTip(tr("Spend time"));
+    pVLayout->addWidget(m_lbSpendTime);
+    m_lbSpendTime->hide();
+
+    connect(m_lbStatus, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
+    connect(m_lbTitle, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
+    connect(m_lbSN, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
 }
 
 TATreeWidget::~TATreeWidget()
 {
+    if(m_twTestPrj)
+        delete m_twTestPrj;
+    if(m_lbStatus)
+        delete m_lbStatus;
+}
 
+void TATreeWidget::setSN(const QString &strSN)
+{
+    if(m_lbSN) {
+        QFontMetrics fontMet(m_lbSN->font());
+        QString strOmitSN = fontMet.elidedText(strSN, Qt::ElideMiddle, m_lbSN->width());
+        m_lbSN->setText(strOmitSN);
+        m_lbSN->setToolTip(strSN);
+    }
+}
+
+void TATreeWidget::showTotalStatus(bool bShow, const QString& status, const QString& style)
+{
+    if(!status.isEmpty() && !style.isEmpty()) {
+        m_lbStatus->setStyleSheet(style);
+        m_lbStatus->setText(status);
+
+        QTreeWidgetItem* item = m_twTestPrj->topLevelItem(0);
+        if(item) {
+            m_lbSpendTime->setText(item->text(TA_COLUMN_SPEND_TIME));
+        }
+    }
+    if(bShow) {
+        m_lbSpendTime->show();
+        m_lbStatus->show();
+        m_twTestPrj->hide();
+    }
+    else {
+        m_lbSpendTime->hide();
+        m_lbStatus->hide();
+        m_twTestPrj->show();
+    }
+}
+
+void TATreeWidget::on_statusClicked()
+{
+    showTotalStatus(m_lbStatus->isHidden(), "", "");
+}
+
+void TATreeWidget::on_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(item)
+    Q_UNUSED(column)
+    showTotalStatus(true, "", "");
 }
 
 void TATreeWidget::on_itemClicked(QTreeWidgetItem* item, int column)
@@ -97,7 +201,8 @@ void TATreeWidget::on_itemChanged(QTreeWidgetItem *item, int column)
 
     if(TA_COLUMN_TEST_STATUS == column)
     {
-        scrollTo(indexFromItem(item, column), QAbstractItemView::PositionAtCenter);
+        showTotalStatus(false, "", "");
+        m_twTestPrj->scrollTo(m_twTestPrj->getIndex(item, column), QAbstractItemView::PositionAtCenter);
     }
 }
 
@@ -152,11 +257,12 @@ bool TATreeWidget::addUnitItems(const QString &who, const QJsonObject &objData)
     int n = lstName.size();
     if(n == 2)  // Test project
     {
+        m_lbTitle->setText(who);
         QStringList lstTP;
         lstTP << who << strPath << strDesc;
         QTreeWidgetItem* item = NULL;
         lstTP << tr("") << tr("") << tr("") << tr("");
-        item = new QTreeWidgetItem(this, lstTP);
+        item = new QTreeWidgetItem(m_twTestPrj, lstTP);
         if(item) {
             item->setCheckState(0, Qt::Checked);
         }
@@ -169,7 +275,7 @@ bool TATreeWidget::addUnitItems(const QString &who, const QJsonObject &objData)
         QStringList lstTP;
         lstTP << lstName.at(2) << strPath << strDesc;
 
-        QTreeWidgetItem* parentItem = topLevelItem(0);
+        QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(0);
         if(parentItem) {
             QTreeWidgetItem* item = NULL;
             lstTP << tr("") << tr("") << tr("") << tr("");
@@ -192,7 +298,7 @@ bool TATreeWidget::addUnitItems(const QString &who, const QJsonObject &objData)
         lstTP << lstName.at(3) << strPath << strDesc;
 
         QTreeWidgetItem* parentItem = NULL;
-        QTreeWidgetItem* rootItem = topLevelItem(0);
+        QTreeWidgetItem* rootItem = m_twTestPrj->topLevelItem(0);
         for(int i = 0; i < rootItem->childCount(); i++)
         {
             if(rootItem->child(i)->text(TA_COLUMN_UNIT_PATH) ==
@@ -226,9 +332,9 @@ bool TATreeWidget::addUnitItems(const QString &who, const QJsonObject &objData)
 QStringList TATreeWidget::seletedPrj()
 {
     QStringList lstSel;
-    const int topCnt = topLevelItemCount();
+    const int topCnt = m_twTestPrj->topLevelItemCount();
     for(int i = 0; i < topCnt; i++) {
-        QTreeWidgetItem* parentItem = topLevelItem(i);
+        QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(i);
         if(NULL == parentItem)
             continue;
         if(parentItem->checkState(0) != Qt::Unchecked) {
@@ -243,7 +349,7 @@ int TATreeWidget::seletedUnitItems(QTemporaryFile* pFile, bool bCheckEnable)
 {
     int nSelectedCnt = 0;
     QTextStream in(pFile);
-    QTreeWidgetItemIterator itorItem(topLevelItem(0));
+    QTreeWidgetItemIterator itorItem(m_twTestPrj->topLevelItem(0));
 
     while(*itorItem) {
         QTreeWidgetItem* item = *itorItem;
@@ -262,7 +368,9 @@ int TATreeWidget::seletedUnitItems(QTemporaryFile* pFile, bool bCheckEnable)
 
 void TATreeWidget::clearPrjStatus()
 {
-    QTreeWidgetItem* parentItem = topLevelItem(0);
+    showTotalStatus(false, "", "");
+
+    QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(0);
     if(NULL == parentItem)
         return;
 
@@ -284,7 +392,7 @@ void TATreeWidget::clearPrjStatus()
 QString TATreeWidget::currentPrjStatus()
 {
     QString strStatus("");
-    QTreeWidgetItem* item = topLevelItem(0);
+    QTreeWidgetItem* item = m_twTestPrj->topLevelItem(0);
     if(item)
         strStatus = item->text(TA_COLUMN_TEST_STATUS);
     return strStatus;
@@ -292,12 +400,12 @@ QString TATreeWidget::currentPrjStatus()
 
 void TATreeWidget::refreshExpandAll()
 {    
-    expandAll();
+    m_twTestPrj->expandAll();
 }
 
 void TATreeWidget::spreadUnitItems()
 {
-    QTreeWidgetItemIterator itor(this);
+    QTreeWidgetItemIterator itor(m_twTestPrj);
     while(*itor) {
         QTreeWidgetItem* item = *itor;
         if(item->parent() != NULL) {
@@ -309,7 +417,7 @@ void TATreeWidget::spreadUnitItems()
 
 void TATreeWidget::shrinkUnitItems()
 {
-    QTreeWidgetItemIterator itor(this);
+    QTreeWidgetItemIterator itor(m_twTestPrj);
     while(*itor) {
         QTreeWidgetItem* item = *itor;
         if(item->parent() != NULL) {
@@ -321,7 +429,7 @@ void TATreeWidget::shrinkUnitItems()
 
 void TATreeWidget::startItemsData(const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = topLevelItem(0);
+    QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(0);
     if(NULL == parentItem)
         return;
 
@@ -335,10 +443,10 @@ void TATreeWidget::startItemsData(const QJsonObject& objData)
             item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
             item->setText(TA_COLUMN_START_TIME, objData["start"].toString());
 
-            SALabel* label = new SALabel(this);
+            SALabel* label = new SALabel(m_twTestPrj);
             label->StartMovie(":/running.gif");
             label->setAlignment(Qt::AlignCenter);
-            setItemWidget(item, TA_COLUMN_TEST_STATUS, label);
+            m_twTestPrj->setItemWidget(item, TA_COLUMN_TEST_STATUS, label);
         }
         ++itor;
     }
@@ -346,7 +454,7 @@ void TATreeWidget::startItemsData(const QJsonObject& objData)
 
 void TATreeWidget::updateItemsData(const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = topLevelItem(0);
+    QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(0);
     if(NULL == parentItem)
         return;
 
@@ -361,7 +469,7 @@ void TATreeWidget::updateItemsData(const QJsonObject& objData)
             item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
             item->setText(TA_COLUMN_SPEND_TIME, objData["spend"].toString());
 
-            setItemWidget(item, TA_COLUMN_TEST_STATUS, NULL);
+            m_twTestPrj->setItemWidget(item, TA_COLUMN_TEST_STATUS, NULL);
         }
         ++itor;
     }
@@ -369,7 +477,7 @@ void TATreeWidget::updateItemsData(const QJsonObject& objData)
 
 void TATreeWidget::detailItemsData(const QJsonObject& objData)
 {
-    QTreeWidgetItem* parentItem = topLevelItem(0);
+    QTreeWidgetItem* parentItem = m_twTestPrj->topLevelItem(0);
     if(NULL == parentItem)
         return;
 
