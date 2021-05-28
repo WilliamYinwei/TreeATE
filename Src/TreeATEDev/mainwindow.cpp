@@ -361,7 +361,7 @@ void MainWindow::on_actionSpread_items_Ctrl_triggered()
 void MainWindow::updateActions()
 {
     bool hasSelection = !m_tvTestItems->selectionModel()->selection().isEmpty();
-    QModelIndex& currIndex = m_tvTestItems->selectionModel()->currentIndex();
+    QModelIndex currIndex = m_tvTestItems->selectionModel()->currentIndex();
     bool hasCurrent = currIndex.isValid();
 
     int column = currIndex.column();
@@ -369,7 +369,7 @@ void MainWindow::updateActions()
     bool bRemovePara = column >= 2 ? true : false;
     bool bInsertPara = column >= 1 ? true : false;
 
-    QModelIndex& parentIndex = currIndex.parent();
+    QModelIndex parentIndex = currIndex.parent();
     bool notRoot = parentIndex.isValid();
     bool isCase = false;
     if(notRoot) {
