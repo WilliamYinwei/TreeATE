@@ -1,7 +1,7 @@
 ///
 /// @brief         Load and manage the test items.
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU LGPL v3
 ///
 /// Distributed under the GNU LGPL v3 License
@@ -272,14 +272,14 @@ void UnitMgr::initUnitPath(QJsonValue& jsonCfg)
 
                     objTS.remove("TestCase");
                     objTS.insert("Type", QJsonValue(eTestSuite));
-                    m_lstUnits.insert(strTSPathName, objTS);                    
+                    m_lstUnits.insert(strTSPathName, objTS);
                 }
             }
         }
 
         jsonObj.remove("TestSuite");
         jsonObj.insert("Type", QJsonValue(eTestProject));
-        m_lstUnits.insert(strPrjPathName, jsonObj);        
+        m_lstUnits.insert(strPrjPathName, jsonObj);
     }
 }
 

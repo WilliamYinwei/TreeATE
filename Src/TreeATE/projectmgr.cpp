@@ -2,7 +2,7 @@
 /// @brief         Test Project manager, include project name, version, loop counts
 ///                and barcode regex.
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU LGPL v3
 ///
 /// Distributed under the GNU LGPL v3 License
