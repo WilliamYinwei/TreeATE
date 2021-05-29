@@ -219,7 +219,7 @@ void TestManger::on_startTesting(const QString& who)
 
     itor.value()->setProcessEnvironment(m_env);
     itor.value()->start("TestEngine", m_mapLstPara[who]);
-    if(m_mapTesting[who] = itor.value()->waitForStarted(3000)) {
+    if((m_mapTesting[who] = itor.value()->waitForStarted(3000))) {
         qDebug() << "-------------------------Start Test for: " + who;
         m_mapTestWin.insert(itor.value()->processId(), who);
     }

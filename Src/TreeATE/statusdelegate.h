@@ -40,7 +40,7 @@ class SALabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit SALabel(QWidget *parent=0, Qt::WindowFlags f=0);
+    explicit SALabel(QWidget *parent=0, Qt::WindowFlags f=Qt::WindowFlags());
     ~SALabel();
     void StartMovie(const QString& strMovieFile);
 

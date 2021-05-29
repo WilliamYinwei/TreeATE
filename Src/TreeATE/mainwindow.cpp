@@ -201,7 +201,7 @@ void MainWindow::openLogFile()
 
 }
 
-void MainWindow::on_directory_changed(QString dir)
+void MainWindow::on_directory_changed(QString)
 {
 
 }
@@ -293,7 +293,7 @@ void MainWindow::on_actionPlay_triggered()
         QString strSN = m_leTotalSN->text();
 
         QString pattern = m_pTestMgr->GetMgr().getBarCodeReg();
-        pattern.trimmed();
+        pattern = pattern.trimmed();
         if(!pattern.isEmpty())
         {
             QRegExp rx(pattern);
@@ -717,7 +717,7 @@ void MainWindow::on_menuView_Show()
 void MainWindow::on_action_Results_triggered()
 {
     if(m_pResultsWin) {
-        m_pResultsWin->start("TreeResults.exe");
+        m_pResultsWin->start("TreeResults.exe",  QStringList());
         if(!m_pResultsWin->waitForStarted(3000))
         {
             QMessageBox::warning(this, "Warning", m_pResultsWin->errorString());
@@ -751,7 +751,7 @@ void MainWindow::on_barcode_returnPressed()
     }
     else {
         QString pattern = m_pTestMgr->GetMgr().getBarCodeReg();
-        pattern.trimmed();
+        pattern = pattern.trimmed();
         if(!pattern.isEmpty())
         {
             QRegExp rx(pattern);

@@ -355,7 +355,7 @@ int TATreeWidget::seletedUnitItems(QTemporaryFile* pFile, bool bCheckEnable)
         QTreeWidgetItem* item = *itorItem;
 
         // path of test unit with selected
-        if(bCheckEnable || item && (item->checkState(0) != Qt::Unchecked)) {
+        if(bCheckEnable || (item && (item->checkState(0) != Qt::Unchecked))) {
             QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
             in << line;
             nSelectedCnt++;

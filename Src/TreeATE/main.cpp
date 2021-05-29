@@ -135,5 +135,5 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
     ts << "[" << currDate.toString("yyyy-MM-dd HH:mm:ss.zzz")
        << "] " << strType << ": "
        << logContext.file << " " << logContext.function << " - " << logContext.line << ":\t"
-       << txt << endl;
+       << txt << Qt::endl;
 }
