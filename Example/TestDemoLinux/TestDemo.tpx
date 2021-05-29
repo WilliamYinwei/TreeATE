@@ -1,0 +1,37 @@
+{
+    "BarCodeReg": "abc\\d{1}",
+    "Desc": "It's demo test",
+    "GUIPlugins": [
+        {
+            "Com": "libGUI_TA_MsgBox.so.1.0.0",
+            "Name": "msg"
+        }
+    ],
+    "Instance": [
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo11",
+            "Parameter": [
+                {
+                    "Desc": "asdf1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "asdf2",
+                    "Name": "Gdd",
+                    "Value": "111"
+                },
+                {
+                    "Desc": "asdf3",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                }
+            ]
+        }
+    ],
+    "LoopCount": 1,
+    "Name": "TestDemos",
+    "failedToStop": false,
+    "stoppedForLoop": false
+}
