@@ -13,17 +13,17 @@
             "Name": "Demo11",
             "Parameter": [
                 {
-                    "Desc": "全局参数1",
+                    "Desc": "asdf1",
                     "Name": "Gabc",
                     "Value": "123"
                 },
                 {
-                    "Desc": "全局参数2",
+                    "Desc": "asdf2",
                     "Name": "Gdd",
                     "Value": "111"
                 },
                 {
-                    "Desc": "全局参数3",
+                    "Desc": "asdf3",
                     "Name": "Gall",
                     "Value": "22.3"
                 }
