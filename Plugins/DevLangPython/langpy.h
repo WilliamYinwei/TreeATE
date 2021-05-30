@@ -13,7 +13,7 @@
 #define LANGPY_H
 
 #include "imutlilang.h"
-#include "pythonqt.h"
+#include "PythonQt.h"
 
 #include <QSharedMemory>
 

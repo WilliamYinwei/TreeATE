@@ -355,7 +355,7 @@ int TATreeWidget::seletedUnitItems(QTemporaryFile* pFile, bool bCheckEnable)
         QTreeWidgetItem* item = *itorItem;
 
         // path of test unit with selected
-        if(bCheckEnable || item && (item->checkState(0) != Qt::Unchecked)) {
+        if(bCheckEnable || (item && (item->checkState(0) != Qt::Unchecked))) {
             QString line = item->text(TA_COLUMN_UNIT_PATH) + "\r\n";
             in << line;
             nSelectedCnt++;
@@ -399,7 +399,7 @@ QString TATreeWidget::currentPrjStatus()
 }
 
 void TATreeWidget::refreshExpandAll()
-{    
+{
     m_twTestPrj->expandAll();
 }
 
@@ -438,7 +438,7 @@ void TATreeWidget::startItemsData(const QJsonObject& objData)
         QTreeWidgetItem* item = *itor;
         if(NULL == item)
             break;
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
+        QString strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
         if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
             item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
             item->setText(TA_COLUMN_START_TIME, objData["start"].toString());
@@ -464,7 +464,7 @@ void TATreeWidget::updateItemsData(const QJsonObject& objData)
         if(NULL == item)
             break;
 
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
+        QString strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
         if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
             item->setText(TA_COLUMN_TEST_STATUS, objData["rst"].toString());
             item->setText(TA_COLUMN_SPEND_TIME, objData["spend"].toString());
@@ -487,7 +487,7 @@ void TATreeWidget::detailItemsData(const QJsonObject& objData)
         if(NULL == item)
             break;
 
-        QString& strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
+        QString strPath = item->text(TA_COLUMN_UNIT_PATH);   // text(1) is path of test unit
         if(strPath.compare(objData["path"].toString(), Qt::CaseInsensitive) == 0) {
             item->setText(TA_COLUMN_TEST_RST, objData["name"].toString() + "=" +
                     objData["value"].toString());

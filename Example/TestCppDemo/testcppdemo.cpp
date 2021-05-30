@@ -70,7 +70,7 @@ int TestCppDemo::teardown_suite2()
     OutputError("teardown_suite2");
     QString ret = GetProjectDesc();
     OutputError("GetProjectDesc:" + ret);
-    QString rst = GetTotalRst();
+    QString rst = QString::number(GetTotalRst());
     OutputError("GetTotalRst:" + rst);
     return 0;
 }

@@ -24,7 +24,7 @@ class GUI_TA_MSGBOXSHARED_EXPORT GUI_TA_MsgBox : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GUI_TA_MsgBox(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit GUI_TA_MsgBox(QWidget* parent = 0, Qt::WindowFlags f = Qt::WindowFlags());
     ~GUI_TA_MsgBox();
 
 public slots:

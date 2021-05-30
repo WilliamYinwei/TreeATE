@@ -3,7 +3,7 @@
     "Desc": "It's demo test",
     "GUIPlugins": [
         {
-            "Com": "GUI_TA_MsgBox.dll",
+            "Com": "libGUI_TA_MsgBox.so.1.0.0",
             "Name": "msg"
         }
     ],

@@ -89,7 +89,6 @@ void OutputMgr::CloseOutput()
 {
     foreach (auto itor, m_lstOutput) {
         itor->CloseOutput();
-        delete itor;
     }
     m_lstOutput.clear();
     m_pOutputSvr = NULL;
@@ -245,7 +244,7 @@ bool OutputMgr::UploadResult()
         fRst.close();
 
         if(bFileLoad && m_pOutputSvr != NULL && m_pOutputSvr->Save("")) {
-            DeleteLocalResult(strFile);            
+            DeleteLocalResult(strFile);
         }
         else {
             bOK = false;
@@ -261,7 +260,7 @@ void OutputMgr::DeleteLocalResult(const QString& strFileName)
 {
     QString strFile = m_appStrPath + "/Results/" + strFileName;
     QFileInfo info(strFile);
-    if(info.isFile()) {        
+    if(info.isFile()) {
         QDir dir;
         bool ok = dir.remove(strFile);
         qDebug() << info.absoluteFilePath() << " is file" << (ok ? ",  It was deleted." : " no deleted.");

@@ -1,7 +1,7 @@
 ///
 /// @brief         Test results manager
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU LGPL v3
 ///
 /// Distributed under the GNU LGPL v3 License
@@ -144,7 +144,7 @@ TestResult::TypeTestRst ResultMgr::updateRst(const QString& strPath,
         eCurrRst = TestResult::EXCE;
     else if(iRet == 0)
         eCurrRst = TestResult::PASS;
-    else if(iRet > 0)
+    else
         eCurrRst = TestResult::FAIL;
 
     QStringList lstName = strPath.split("/");

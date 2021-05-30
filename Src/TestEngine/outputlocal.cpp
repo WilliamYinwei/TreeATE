@@ -55,7 +55,7 @@ bool OutputLocal::OpenOutput()
             return false;
         }
 
-        QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+        QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
         QStringList lsTables = m_dbSqlite.tables();
         if(lsTables.count() <= 0) {
             const QString strCreateTables = "CREATE TABLE \"TestProject\" (\"name\" TEXT,\
@@ -142,7 +142,7 @@ bool OutputLocal::OutputTestProjectRst(const TestProjectRst& tpr)
                               + "','" + tpr.m_strUser + "','" + tpr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "','" + tpr.m_strVersion + "','" + tpr.m_strLineName
                               + "','" + tpr.m_strBarcode + "'," + QString::number(tpr.m_nCount) + ")";
-    QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
     if(sqlQuery.isActive()) {
         QThread::msleep(200);
     }
@@ -183,7 +183,7 @@ bool OutputLocal::UpdateTestProjectRst(const TestProjectRst& tpr)
             + "', desc = '" + tpr.m_strDesc
             + "' where id = " + QString::number(itor.value());
 
-    QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
     if(sqlQuery.isActive()) {
         QThread::msleep(200);
     }
@@ -249,7 +249,7 @@ bool OutputLocal::OutputTestCaseRst(const TestCaseRst& tcr, const QString& strPa
                         values('" + tcr.m_strName + "','" + tcr.m_strPath
                               + "','" + tcr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "'," + QString::number(itor.value()) + ")";
-    QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
     if(sqlQuery.isActive()) {
         QThread::msleep(200);
     }
@@ -286,7 +286,7 @@ bool OutputLocal::UpdateTestCaseRst(const TestCaseRst& tcr)
             + "', desc = '" + tcr.m_strDesc
             + "' where id = " + QString::number(itor.value());
 
-    QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
     if(sqlQuery.isActive()) {
         QThread::msleep(200);
     }
@@ -321,7 +321,7 @@ bool OutputLocal::OutputDetailRst(const TestResult& tdr, const QString& strPathP
                         values('" + tdr.m_strName + "','" + tdr.m_strPath + "','" + TestResult::ToString(tdr.m_eRst)
                               + "','" + tdr.m_strDesc + "','" + tdr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "','" + tdr.m_strStandard + "'," + QString::number(itor.value()) + ")";
-    QSqlQuery sqlQuery = QSqlQuery::QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
     if(sqlQuery.isActive()) {
         QThread::msleep(200);
     }

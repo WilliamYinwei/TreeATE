@@ -1,7 +1,7 @@
 ///
 /// @brief         TreeATE main function
 /// @author        David Yin  2018-12 willage.yin@163.com
-/// 
+///
 /// @license       GNU LGPL v3
 ///
 /// Distributed under the GNU LGPL v3 License
@@ -135,5 +135,5 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
     ts << "[" << currDate.toString("yyyy-MM-dd HH:mm:ss.zzz")
        << "] " << strType << ": "
        << logContext.file << " " << logContext.function << " - " << logContext.line << ":\t"
-       << txt << endl;
+       << txt << Qt::endl;
 }
