@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>23</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProject">
@@ -95,6 +95,7 @@
     <addaction name="menu_Test_Units"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
+    <addaction name="actionInsert_Output"/>
    </widget>
    <addaction name="menuProject"/>
    <addaction name="menu_Edit"/>
@@ -214,7 +215,7 @@
   </action>
   <action name="actionShrink_items_Ctrl">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATE/res.qrc">
      <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
    </property>
    <property name="text">
@@ -229,7 +230,7 @@
   </action>
   <action name="actionSpread_items_Ctrl">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset resource="../TreeATE/res.qrc">
      <normaloff>:/add.png</normaloff>:/add.png</iconset>
    </property>
    <property name="text">
@@ -318,9 +319,18 @@
     <string>Rename...</string>
    </property>
   </action>
+  <action name="actionInsert_Output">
+   <property name="text">
+    <string>Insert Output...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
+  <include location="../TreeATE/res.qrc"/>
   <include location="res.qrc"/>
  </resources>
  <connections/>

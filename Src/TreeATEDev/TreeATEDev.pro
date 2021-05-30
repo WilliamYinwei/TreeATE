@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     taprjcfgwidget.cpp \
     newprjdlg.cpp \
     tacsvparser.cpp \
-    dlgfind.cpp
+    dlgfind.cpp \
+    dlginsertoutput.cpp
 
 HEADERS  += mainwindow.h \
     tascriptedit.h \
@@ -36,12 +37,14 @@ HEADERS  += mainwindow.h \
     newprjdlg.h \
     tacsvparser.h \
     ate_dev.rc \
-    dlgfind.h
+    dlgfind.h \
+    dlginsertoutput.h
 
 FORMS    += mainwindow.ui \
     aboutdlg.ui \
     newprjdlg.ui \
-    dlgfind.ui
+    dlgfind.ui \
+    dlginsertoutput.ui
 
 RC_FILE += ate_dev.rc
 

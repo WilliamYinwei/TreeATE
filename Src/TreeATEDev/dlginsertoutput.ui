@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DlgInsertOutput</class>
+ <widget class="QDialog" name="DlgInsertOutput">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>418</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Insert Output Result for detial test item</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="4" column="1">
+      <widget class="QComboBox" name="comboBox_rst">
+       <item>
+        <property name="text">
+         <string>Info</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Pass</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Fail</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Exce</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Failed Module:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox_module">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Module1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Module2</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Failed Contant:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="checkBox_ts">
+       <property name="toolTip">
+        <string>Checked the value was paramete</string>
+       </property>
+       <property name="text">
+        <string>Stand Description:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEdit_stand"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEdit_value"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBox_tv">
+       <property name="toolTip">
+        <string>Checked the value was paramete</string>
+       </property>
+       <property name="text">
+        <string>Failed Value:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="checkBox_rst">
+       <property name="text">
+        <string>Result of item:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>150</height>
+        </size>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <property name="gridStyle">
+        <enum>Qt::SolidLine</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <row>
+        <property name="text">
+         <string>1</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>2</string>
+        </property>
+       </row>
+       <column>
+        <property name="text">
+         <string>Code</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Fixed</string>
+        </property>
+       </column>
+       <item row="0" column="0">
+        <property name="text">
+         <string>F0001</string>
+        </property>
+       </item>
+       <item row="0" column="1">
+        <property name="text">
+         <string>无法上电</string>
+        </property>
+       </item>
+       <item row="0" column="2">
+        <property name="text">
+         <string>检测电线连接</string>
+        </property>
+       </item>
+       <item row="1" column="0">
+        <property name="text">
+         <string>F0002</string>
+        </property>
+       </item>
+       <item row="1" column="1">
+        <property name="text">
+         <string>电压不足</string>
+        </property>
+       </item>
+       <item row="1" column="2">
+        <property name="text">
+         <string>检查供电模块</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_func">
+     <property name="text">
+      <string>__ate.OutputRstEx(&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Yes</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>comboBox_module</tabstop>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>checkBox_tv</tabstop>
+  <tabstop>lineEdit_value</tabstop>
+  <tabstop>checkBox_ts</tabstop>
+  <tabstop>lineEdit_stand</tabstop>
+  <tabstop>checkBox_rst</tabstop>
+  <tabstop>comboBox_rst</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DlgInsertOutput</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DlgInsertOutput</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

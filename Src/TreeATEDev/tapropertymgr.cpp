@@ -239,7 +239,7 @@ void TAPropertyMgrWidget::SetCurrentView(const QString& strFileName)
     QString strSuffix = infoFile.completeSuffix();
     strSuffix = strSuffix.toLower();
 
-    if(strSuffix == "dll") {
+    if(strSuffix == TA_TEST_COM_SUFFIX) {
         m_lvFunction->show();
         m_splitter->hide();
         m_labelImage->hide();
@@ -509,7 +509,7 @@ QStringList TAPropertyMgrWidget::GetAPIsFromModels()
         if(item) {
             QString strFileName = item->text();
             QFileInfo info(strFileName);
-            if(info.completeSuffix().compare("dll", Qt::CaseInsensitive) == 0)
+            if(info.completeSuffix().compare(TA_TEST_COM_SUFFIX, Qt::CaseInsensitive) == 0)
             {
                 lstFunc << OpenDllFunc(m_strPrjPath + "/libs/" + strFileName, false);
             }

@@ -18,6 +18,7 @@
 #include "tapropertymgr.h"
 #include "newprjdlg.h"
 #include "dlgfind.h"
+#include "dlginsertoutput.h"
 
 #include <QSplitter>
 #include <QTableView>
@@ -742,5 +743,13 @@ void MainWindow::on_actionRename_triggered()
 
         QFile::rename(strDistPath + oldFileName + ".tpx", strDistPath + newFileName + ".tpx");
         close();
+    }
+}
+
+void MainWindow::on_actionInsert_Output_triggered()
+{
+    DlgInsertOutput dlgInsert(this);
+    if(QDialog::Accepted == dlgInsert.exec()) {
+         m_scriptEdit->GetScriptEdit()->insert(dlgInsert.GetInsertStr());
     }
 }

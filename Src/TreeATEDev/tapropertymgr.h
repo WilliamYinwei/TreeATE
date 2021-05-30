@@ -27,6 +27,12 @@ class QCheckBox;
 class QPushButton;
 class TAPrjCfgWidget;
 
+#ifdef WIN32
+#define TA_TEST_COM_SUFFIX  "dll"
+#else
+#define TA_TEST_COM_SUFFIX  "so"
+#endif
+
 class TAPropertyMgrWidget : public QDockWidget
 {
     Q_OBJECT

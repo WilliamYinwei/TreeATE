@@ -100,6 +100,8 @@ private slots:
 
     void on_actionRename_triggered();
 
+    void on_actionInsert_Output_triggered();
+
 protected:
     bool importModelFile(const QString& sourcePath, const QString& distPath);
     void closeEvent(QCloseEvent *event);    

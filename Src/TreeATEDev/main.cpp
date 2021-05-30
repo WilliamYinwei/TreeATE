@@ -16,35 +16,29 @@
 #include <QFile>
 #include <QDateTime>
 #include <QTextStream>
-
-#if defined(Q_OS_WIN)
-    #include <Windows.h>
+#ifdef WIN32
+#include <Windows.h>
 #endif
-
 #include <QDebug>
 
 extern void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext, const QString& str);
-
-#if defined(Q_OS_WIN)
+#ifdef WIN32
 long __stdcall callbackCrash(_EXCEPTION_POINTERS*   excp)
-    {
-        EXCEPTION_RECORD* record = excp->ExceptionRecord;
-        QString errCode(QString::number(record->ExceptionCode,16)),errAdr(QString::number((uint)record->ExceptionAddress,16));
-        QString sCrashInfo = QString("Error code: %1 address: %2").arg(errCode).arg(errAdr);
-        qDebug() <<"Error:\n" << sCrashInfo;
+{
+    EXCEPTION_RECORD* record = excp->ExceptionRecord;
+    QString errCode(QString::number(record->ExceptionCode,16)),errAdr(QString::number((uint)record->ExceptionAddress,16));
+    QString sCrashInfo = QString("Error code: %1 address: %2").arg(errCode).arg(errAdr);
+    qDebug() <<"Error:\n" << sCrashInfo;
 
-        return EXCEPTION_EXECUTE_HANDLER;
-    }
+    return EXCEPTION_EXECUTE_HANDLER;
+}
 #endif
 
 int main(int argc, char *argv[])
 {
-    #if defined(Q_OS_WIN)
-        SetUnhandledExceptionFilter(callbackCrash);
-    #elif defined(Q_OS_LINUX)
-        // TODO: handle exceptions on Linux.
-    #endif
-
+#ifdef WIN32
+    SetUnhandledExceptionFilter(callbackCrash);
+#endif
     QApplication a(argc, argv);
     qInstallMessageHandler(customMessageHandler);
     MainWindow w;
@@ -62,7 +56,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
 {
     QString txt = str;
     // write to file
-    QString strLogDir = qApp->applicationDirPath() + "\\Log\\TreeATEDev";
+    QString strLogDir = qApp->applicationDirPath() + "/Log/TreeATEDev";
     QDir dir(strLogDir);
     if(!dir.exists())
     {
@@ -72,7 +66,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
     // generate the log file name
     QDateTime currDate = QDateTime::currentDateTime();
     QString fName = currDate.toString("yyyy-MM-dd");
-    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    fName = QString("%1/%2.txt").arg(strLogDir).arg(fName);
 
     QFile outFile(fName);
     outFile.open(QIODevice::WriteOnly | QIODevice::Append);
@@ -101,5 +95,5 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
     ts << "[" << currDate.toString("yyyy-MM-dd HH:mm:ss.zzz")
        << "] " << strType << ": "
        << logContext.file << " " << logContext.function << " - " << logContext.line << ":\t"
-       << txt << Qt::endl;
+       << txt << endl;
 }
