@@ -1,0 +1,102 @@
+{
+    "Desc": "demo",
+    "Name": "testdemo",
+    "Parameter": {
+        "Name1": "gfedcba",
+        "Name2": "abcdefg"
+    },
+    "Public": {
+        "Models": [
+            {
+                "Com": "libTA_MsgBox.so",
+                "Obj": "taOld"
+            },
+            {
+                "Com": "libTA_MutilMsgBox.so",
+                "Obj": "ta"
+            }
+        ],
+        "Parameter": [
+            {
+                "Desc": "测试员可修改的参数1",
+                "Name": "Gabc",
+                "Value": "123"
+            },
+            {
+                "Desc": "测试员可修改的参数1",
+                "Name": "Gall",
+                "Value": "22.3"
+            },
+            {
+                "Desc": "测试(测试套启动)",
+                "Name": "g_rstSetupSuite",
+                "Value": "0"
+            },
+            {
+                "Desc": "测试(测试套退出)",
+                "Name": "g_rstExitSuite",
+                "Value": "0"
+            },
+            {
+                "Desc": "测试(测试项)",
+                "Name": "g_rstTest",
+                "Value": "0"
+            }
+        ]
+    },
+    "TestSuite": [
+        {
+            "Desc": "suite2 test",
+            "Name": "suite2",
+            "Parameter": {
+                "Name1": "2",
+                "Name2": "2"
+            },
+            "TestCase": [
+                {
+                    "Desc": "描述2",
+                    "Name": "test2",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                },
+                {
+                    "Desc": "描述1",
+                    "Name": "test1",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                }
+            ]
+        },
+        {
+            "Desc": "suite1描述",
+            "Name": "suite1",
+            "Parameter": {
+                "Name1": "2",
+                "Name2": "2"
+            },
+            "TestCase": [
+                {
+                    "Desc": "描述1",
+                    "Name": "test1",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                },
+                {
+                    "Desc": "描述2",
+                    "Name": "test2",
+                    "Parameter": {
+                        "Name1": "1",
+                        "Name2": "2"
+                    }
+                }
+            ]
+        }
+    ],
+    "Ver": "2.1.0"
+}

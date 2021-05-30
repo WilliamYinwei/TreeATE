@@ -1,0 +1,78 @@
+{
+    "BarCodeReg": "",
+    "Desc": "It's demo test",
+    "GUIPlugins": [
+        {
+            "Com": "libGUI_TA_MsgBox.so",
+            "Name": "msg"
+        }
+    ],
+    "Instance": [
+        {
+            "File": "TestDemo.tp",
+            "Name": "1",
+            "Parameter": [
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
+                }
+            ]
+        },
+        {
+            "File": "TestDemo.tp",
+            "Name": "2",
+            "Parameter": [
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "测试员可修改的参数1",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                },
+                {
+                    "Desc": "测试(测试套启动)",
+                    "Name": "g_rstSetupSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试套退出)",
+                    "Name": "g_rstExitSuite",
+                    "Value": "0"
+                },
+                {
+                    "Desc": "测试(测试项)",
+                    "Name": "g_rstTest",
+                    "Value": "0"
+                }
+            ]
+        }
+    ],
+    "LoopCount": 1,
+    "Name": "TestDemos",
+    "failedToStop": true,
+    "stoppedForLoop": false
+}

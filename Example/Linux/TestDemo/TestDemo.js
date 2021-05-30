@@ -77,5 +77,5 @@ function test_test2()
 	sleep(2000);
 	__ate.OutputRst(Name2, Gabc, ret);
 	ta.CloseAsyncMsgBox(ret);
-	return -3;
+	return 0;
 }
