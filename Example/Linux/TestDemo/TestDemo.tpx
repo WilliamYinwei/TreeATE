@@ -1,0 +1,37 @@
+{
+    "BarCodeReg": "abc\\d{1}",
+    "Desc": "It's demo test",
+    "GUIPlugins": [
+        {
+            "Com": "libGUI_TA_MsgBox.so",
+            "Name": "msg"
+        }
+    ],
+    "Instance": [
+        {
+            "File": "TestDemo.tp",
+            "Name": "Demo11",
+            "Parameter": [
+                {
+                    "Desc": "全局参数1",
+                    "Name": "Gabc",
+                    "Value": "123"
+                },
+                {
+                    "Desc": "全局参数2",
+                    "Name": "Gdd",
+                    "Value": "111"
+                },
+                {
+                    "Desc": "全局参数3",
+                    "Name": "Gall",
+                    "Value": "22.3"
+                }
+            ]
+        }
+    ],
+    "LoopCount": 1,
+    "Name": "TestDemos",
+    "failedToStop": false,
+    "stoppedForLoop": false
+}
