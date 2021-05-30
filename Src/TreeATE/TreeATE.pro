@@ -15,7 +15,7 @@ TEMPLATE = app
 CONFIG(release, debug|release): DESTDIR = ../../bin
 CONFIG(debug, debug|release): DESTDIR = ../../bind
 
-INCLUDEPATH += ../../Libs/TALocalSocket
+INCLUDEPATH += $$PWD/../../Libs/TALocalSocket
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -76,10 +76,12 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 LIBS += -L$$DESTDIR/libs/ -lTALocalSocket
 
-TRANSLATIONS += $${PWD}/i18n/en.ts \
+win32:TRANSLATIONS += $${PWD}/i18n/en.ts \
     $${PWD}/i18n/zh.ts
+unix:TRANSLATIONS += $$PWD/i18n/en.ts \
+    $$PWD/i18n/zh.ts
 
-linux-g++{
+unix {
     # for linux
     QMAKE_POST_LINK += $$quote(lrelease $${TRANSLATIONS}$$escape_expand(\n\t))
 
