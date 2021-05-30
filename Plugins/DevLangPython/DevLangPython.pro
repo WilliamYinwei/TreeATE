@@ -15,8 +15,8 @@ CONFIG(debug, debug|release): DESTDIR = ../../bind
 include ( ../../3part/PythonQt/build/common.prf )
 include ( ../../3part/PythonQt/build/PythonQt.prf )
 
-INCLUDEPATH += ../../3part/PythonQt/include
-INCLUDEPATH += ../../Src/TestEngine
+INCLUDEPATH += $$PWD/../../3part/PythonQt/include
+INCLUDEPATH += $$PWD/../../Src/TestEngine
 
 DEFINES += DEVLANGCHOOSE_LIBRARY
 

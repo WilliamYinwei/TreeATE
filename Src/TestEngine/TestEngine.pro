@@ -44,7 +44,7 @@ HEADERS += \
     langqs.h \
     maintask.h
 
-linux-g++{
+unix: {
     # for linux
     EXTRA_BINFILES += \
         $${PWD}/OutputCfg.ini

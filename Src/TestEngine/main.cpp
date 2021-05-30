@@ -22,7 +22,7 @@
 // Let's debug informaion output to the log file
 void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext, const QString& str)
 {
-    QString strLogDir = qApp->applicationDirPath() + "\\Log\\TestEngine";
+    QString strLogDir = qApp->applicationDirPath() + "/Log/TestEngine";
     QDir dir(strLogDir);
     if(!dir.exists())
     {
@@ -31,7 +31,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
 
     QDateTime currDate = QDateTime::currentDateTime();
     QString fName = currDate.toString("yyyy-MM-dd");
-    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    fName = QString("%1/%2.txt").arg(strLogDir).arg(fName);
 
     QFile outFile(fName);
     outFile.open(QIODevice::WriteOnly | QIODevice::Append);

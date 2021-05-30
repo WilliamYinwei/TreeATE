@@ -89,6 +89,7 @@ void OutputMgr::CloseOutput()
 {
     foreach (auto itor, m_lstOutput) {
         itor->CloseOutput();
+        delete itor;
     }
     m_lstOutput.clear();
     m_pOutputSvr = NULL;

@@ -152,8 +152,13 @@ bool TestRunner::initScript(const QString& prjPath)
 
         QString strDllFile = vmModel["Com"].toString();
         QFileInfo fInfo(strDllFile);
+#ifdef WIN32
         if(fInfo.suffix().compare("dll", Qt::CaseInsensitive) != 0)
             continue;
+#else
+        if(fInfo.suffix().compare("so", Qt::CaseInsensitive) != 0)
+            continue;
+#endif
 
         strDllFile = prjPath + "/libs/" + strDllFile;
 

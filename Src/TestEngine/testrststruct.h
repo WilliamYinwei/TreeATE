@@ -42,7 +42,7 @@ public:
             strRst = "Exce";
             break;
         default:
-            qDebug() << "No defined, eRst = " << eRst << Qt::endl;
+            qDebug() << "No defined, eRst = " << eRst << endl;
             break;
         };
         return strRst;
