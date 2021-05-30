@@ -70,16 +70,16 @@ bool TestRunner::initScript(const QString& prjPath)
 
         QDir dir;
         dir.setPath(qApp->applicationDirPath());
-        QStringList pythonDlls = dir.entryList(QStringList() << "DevLangPython*.dll", QDir::Files);
+        QStringList pythonDlls = dir.entryList(QStringList() << TA_DEV_LANG_PYTHON, QDir::Files);
         if(pythonDlls.count() <= 0) {
             m_lastErr = TA_TR("Can't found the DevLangPython*.dll");
             TA_OUT_DEBUG_INFO << m_lastErr;
             return false;
         }
-        const QString strDllFile(pythonDlls.at(0));
+        const QString strDllFile(dir.path() + "/" + pythonDlls.at(0));
         QLibrary myLib(strDllFile);
         if(!myLib.load()) {
-            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
+            m_lastErr = TA_TR("Failed to load the ") + strDllFile + ". error:" + myLib.errorString();
             TA_OUT_DEBUG_INFO << m_lastErr;
             return false;
         }
@@ -152,13 +152,8 @@ bool TestRunner::initScript(const QString& prjPath)
 
         QString strDllFile = vmModel["Com"].toString();
         QFileInfo fInfo(strDllFile);
-#ifdef WIN32
-        if(fInfo.suffix().compare("dll", Qt::CaseInsensitive) != 0)
+        if(fInfo.suffix().compare(TA_TEST_COM_SUFFIX, Qt::CaseInsensitive) != 0)
             continue;
-#else
-        if(fInfo.suffix().compare("so", Qt::CaseInsensitive) != 0)
-            continue;
-#endif
 
         strDllFile = prjPath + "/libs/" + strDllFile;
 

@@ -8,7 +8,7 @@
 /// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
-
+#include "tadefine.h"
 #include "pluginsmgr.h"
 #include "talocalsocket.h"
 
@@ -147,7 +147,7 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
 
         QString strDllFile = vmModel["Com"].toString();
         QFileInfo fInfo(strDllFile);
-        if(fInfo.suffix().compare("dll", Qt::CaseInsensitive) != 0)
+        if(fInfo.suffix().compare(TA_TEST_COM_SUFFIX, Qt::CaseInsensitive) != 0)
             continue;
 
         strDllFile = strPath + "/libs/" + strDllFile;

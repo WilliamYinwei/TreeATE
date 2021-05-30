@@ -29,7 +29,7 @@ extern void customMessageHandler(QtMsgType type, const QMessageLogContext & logC
 
 QString getTranLang() {
     QFile file(qApp->applicationDirPath() + "/Config/sys.cfg");
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Truncate))
+    if(!file.open(QIODevice::ReadOnly))
     {
         qWarning() << file.errorString();
         return "";
@@ -59,10 +59,11 @@ int main(int argc, char *argv[])
         qApp->setStyleSheet(stylesheet);
         file.close();
     }
-
+#ifdef WIN32
     QSharedMemory sharedMemory("TreeATE_exe");
     if (sharedMemory.create(1) && sharedMemory.error() != QSharedMemory::AlreadyExists)
     {
+#endif
         qInstallMessageHandler(customMessageHandler);
 
         QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
@@ -83,11 +84,13 @@ int main(int argc, char *argv[])
             w.setFocus();
             iRet = a.exec();
         }
+#ifdef WIN32
     }
     else
     {
         QMessageBox::warning(NULL, "Warning", QObject::tr("TreeATE is running."));
     }
+#endif
 
     return iRet;
 }
@@ -96,7 +99,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
 {
     QString txt = str;
     // write to file
-    QString strLogDir = qApp->applicationDirPath() + "\\Log";
+    QString strLogDir = qApp->applicationDirPath() + "/Log";
     QDir dir(strLogDir);
     if(!dir.exists())
     {
@@ -106,7 +109,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext,
     // generate the log file name
     QDateTime currDate = QDateTime::currentDateTime();
     QString fName = currDate.toString("yyyy-MM-dd");
-    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    fName = QString("%1/%2.txt").arg(strLogDir).arg(fName);
 
     QFile outFile(fName);
     outFile.open(QIODevice::WriteOnly | QIODevice::Append);

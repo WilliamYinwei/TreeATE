@@ -192,7 +192,7 @@ void MainWindow::openLogFile()
 
     QDateTime currDate = QDateTime::currentDateTime();
     QString fName = currDate.toString("yyyy-MM-dd");
-    fName = QString("%1\\%2.txt").arg(strLogDir).arg(fName);
+    fName = QString("%1/%2.txt").arg(strLogDir).arg(fName);
     m_pFSWatcher->addPath(fName);
 
     m_pLogFile = new QFile(fName);
@@ -665,7 +665,7 @@ void MainWindow::on_actionSys_options_triggered()
 void MainWindow::openSysCfg()
 {
     QFile file(m_strAppDir + "/Config/sys.cfg");
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Truncate))
+    if(!file.open(QIODevice::ReadOnly))
     {
         QMessageBox::warning(this, tr("Error"),
                             file.errorString());
@@ -717,7 +717,7 @@ void MainWindow::on_menuView_Show()
 void MainWindow::on_action_Results_triggered()
 {
     if(m_pResultsWin) {
-        m_pResultsWin->start("TreeResults.exe",  QStringList());
+        m_pResultsWin->start(m_strAppDir + "/TreeResults",  QStringList());
         if(!m_pResultsWin->waitForStarted(3000))
         {
             QMessageBox::warning(this, "Warning", m_pResultsWin->errorString());
@@ -778,7 +778,7 @@ void MainWindow::on_action_Edit_triggered()
         if(info.isFile()) {
             lstPara << strPath;
         }
-        m_pEditWin->start("TreeATEDev.exe", lstPara);
+        m_pEditWin->start(m_strAppDir + "/TreeATEDev", lstPara);
         if(!m_pEditWin->waitForStarted(3000))
         {
             QMessageBox::warning(this, "Warning", m_pEditWin->errorString());
@@ -860,7 +860,7 @@ void MainWindow::on_actionTandem_triggered()
         QSize mdiSize = ui->mdiArea->size();
         int width = mdiSize.width() / nCnt;
         width = width < minWidth ? minWidth : width;
-        QSize subWinSize = QSize(width, mdiSize.height() - 6); // 6 size of edge
+        QSize subWinSize = QSize(width, mdiSize.height());
         int i = 0;
         foreach(QMdiSubWindow* pSubWin, ui->mdiArea->subWindowList(QMdiArea::CreationOrder)) {
             ui->mdiArea->subWindowActivated(pSubWin);

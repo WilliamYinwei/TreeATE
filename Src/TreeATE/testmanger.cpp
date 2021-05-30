@@ -128,7 +128,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
         m_lstDockWidget.append(m_pUploadRst->getDockWidget());
     }
 
-    m_pUploadRst->start("TestEngine", QStringList() << "uploadrst");
+    m_pUploadRst->start(qApp->applicationDirPath() + "/TestEngine", QStringList() << "uploadrst");
 
     // loading test projects
     strTitle = m_prjMgr.getPrjName() + " - " + m_prjMgr.getPrjDescription();
@@ -161,7 +161,7 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
         lstPara << infoPrj.absolutePath() + "/" + m_prjMgr.getTestPrjFileName(strName)
                 << "-l";
         pTestPrj->setProcessEnvironment(m_env);
-        pTestPrj->start("TestEngine", lstPara);
+        pTestPrj->start(qApp->applicationDirPath() + "/TestEngine", lstPara);
         pTestPrj->waitForFinished(1000);
     }
 
@@ -218,10 +218,11 @@ void TestManger::on_startTesting(const QString& who)
     if(pTree) pTree->clearPrjStatus();
 
     itor.value()->setProcessEnvironment(m_env);
-    itor.value()->start("TestEngine", m_mapLstPara[who]);
-    if(m_mapTesting[who] = itor.value()->waitForStarted(3000)) {
+    itor.value()->start(qApp->applicationDirPath() + "/TestEngine", m_mapLstPara[who]);
+    if(itor.value()->waitForStarted(3000)) {
         qDebug() << "-------------------------Start Test for: " + who;
         m_mapTestWin.insert(itor.value()->processId(), who);
+        m_mapTesting[who] = true;
     }
 }
 
@@ -517,7 +518,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
 
     // update the SubWindow's TabBar icon or color
     setTabIconUUT(who, icTabBC, tabTextColor);
-    pTree->showTotalStatus(true, strStatus, strStsBC);
+    if(pTree) pTree->showTotalStatus(true, strStatus, strStsBC);
     emit updateCounts(m_nPassCnts, m_nFailCnts, m_nExceCnts);
 
     if(nCode) {

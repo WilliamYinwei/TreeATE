@@ -26,4 +26,10 @@
 #define TA_COLUMN_START_TIME    6
 #define TA_COLUMN_SPEND_TIME    7
 
+#ifdef WIN32
+#define TA_TEST_COM_SUFFIX  "dll"
+#else
+#define TA_TEST_COM_SUFFIX  "so"
+#endif
+
 #endif // TADEFINE_H

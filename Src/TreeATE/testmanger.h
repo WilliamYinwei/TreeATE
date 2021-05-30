@@ -28,9 +28,15 @@
 #include <QMdiArea>
 
 
+#ifdef WIN32
 #define TA_ERR_UPLOAD_HRST      -9
 #define TA_LIST_OK          10000
 #define TA_UPLOAD_OK        10001
+#else   // for Linux
+#define TA_ERR_UPLOAD_HRST  247 // = -9 % 256
+#define TA_LIST_OK          16  // = 10000 % 256
+#define TA_UPLOAD_OK        17  // = 10001 % 256
+#endif
 
 #define TA_PROGRESS_BC_FAIL "QProgressBar::chunk { background-color: rgb(255, 100, 100);margin:0.5px;}"
 #define TA_PROGRESS_BC_EXCE "QProgressBar::chunk { background-color: rgb(255, 191, 0);margin:0.5px;}"

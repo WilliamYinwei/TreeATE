@@ -54,4 +54,12 @@ typedef enum {
 #define TA_RST_MAXLEN_VALUE     256
 #define TA_RST_MAXLEN_STAND     256
 
+#ifdef WIN32
+#define TA_TEST_COM_SUFFIX  "dll"
+#define TA_DEV_LANG_PYTHON  "DevLangPython*.dll"
+#else
+#define TA_TEST_COM_SUFFIX  "so"
+#define TA_DEV_LANG_PYTHON  "libDevLangPython*.so"
+#endif
+
 #endif // STDINC_H
