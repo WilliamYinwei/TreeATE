@@ -2,14 +2,18 @@
 
 include ( python.prf )  
 
-# INCLUDEPATH += $$PWD/../src
+INCLUDEPATH += $$PWD/../src
 
 # check if debug or release
-# CONFIG(debug, debug|release) {
-#   DEBUG_EXT = _d
-# } else {
-#   DEBUG_EXT =
-# }
+CONFIG(debug, debug|release) {
+  DEBUG_EXT = _d 
+} else {
+  DEBUG_EXT = 
+}
 
-win32::LIBS += $$PWD/../lib/PythonQt-Qt5-Python$${PYTHON_VERSION}$${DEBUG_EXT}.lib
-unix::LIBS += -L$$PWD/../lib -lPythonQt-Qt5-Python$${PYTHON_VERSION}$${DEBUG_EXT}
+win32-g++: LIBS += $$PWD/../lib/PythonQt-Qt5-Python$${PYTHON_VERSION}$${DEBUG_EXT}.dll
+win32-msvc*: LIBS += $$PWD/../lib/PythonQt-Qt5-Python$${PYTHON_VERSION}$${DEBUG_EXT}.lib
+unix {
+    CONFIG += link_prl
+    LIBS += -L$$PWD/../lib -lPythonQt-Qt5-Python$${PYTHON_VERSION}$${DEBUG_EXT}
+}

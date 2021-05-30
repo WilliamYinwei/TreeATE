@@ -42,6 +42,7 @@
 */
 //----------------------------------------------------------------------------------
 
+#include "PythonQtPythonInclude.h"
 #include "PythonQtSystem.h"
 
 #include <QByteArray>
@@ -78,12 +79,15 @@ public:
     bool newOwnerOfThis;
   };
 
-  PythonQtMethodInfo() {};
+  PythonQtMethodInfo() {
+    _shouldAllowThreads = true;
+  };
   ~PythonQtMethodInfo() {};
   PythonQtMethodInfo(const QMetaMethod& meta, PythonQtClassInfo* classInfo);
   PythonQtMethodInfo(const QByteArray& typeName, const QList<QByteArray>& args);
   PythonQtMethodInfo(const PythonQtMethodInfo& other) {
     _parameters = other._parameters;
+    _shouldAllowThreads = other._shouldAllowThreads;
   }
 
   //! returns the method info of the signature, uses a cache internally to speed up
@@ -123,7 +127,13 @@ public:
   //! returns the inner type name of a simple template or the typename without appended "List".
   static QByteArray getInnerListTypeName(const QByteArray& typeName);
 
+  //! returns if the GIL should be released when calling this method.
+  //! This is the default, but it will return false if any of the
+  //! parameters is a PythonQtObjectPtr or PyObject*.
+  bool shouldAllowThreads() const { return _shouldAllowThreads; }
+
 protected:
+  void setupAllowThreads();
 
   static QHash<QByteArray, int> _parameterTypeDict;
   static QHash<QByteArray, QByteArray> _parameterNameAliases;
@@ -134,6 +144,8 @@ protected:
   static QHash<int, ParameterInfo> _cachedParameterInfos;
 
   QList<ParameterInfo> _parameters;
+  bool _shouldAllowThreads;
+
 };
 
 //! stores information about a slot, including a next pointer to overloaded slots
@@ -147,6 +159,7 @@ public:
   PythonQtSlotInfo(const PythonQtSlotInfo& info):PythonQtMethodInfo() {
     _meta = info._meta;
     _parameters = info._parameters;
+    _shouldAllowThreads = info._shouldAllowThreads;
     _slotIndex = info._slotIndex;
     _next = NULL;
     _decorator = info._decorator;
@@ -159,6 +172,7 @@ public:
     const PythonQtMethodInfo* info = getCachedMethodInfo(meta, classInfo);
     _meta = meta;
     _parameters = info->parameters();
+    _shouldAllowThreads = info->shouldAllowThreads();
     _slotIndex = slotIndex;
     _next = NULL;
     _decorator = decorator;
@@ -214,6 +228,15 @@ public:
   //! regardless where the wrapper is located/implemented.
   QByteArray getImplementingClassName() const;
 
+  //! Invoke the given slot on obj, save/restore thread state if needed.
+  static void invokeQtMethod(QObject* obj, PythonQtSlotInfo* slot, void** argList);
+
+  //! Sets if calling slots should release the GIL to allow other Python threads while being inside of C++
+  static void setGlobalShouldAllowThreads(bool flag);
+
+  //! Returns if calling slots should release the GIL to allow  Python threads while being inside of C++
+  static bool getGlobalShouldAllowThreads();
+
 private:
   int               _slotIndex;
   PythonQtSlotInfo* _next;
@@ -221,6 +244,8 @@ private:
   Type              _type;
   QMetaMethod       _meta;
   int               _upcastingOffset;
+
+  static bool _globalShouldAllowThreads;
 };
 
 

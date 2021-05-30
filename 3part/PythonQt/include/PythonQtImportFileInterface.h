@@ -42,6 +42,7 @@
 */
 //----------------------------------------------------------------------------------
 
+#include "PythonQtPythonInclude.h"
 #include <QDateTime>
 #include <QString>
 #include <QByteArray>
@@ -63,6 +64,10 @@ public:
 
   //! returns if the file exists
   virtual bool exists(const QString& filename) = 0;
+
+  //! returns true if the given file is an egg archive (e.g. zip). If the egg is a directory
+  //! then false is returned.
+  virtual bool isEggArchive(const QString& filename) = 0;
 
   //! get the last modified data of a file
   virtual QDateTime lastModifiedDate(const QString& filename) = 0;

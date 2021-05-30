@@ -42,6 +42,7 @@
 */
 //----------------------------------------------------------------------------------
 
+#include "PythonQtPythonInclude.h"
 #include "PythonQt.h"
 #include "PythonQtMisc.h"
 #include "PythonQtClassInfo.h"
@@ -108,10 +109,10 @@ public:
   static PyObject* ConvertQtValueToPython(const PythonQtMethodInfo::ParameterInfo& info, const void* data);
 
   //! convert python object to Qt (according to the given parameter) and if the conversion should be strict (classInfo is currently not used anymore)
-  static void* ConvertPythonToQt(const PythonQtMethodInfo::ParameterInfo& info, PyObject* obj, bool strict, PythonQtClassInfo* classInfo, void* alreadyAllocatedCPPObject = NULL);
+  static void* ConvertPythonToQt(const PythonQtMethodInfo::ParameterInfo& info, PyObject* obj, bool strict, PythonQtClassInfo* classInfo, void* alreadyAllocatedCPPObject, PythonQtArgumentFrame* frame = NULL);
 
   //! creates a data storage for the passed parameter type and returns a void pointer to be set as arg[0] of qt_metacall
-  static void* CreateQtReturnValue(const PythonQtMethodInfo::ParameterInfo& info);
+  static void* CreateQtReturnValue(const PythonQtMethodInfo::ParameterInfo& info, PythonQtArgumentFrame* frame);
 
   //! converts QString to Python string (unicode!)
   static PyObject* QStringToPyObject(const QString& str);
@@ -180,6 +181,8 @@ public:
 
   static bool      convertToPythonQtObjectPtr(PyObject* obj, void* /* PythonQtObjectPtr* */ outPtr, int /*metaTypeId*/, bool /*strict*/);
   static PyObject* convertFromPythonQtObjectPtr(const void* /* PythonQtObjectPtr* */ inObject, int /*metaTypeId*/);
+  static bool      convertToPythonQtSafeObjectPtr(PyObject* obj, void* /* PythonQtObjectPtr* */ outPtr, int /*metaTypeId*/, bool /*strict*/);
+  static PyObject* convertFromPythonQtSafeObjectPtr(const void* /* PythonQtObjectPtr* */ inObject, int /*metaTypeId*/);
   static bool      convertToQListOfPythonQtObjectPtr(PyObject* obj, void* /* QList<PythonQtObjectPtr>* */ outList, int /*metaTypeId*/, bool /*strict*/);
   static PyObject* convertFromQListOfPythonQtObjectPtr(const void* /* QList<PythonQtObjectPtr>* */ inObject, int /*metaTypeId*/);
   static PyObject* convertFromStringRef(const void* inObject, int /*metaTypeId*/);
@@ -190,19 +193,13 @@ public:
   //! Returns if the given object is a string (or unicode string)
   static bool isStringType(PyTypeObject* type);
 
-public:
-
-  static PythonQtValueStorage<qint64, 128>  global_valueStorage;
-  static PythonQtValueStorage<void*, 128>   global_ptrStorage;
-  static PythonQtValueStorageWithCleanup<QVariant, 128>  global_variantStorage;
-
 protected:
   static QHash<int, PythonQtConvertMetaTypeToPythonCB*> _metaTypeToPythonConverters; 
   static QHash<int, PythonQtConvertPythonToMetaTypeCB*> _pythonToMetaTypeConverters; 
   static PythonQtConvertPythonSequenceToQVariantListCB*  _pythonSequenceToQVariantListCB;
  
   //! handle automatic conversion of some special types (QColor, QBrush, ...)
-  static void* handlePythonToQtAutoConversion(int typeId, PyObject* obj, void* alreadyAllocatedCPPObject);
+  static void* handlePythonToQtAutoConversion(int typeId, PyObject* obj, void* alreadyAllocatedCPPObject, PythonQtArgumentFrame* frame);
 
   //! converts the list of pointers of given type to Python
   static PyObject* ConvertQListOfPointerTypeToPythonList(QList<void*>* list, const PythonQtMethodInfo::ParameterInfo& info);
