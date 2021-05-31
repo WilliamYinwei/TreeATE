@@ -46,13 +46,13 @@ TreeATE Dev界面预览
 ## 开发编译
 
 TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编译TreeATE之前，你需要安装以下开发工具：
-* [qt-opensource-windows-x86-msvc2013-5.7.0](http://download.qt.io/archive/qt/5.7/5.7.0/qt-opensource-windows-x86-msvc2013-5.7.0.exe)	(L)GPL v3
+* qt-opensource-windows-x86-5.9.6	(L)GPL v3
 * [QScintilla_gpl-2.10.3](https://github.com/WilliamYinwei/qscintilla/releases/tag/v2.10.3) GPL v3
 ```
   // 进入QT命令行模式  
   cd qt4qt5
   qmake
-  // 进入VS 2013 x86命令行模式
+  // 进入VS 2015 x86命令行模式
   cd qt4qt5
   nmake
   nmake install 
@@ -66,13 +66,14 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 关于以上工具的安装和详细配置请参见它们的帮助文档。
 
 ### 设置环境变量
-在Windows系统环境变量中添加如下2个环境变量，根据Python27的安装路径，例如
-* PYTHON_PATH  C:\Python27\
-* PYTHON_LIB  C:\Python27\libs\
+在Windows系统环境变量中添加如下2个环境变量，根据Python38的安装路径，例如
+* PYTHON_PATH  C:\Python38\
+* PYTHON_LIB  C:\Python38\libs\
+* PYTHON_VERSION  38
 
 ## 部署
-在开始菜单中找到Qt 5.7 32-bit for Desktop(MSVC 2013)命令行窗口进入构建的目录。
-例如：D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
+在开始菜单中找到Qt 5.9.6 32-bit for Desktop(MSVC 2015)命令行窗口进入构建的目录。
+例如：D:\Projects\build-TreeATE-Desktop_Qt_5_9_6_MSVC2015_32bit-Release\bin\
 再执行以下命令
 * windeployqt TestEngine.exe
 * windeployqt TreeATE.exe
@@ -82,7 +83,7 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 ### 打包成安装文件
 依赖 Inno Setup
 * 通过 Inno Setup 打开 Setup/Setup.iss文件
-* 找到第37行，根据本地实际输出的构建目录替换掉路径D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin
+* 找到第37行，根据本地实际输出的构建目录替换掉路径D:\Projects\build-TreeATE-Desktop_Qt_5_9_6_MSVC2015_32bit-Release\bin
 * 再执行Build>>Compile(Ctrl+F9)或Run(F9)
 
 运行
@@ -91,7 +92,7 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
 * 手动复制3part/PythonQt/lib/PythonQt-Qt5-PythonXXX.dll(xxx是你本地Python环境的版本号）。PythonQt-Qt5-PythonXXX.dll是通过PythonQt生成的库。
 
 在构建的目录下启动TreeATE.exe即可。例如作者的开发构建目录为：
-D:\Projects\build-TreeATE-Desktop_Qt_5_7_0_MSVC2013_32bit-Release\bin\
+D:\Projects\build-TreeATE-Desktop_Qt_5_9_6_MSVC2015_32bit-Release\bin\
 
 技术交流
 -------------------------------------------------------------------------------
