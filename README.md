@@ -58,7 +58,8 @@ TreeATE基于QT开发，运行于Windows 32位系统（支持64位）。在编�
   nmake install 
 ```
 * [PythonQt 3.2.0](https://github.com/MeVisLab/pythonqt)	LGPL v2.1 
-  - 这个可以先下载，不用先编译，因为3part中已默认生成了32位的DLL库文件
+  - 请根据PythonQT的说明编译构建出dll和lib文件，例如PythonQT-Qt5-Python38.dll和PythonQT-Qt5-Python38.lib
+  - 再将lib文件复制到 3part/PythonQT/lib目录下
 * [Python38 32位](https://www.python.org/downloads/release/python-380/) Python License (Python-2.0)
 
 **注意: 推荐统一采用32位编译，并选择Release配置运行**
