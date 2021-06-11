@@ -49,11 +49,9 @@ bool ResultMgr::UploadResultToSvr()
 
 void ResultMgr::ExitResult()
 {
-    const QString strFileName = QDateTime::currentDateTime().toString(TREEATE_DATETIME_FORMAT2) + TA_RST_FILE;
-
     // if success to save (to database) than delete local result
-    if(m_output.Save(strFileName)) {
-        m_output.DeleteLocalResult(strFileName);
+    if(m_output.Save("")) {
+        m_output.tagLocalResult(TA_UPLOAD_RST);
     }
 }
 

@@ -37,11 +37,15 @@ public:
 
     virtual bool OutputDetailRst(const TestResult& tdr, const QString& strPathParent);
 
+    bool UploadResultTo(IOutput* pOutput);
+
+protected:
+    bool uploadTestPrjRst(const int id);
+
 private:
-    QTextStream         m_out;
-    QFile               m_fRst;
     QSqlDatabase        m_dbSqlite;
     QMap<QString, int>  m_mpPath;
+    int                 m_rootId;
 };
 
 #endif // OUTPUTLOCAL_H

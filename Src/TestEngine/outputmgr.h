@@ -25,7 +25,7 @@ public:
     void CloseOutput();
     bool Save(const QString& strFileName);
     bool UploadResult();
-    void DeleteLocalResult(const QString& strFileName);
+    void tagLocalResult(const QString& strFileName);
 
     bool OutputTestProjectRst(const TestProjectRst& tpr);
     bool UpdateTestProjectRst(const TestProjectRst& tpr);
@@ -37,9 +37,6 @@ public:
     bool UpdateTestCaseRst(const TestCaseRst& tcr);
 
     bool OutputDetailTestRst(const TestResult& tdr, const QString& strPathParent);
-
-protected:
-    bool uploadRst(const QJsonValue& json);
 
 private:
     QList<IOutput*> m_lstOutput;

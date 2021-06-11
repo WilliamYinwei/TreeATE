@@ -45,12 +45,12 @@ protected:
     QStringList runningList(const QStringList& selPath);
 
 private:
-    bool            m_bStopped;
+    quint32         m_nStopped;
     UnitMgr*        m_pUnitMgr;
     QString         m_lastErr;
     TA_ListObj      m_lstObj;
     QStringList     m_lstPath;
-    IMutliLang*     m_pCurretLang;
+    IMutliLang*     m_pCurretLang;    
 };
 
 #endif // TESTRUNNER_H

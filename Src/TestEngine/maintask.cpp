@@ -166,7 +166,7 @@ int MainTask::mainTest()
     }
 
     TestCtrl testCtrl(&run);
-    testCtrl.start();
+    testCtrl.start(QThread::HighestPriority);
 
     if(!run.runner(selPath, rstMgr, bStopWhenFailed))
     {

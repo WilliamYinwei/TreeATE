@@ -27,7 +27,7 @@ typedef void* (*CreateInst)(const char*);
 TestRunner::TestRunner(UnitMgr* pMgr)
 {
     m_pUnitMgr = pMgr;
-    m_bStopped = false;
+    m_nStopped = 0;
     m_pCurretLang = NULL;
 }
 
@@ -43,7 +43,11 @@ TestRunner::~TestRunner()
 
 void TestRunner::stop()
 {
-    m_bStopped = true;
+    m_nStopped++;
+    qDebug() << "---- stopped click counts: " <<  m_nStopped;
+    if(m_nStopped > 3) {
+        exit(TA_ERR_BY_STOPPED);
+    }
 }
 
 QString TestRunner::getLastError()
@@ -285,7 +289,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         }
 
         // stopped, or failed to stop
-        if(m_bStopped || (iRet > 0 && bStopWhenFailed)) {
+        if(m_nStopped || (iRet > 0 && bStopWhenFailed)) {
             rstMgr.UpdateResult(path, objUnit, 1, TA_TR("Stopped by TreeATE."));
             break;
         }
@@ -326,5 +330,5 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
 bool TestRunner::IsStopped()
 {
-    return m_bStopped;
+    return (bool)m_nStopped;
 }

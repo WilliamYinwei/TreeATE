@@ -42,6 +42,7 @@ typedef enum {
 #define TA_ERR_INIT_RESULT  -7
 #define TA_ERR_RUNNING      -8
 #define TA_ERR_UPLOAD_HRST  -9
+#define TA_ERR_BY_STOPPED   -10
 
 
 #define TA_OUT_DEBUG_INFO  qDebug()
@@ -49,6 +50,9 @@ typedef enum {
 #define TA_STOPPED      "stop"
 #define TA_RST_FILE     ".rst"
 #define TA_UPLOAD_RST   "uploadrst"
+#define TA_SQLITE_NAME  "sql_treeate_localsqlite"
+#define TA_UPLOAD_FALSE  1
+#define TA_UPLOAD_TRUE   2
 
 #define TA_RST_MAXLEN_NAME      32
 #define TA_RST_MAXLEN_VALUE     256
