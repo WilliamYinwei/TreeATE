@@ -26,6 +26,8 @@
 
 #include "tatreewidget.h"
 #include "tastandmsgbox.h"
+#include "tacustomtreewidget.h"
+#include "manybarcodedlg.h"
 
 TestManger::TestManger(QMdiArea *pMdi, QTextBrowser *pBrower, QObject *parent): QObject(parent)
 {
@@ -137,6 +139,11 @@ bool TestManger::LoadTestUnits(const QString& strPrjFile, QString& strTitle)
         m_logTextBrower->append("Loading: " + strName);
         TestProcess* pTestPrj = new TestProcess(strName, (QObject*)m_parent);
         TATreeWidget* pTW = new TATreeWidget();
+        connect(pTW->twTestPrj(), SIGNAL(startTest(QString,QString)), this,
+                SLOT(on_startTest_clicked(QString,QString)));
+        connect(pTW->twTestPrj(), SIGNAL(stopTest(QString)), this,
+                SLOT(on_stopTest_clicked(QString)));
+
         QMdiSubWindow* pSubWin = m_mdiArea->addSubWindow(pTW);
         if(pSubWin) {
             pSubWin->setWindowTitle(strName);
@@ -222,13 +229,11 @@ void TestManger::on_startTesting(const QString& who)
     if(itor.value()->waitForStarted(3000)) {
         qDebug() << "-------------------------Start Test for: " + who;
         m_mapTestWin.insert(itor.value()->processId(), who);
-        m_mapTesting[who] = true;
+        m_mapTesting.insert(who, true);
     }
 }
 
-int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStation,
-                  const QString& strUser,
-                  const QMap<QString, QString> &mapSN, const QString& who)
+int TestManger::StartOneTest(const QMap<QString, QString> &mapSN, const QString& who)
 {
     int nSelectedCnt = 0;
     QMap<QString, TestProcess*>::iterator itor = m_prcTestEngine.find(who);
@@ -265,9 +270,9 @@ int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStati
             << "-m"
             << tempFile->fileName()
             << (m_prjMgr.getFailedToStop() ? "-S" : "")
-            << "-s" << strStation
-            << "-w" << strWorkLine
-            << "-u" << strUser
+            << "-s" << m_station
+            << "-w" << m_workLine
+            << "-u" << m_user
             << "-b" << mapSN[who]
             << "-p"
             << tempParaFile->fileName();
@@ -278,9 +283,7 @@ int TestManger::StartOneTest(const QString& strWorkLine, const QString& strStati
     return nSelectedCnt;
 }
 
-int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
-                          const QString &strUser,
-                          const QMap<QString, QString> &mapSN)
+int TestManger::StartTest(const QMap<QString, QString> &mapSN)
 {
     int nSelectedCnt = 0;
     m_nTestingCnt = 0;
@@ -304,20 +307,83 @@ int TestManger::StartTest(const QString &strWorkLine, const QString &strStation,
         m_mapLoopCount.insert(who, nCnt);
         m_mapLoopProgress[who]->setRange(0, nCnt);
 
-        nSelectedCnt += StartOneTest(strWorkLine, strStation, strUser, mapSN, who);
+        nSelectedCnt += StartOneTest(mapSN, who);
     }
 
     return nSelectedCnt;
+}
+
+void TestManger::stopTest(TestProcess* pProcess)
+{
+    if(pProcess) {
+        if(!pProcess->StopTest()) {
+            QMessageBox::critical(NULL, "Warning", "Failed to stop test\n"
+                                  + pProcess->errorString());
+        }
+    }
 }
 
 void TestManger::StopTest()
 {
     for(QMap<QString, TestProcess*>::iterator itor = m_prcTestEngine.begin();
         itor != m_prcTestEngine.end(); ++itor) {
-        TestProcess* pProcess = itor.value();
-        pProcess->write("stop\r\n");
-        pProcess->waitForBytesWritten(100);
+        stopTest(itor.value());
     }
+}
+
+void TestManger::on_startTest_clicked(const QString& who, const QString& strPath)
+{
+    if(IsTesting(who)) {
+        QString strErr = tr("It's testing now, don't start test again.");
+        qDebug() << strErr;
+        QMessageBox::information(NULL, "Warning", strErr);
+        return;
+    }
+    Q_UNUSED(strPath)
+    ManyBarcodeDlg mbDlg(NULL);
+    mbDlg.SetProjectName(QStringList() << who);
+    mbDlg.SetBarcodeReg(GetMgr().getBarCodeReg().trimmed());
+    if(QDialog::Accepted != mbDlg.exec())
+        return;
+    StartOneTest(mbDlg.GetPrjsBarcodes(), who);
+}
+
+void TestManger::on_stopTest_clicked(const QString& who)
+{
+    auto itor = m_prcTestEngine.find(who);
+    if(itor != m_prcTestEngine.end()) {
+        stopTest(itor.value());
+    }
+}
+
+QString TestManger::user() const
+{
+    return m_user;
+}
+
+void TestManger::setUser(const QString &user)
+{
+    m_user = user;
+}
+
+QString TestManger::station() const
+{
+    return m_station;
+}
+
+void TestManger::setStation(const QString &station)
+{
+    m_station = station;
+}
+
+QString TestManger::workLine() const
+{
+    return m_workLine;
+}
+
+void TestManger::setWorkLine(const QString &workLine)
+{
+    m_workLine = workLine;
 }
 
 void TestManger::clearTempFile()
@@ -337,7 +403,6 @@ void TestManger::UnloadUnits()
 {
     clearTempFile();
 
-    m_rstLevel = Unload;
     m_mpPrjTestStatus.clear();
 
     if(m_mdiArea) {
@@ -407,47 +472,20 @@ void TestManger::on_updateTestItemStatus(const QString& who,
     if(status == "commit") {
         //emit startLoading(objData["count"].toInt());
     }
-    else if(status == "progress") {
-        //m_rstLevel = Loading;
-        //emit updateTotalStatus(Loading, objData["count"].toInt());
-    }
     else if(status == "list") {
         addUnitItems(who, objData);
-        m_rstLevel = Loading;
-        emit updateTotalStatus(Loading, 0);
+        updateTotalStatusEx(Loading, 0);
     }
     else if(status == "start") {
-        m_rstLevel = Testing;
         startItemsData(who, objData);
-        emit updateTotalStatus(Testing, 0);
+        updateTotalStatusEx(Testing, 0);
     }
     else if(status == "update") {
-        m_rstLevel = Testing;
         updateItemsData(who, objData);
-        emit updateTotalStatus(Testing, ++m_nTestingCnt);
+        updateTotalStatusEx(Testing, ++m_nTestingCnt);
     }
     else if(status == "detail") {
         detailItemsData(who, objData);
-    }
-    else if(status == "over") {
-        eTestStatus curLvl = Pass;
-
-        QString strStatus;
-        TATreeWidget* pTree = findTreeWidget(who);
-        if(pTree) strStatus = pTree->currentPrjStatus();
-        if(strStatus == TA_STATUS_EXCE) {
-            curLvl = Exception;
-        }
-        else if(strStatus == TA_STATUS_FAIL) {
-            curLvl = Failed;
-        }
-        else if(strStatus == TA_STATUS_PASS) {
-            curLvl = Pass;
-        }
-        if(m_rstLevel < curLvl) {
-            m_rstLevel = curLvl;
-        }
-        emit updateTotalStatus(m_rstLevel, 0);
     }
 }
 
@@ -474,8 +512,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
         }
 
         if(bReady)  { // all ready
-            m_rstLevel = Ready;
-            emit updateTotalStatus(Ready, 0);
+            updateTotalStatusEx(Ready, 0);
         }
         return;
     }
@@ -500,6 +537,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
         icTabBC = QIcon(QPixmap(":/exce.png"));
         tabTextColor = TA_TAB_STATUS_EXCE;
         m_nExceCnts++;
+        updateTotalStatusEx(Exception, 0);
     }
     else if(strStatus == TA_STATUS_FAIL) {
         strPgBC = TA_PROGRESS_BC_FAIL;
@@ -507,6 +545,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
         icTabBC = QIcon(QPixmap(":/ng.png"));
         tabTextColor = TA_TAB_STATUS_FAIL;
         m_nFailCnts++;
+        updateTotalStatusEx(Failed, 0);
     }
     else if(strStatus == TA_STATUS_PASS) {
         strPgBC = TA_PROGRESS_BC_OK;
@@ -514,6 +553,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
         icTabBC = QIcon(QPixmap(":/ok.png"));
         tabTextColor = TA_TAB_STATUS_OK;
         m_nPassCnts++;
+        updateTotalStatusEx(Pass, 0);
     }
 
     // update the SubWindow's TabBar icon or color
@@ -522,8 +562,7 @@ void TestManger::on_testEngineFinished(const QString& who, int nCode)
     emit updateCounts(m_nPassCnts, m_nFailCnts, m_nExceCnts);
 
     if(nCode) {
-        m_rstLevel = Exception;
-        emit updateTotalStatus(Exception, 0);
+        updateTotalStatusEx(Exception, 0);
         return;
     }
 
@@ -602,7 +641,7 @@ void TestManger::ShrinkUnitItems()
 
 bool TestManger::Exit()
 {
-    if(m_rstLevel != Loading && m_rstLevel != Testing) {
+    if(!IsTotalTesting()) {
         return true;
     }
     else {
@@ -699,3 +738,27 @@ bool TestManger::CloseAsyncMsgBox(qint64 pid, int msgBoxId)
     return false;
 }
 
+bool TestManger::IsTotalTesting()
+{
+    for(auto itor = m_mapTesting.begin(); itor != m_mapTesting.end();
+        ++itor)
+    {
+        if(itor.value()) { // is testing
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void TestManger::updateTotalStatusEx(eTestStatus status, int n)
+{
+    if(status > Testing) {
+        if(IsTotalTesting())
+            return; // No update for testing
+        emit updateTotalStatus(status, n);
+    }
+    else {
+        emit updateTotalStatus(status, n);
+    }
+}

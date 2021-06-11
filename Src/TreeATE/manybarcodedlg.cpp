@@ -129,6 +129,9 @@ void ManyBarcodeDlg::accept()
                 ui->lineEdit_SN->setText(rx.cap(0));
             }
 
+            ui->tableWidget->setCurrentCell(row + 1, 1);
+            ui->tableWidget->setCurrentCell(row, 1);
+
             item->setText(ui->lineEdit_SN->text());
             ui->lineEdit_SN->setText("");
         }

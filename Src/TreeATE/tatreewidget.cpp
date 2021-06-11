@@ -39,7 +39,6 @@ TATreeWidget::TATreeWidget(QWidget *parent):QWidget(parent)
     m_twTestPrj->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     m_twTestPrj->hideColumn(TA_COLUMN_UNIT_PATH);
-    m_twTestPrj->setContextMenuPolicy(Qt::CustomContextMenu);
     m_twTestPrj->setItemDelegateForColumn(TA_COLUMN_TEST_STATUS, new StatusDelegate(parent));
 
     connect(m_twTestPrj, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(on_itemClicked(QTreeWidgetItem*,int)));
@@ -92,6 +91,8 @@ TATreeWidget::TATreeWidget(QWidget *parent):QWidget(parent)
     connect(m_lbStatus, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
     connect(m_lbTitle, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
     connect(m_lbSN, SIGNAL(clicked()), this, SLOT(on_statusClicked()));
+
+    setContextMenuPolicy(Qt::CustomContextMenu);   
 }
 
 TATreeWidget::~TATreeWidget()
@@ -138,6 +139,11 @@ void TATreeWidget::showTotalStatus(bool bShow, const QString& status, const QStr
 void TATreeWidget::on_statusClicked()
 {
     showTotalStatus(m_lbStatus->isHidden(), "", "");
+}
+
+TAcustomTreeWidget *TATreeWidget::twTestPrj() const
+{
+    return m_twTestPrj;
 }
 
 void TATreeWidget::on_itemDoubleClicked(QTreeWidgetItem *item, int column)

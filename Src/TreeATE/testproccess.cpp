@@ -186,3 +186,18 @@ void TestProcess::on_testEngineFinished(int nCode)
     m_tbErr->append("Exit:" + QString::number(nCode));
     emit testEngineFinished(m_strTitle, nCode);
 }
+
+bool TestProcess::StopTest()
+{
+    if(state() == QProcess::Running){
+        if(write("stop\r\nstop\r\nstop\r\n") < 0)
+        {
+            return false;
+        }
+        if(!waitForBytesWritten(3000)) {
+            return false;
+        }
+    }
+
+    return true;
+}

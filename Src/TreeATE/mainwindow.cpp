@@ -228,6 +228,7 @@ void MainWindow::SetCurrUser(const QString& strUser)
 {
     m_strUser = strUser;
     m_labelUser->setText(m_strUser);
+    if(m_pTestMgr) m_pTestMgr->setUser(strUser);
 }
 
 void MainWindow::loadUnits(const QString& strPrjName)
@@ -342,9 +343,7 @@ void MainWindow::on_actionPlay_triggered()
 
     ui->textBrowser_Log->append("Start: " + mapSN.values().join(","));
 
-    QVariantMap vmTemp = m_vaSysCfg.toMap();
-    int nSelectedCnt = m_pTestMgr->StartTest(vmTemp["LineName"].toString(),
-            vmTemp["Station"].toString(), m_strUser, mapSN);
+    int nSelectedCnt = m_pTestMgr->StartTest(mapSN);
     m_totalStatus = Unload; // initizate to status of the Unload '0'
     on_startLoading(nSelectedCnt);
 }
@@ -435,7 +434,7 @@ void MainWindow::on_updateTotalStatus(eTestStatus eStatus, int n)
     enableForStatus(eStatus);
 
     if(eStatus < m_totalStatus)
-        return;
+        return;    
     m_totalStatus = eStatus;
 
     QString strStatus;
@@ -686,6 +685,11 @@ void MainWindow::openSysCfg()
             + vmSysCfg["Station"].toString());
 
     file.close();
+
+    if(m_pTestMgr) {
+        m_pTestMgr->setWorkLine(vmSysCfg["LineName"].toString());
+        m_pTestMgr->setStation(vmSysCfg["Station"].toString());
+    }
 
     // list the language files at i18n/treeate
     QString strLangPath = m_strAppDir + "/i18n/treeate/";

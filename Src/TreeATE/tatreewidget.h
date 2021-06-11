@@ -63,6 +63,8 @@ private slots:
 public:
     TAStandMsgBox* m_taMsgBox;
 
+    TAcustomTreeWidget *twTestPrj() const;
+
 private:
     TALabel* m_lbStatus;
     TALabel*  m_lbTitle;

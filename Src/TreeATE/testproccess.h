@@ -26,6 +26,8 @@ public:
     QDockWidget *getDockWidget();
     quint32 getUnitsCount();
 
+    bool StopTest();
+
 signals:
     void updateTestItemStatus(const QString& who, const QJsonObject& objData);
     void testEngineFinished(const QString& who, int nCode);

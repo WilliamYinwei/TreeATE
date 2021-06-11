@@ -76,12 +76,8 @@ public:
     void SetCheckboxEnable(bool bEnable);
 
     QStringList SeletedPrj();
-    int StartTest(const QString& strWorkLine, const QString& strStation,
-                  const QString& strUser,
-                  const QMap<QString, QString> &mapSN);
-    int StartOneTest(const QString& strWorkLine, const QString& strStation,
-                      const QString& strUser,
-                      const QMap<QString, QString> &mapSN, const QString& who);
+    int StartTest(const QMap<QString, QString> &mapSN);
+    int StartOneTest(const QMap<QString, QString> &mapSN, const QString& who);
     void StopTest();
     QList<QDockWidget*> GetDockWidgetList();
     void SpreadUnitItems();
@@ -94,6 +90,20 @@ public:
     bool IsTesting(const QString& who);
 
     void ClearCurrentCounts();
+
+    QString workLine() const;
+    void setWorkLine(const QString &workLine);
+
+    QString station() const;
+    void setStation(const QString &station);
+
+    QString user() const;
+    void setUser(const QString &user);
+
+protected:
+    void stopTest(TestProcess *pProcess);
+    void updateTotalStatusEx(eTestStatus status, int n);
+    bool IsTotalTesting();
 
 public slots:
     QString MsgBox(qint64 pid, const QString& strPic, const QString& strMsg, const int nType, const int mSec);
@@ -123,6 +133,8 @@ private slots:
                                  const QJsonObject& objData);
     void on_testEngineFinished(const QString& who, int nCode);
     void on_startTesting(const QString& who);
+    void on_startTest_clicked(const QString& who, const QString& strPath);
+    void on_stopTest_clicked(const QString& who);
 
 private:
     QWidget*        m_parent;
@@ -134,7 +146,6 @@ private:
     QString         m_strPrjName;
     ProjectMgr      m_prjMgr;
     QMap<QString, eTestStatus>  m_mpPrjTestStatus;
-    eTestStatus     m_rstLevel;     // total result level
     quint32         m_nTestingCnt;
     QMdiArea*       m_mdiArea;
     QTextBrowser*   m_logTextBrower;
@@ -150,6 +161,10 @@ private:
     quint32         m_nPassCnts;
     quint32         m_nFailCnts;
     quint32         m_nExceCnts;
+
+    QString         m_workLine;
+    QString         m_station;
+    QString         m_user;
 };
 
 #endif // TESTMANGER_H

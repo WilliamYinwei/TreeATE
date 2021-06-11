@@ -21,8 +21,16 @@ public:
 
     QModelIndex getIndex(QTreeWidgetItem *item, int column);
 signals:
+    void startTest(const QString& who, const QString& strPath);
+    void stopTest(const QString& who);
 
-public slots:
+private slots:
+    void on_customContextMenuRequested(const QPoint& pos);
+    void on_action_Start_clicked();
+    void on_action_Stop_clicked();
+
+private:
+    QMenu*       m_popMenuPara;
 };
 
 #endif // TACUSTOMTREEWIDGET_H
