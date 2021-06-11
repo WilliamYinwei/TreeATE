@@ -52,7 +52,7 @@ def test_test1():
 
 def test_test2():
 	__ate.OutputError("test_test2")
-	print "*** This is python print to the error window of the TreeATE."
+	print("*** This is python print to the error window of the TreeATE.")
 	ret = ta.AsyncMsgBox("images/temp.gif", u"AsyncMsgBox中文", 0, 5000)
 	__ate.OutputError(ret)
 	for i in range(1, 5):
