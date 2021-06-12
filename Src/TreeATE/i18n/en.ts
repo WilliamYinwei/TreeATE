@@ -319,8 +319,8 @@
         <translation type="vanished">Not found the TestEngine log directory.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="302"/>
-        <location filename="../mainwindow.cpp" line="760"/>
+        <location filename="../mainwindow.cpp" line="303"/>
+        <location filename="../mainwindow.cpp" line="764"/>
         <source>Critical</source>
         <translation>Critical</translation>
     </message>
@@ -334,109 +334,109 @@
         <translation>Not found the TestEngine log directory.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="303"/>
+        <location filename="../mainwindow.cpp" line="304"/>
         <source>Please scan the barcode for the correct rules, refer the project option.</source>
         <translation>Please scan the barcode for the correct rules, refer the project option.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="312"/>
-        <location filename="../mainwindow.cpp" line="331"/>
+        <location filename="../mainwindow.cpp" line="313"/>
+        <location filename="../mainwindow.cpp" line="332"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="312"/>
+        <location filename="../mainwindow.cpp" line="313"/>
         <source>Please scan the product&apos;s barcode to play.</source>
         <translation>Please scan the product&apos;s barcode to play.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="317"/>
+        <location filename="../mainwindow.cpp" line="318"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="318"/>
+        <location filename="../mainwindow.cpp" line="319"/>
         <source>The same barcode to play, are you sure?</source>
         <translation>The same barcode to play, are you sure?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="331"/>
+        <location filename="../mainwindow.cpp" line="332"/>
         <source>Please selected the test item to play.</source>
         <translation>Please selected the test item to play.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
-        <location filename="../mainwindow.cpp" line="446"/>
+        <location filename="../mainwindow.cpp" line="427"/>
+        <location filename="../mainwindow.cpp" line="445"/>
         <source>Unload</source>
         <translation>Unload</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="450"/>
+        <location filename="../mainwindow.cpp" line="449"/>
         <source>Loading...</source>
         <translation>Loading...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="455"/>
+        <location filename="../mainwindow.cpp" line="454"/>
         <source>Ready</source>
         <translation>Ready</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="459"/>
+        <location filename="../mainwindow.cpp" line="458"/>
         <source>GO...</source>
         <translation>GO...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="469"/>
+        <location filename="../mainwindow.cpp" line="468"/>
         <source>ERROR</source>
         <translation>ERROR</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="670"/>
+        <location filename="../mainwindow.cpp" line="669"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="750"/>
+        <location filename="../mainwindow.cpp" line="754"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="750"/>
+        <location filename="../mainwindow.cpp" line="754"/>
         <source>No matching loadable test project, refer the System options.</source>
         <translation>No matching loadable test project, refer the System options.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="761"/>
+        <location filename="../mainwindow.cpp" line="765"/>
         <source>Please scan the SN for the correct rules, refer the project option.</source>
         <translation>Please scan the barcode for the correct rules, refer the project option.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="877"/>
+        <location filename="../mainwindow.cpp" line="881"/>
         <source>Counts</source>
         <translation>Counts</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="889"/>
+        <location filename="../mainwindow.cpp" line="893"/>
         <source>Exception Counts</source>
         <translation>Exception Counts</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="902"/>
+        <location filename="../mainwindow.cpp" line="906"/>
         <source>Fail Counts</source>
         <translation>Fail Counts</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="915"/>
+        <location filename="../mainwindow.cpp" line="919"/>
         <source>Pass Counts</source>
         <translation>Pass Counts</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="928"/>
+        <location filename="../mainwindow.cpp" line="932"/>
         <source>Total Counts</source>
         <translation>Total Counts</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="938"/>
+        <location filename="../mainwindow.cpp" line="942"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
@@ -578,12 +578,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="89"/>
+        <location filename="../main.cpp" line="91"/>
         <source>TreeATE is running.</source>
         <translation>TreeATE is running now.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="279"/>
+        <location filename="../mainwindow.cpp" line="280"/>
         <source>Open Test Project</source>
         <translation>Open the Test Project</translation>
     </message>
@@ -706,40 +706,58 @@
         <translation>Elapsed Time</translation>
     </message>
     <message>
-        <location filename="../tatreewidget.cpp" line="88"/>
+        <location filename="../tatreewidget.cpp" line="87"/>
         <source>Spend time</source>
         <translation>Spend time</translation>
     </message>
 </context>
 <context>
+    <name>TAcustomTreeWidget</name>
+    <message>
+        <location filename="../tacustomtreewidget.cpp" line="22"/>
+        <source>Play</source>
+        <translation>Play</translation>
+    </message>
+    <message>
+        <location filename="../tacustomtreewidget.cpp" line="23"/>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+</context>
+<context>
     <name>TestManger</name>
     <message>
-        <location filename="../testmanger.cpp" line="65"/>
+        <location filename="../testmanger.cpp" line="67"/>
         <source>Loop progress</source>
         <translation>Loop progress</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="124"/>
+        <location filename="../testmanger.cpp" line="126"/>
         <source>Upload histroy results</source>
         <translation>Upload histroy results</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="292"/>
+        <location filename="../testmanger.cpp" line="296"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="293"/>
+        <location filename="../testmanger.cpp" line="297"/>
         <source>It&apos;s loop test, are you sure?</source>
         <translation>It&apos;s loop test, are you sure?</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="608"/>
+        <location filename="../testmanger.cpp" line="337"/>
+        <source>It&apos;s testing now, don&apos;t start test again.</source>
+        <translation>It&apos;s testing now, don&apos;t start test again.</translation>
+    </message>
+    <message>
+        <location filename="../testmanger.cpp" line="648"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
-        <location filename="../testmanger.cpp" line="609"/>
+        <location filename="../testmanger.cpp" line="649"/>
         <source>Warning: Testing now, an error may occur when quit. Are you quit?</source>
         <translation>Warning: Testing now, an error may occur when quit. Are you quit?</translation>
     </message>

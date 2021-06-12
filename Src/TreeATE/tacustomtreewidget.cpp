@@ -19,8 +19,8 @@ TAcustomTreeWidget::TAcustomTreeWidget(QWidget *parent) : QTreeWidget(parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     m_popMenuPara = new QMenu(this);
-    QAction* acStart = m_popMenuPara->addAction(tr("Start"));
-    QAction* acStop  = m_popMenuPara->addAction(tr("Stop"));
+    QAction* acStart = m_popMenuPara->addAction(QIcon(":/play.png"), tr("Play"));
+    QAction* acStop  = m_popMenuPara->addAction(QIcon(":/pause.png"), tr("Stop"));
     connect(acStart, SIGNAL(triggered(bool)), this, SLOT(on_action_Start_clicked()));
     connect(acStop, SIGNAL(triggered(bool)), this, SLOT(on_action_Stop_clicked()));
 
