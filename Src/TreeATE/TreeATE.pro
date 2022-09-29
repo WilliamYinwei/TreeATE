@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     tatreewidget.cpp \
     talabel.cpp \
     tacustomtreewidget.cpp \
-    tastandmsgbox.cpp
+    tastandmsgbox.cpp \
+    ta_atetop.cpp
 
 HEADERS  += mainwindow.h \
     testproccess.h \
@@ -55,7 +56,9 @@ HEADERS  += mainwindow.h \
     tatreewidget.h \
     talabel.h \
     tacustomtreewidget.h \
-    tastandmsgbox.h
+    tastandmsgbox.h \
+    treeatetop.h \
+    ta_atetop.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

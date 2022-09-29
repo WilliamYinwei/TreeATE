@@ -30,6 +30,8 @@ public:
     void SetBarcodeReg(const QString& strReg);
     QMap<QString, QString> GetPrjsBarcodes();
 
+    bool event(QEvent *event);
+
 public slots:
     virtual void accept();
 

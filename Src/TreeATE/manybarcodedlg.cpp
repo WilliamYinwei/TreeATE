@@ -14,6 +14,7 @@
 
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QClipboard>
 
 ManyBarcodeDlg::ManyBarcodeDlg(QWidget *parent) :
     QDialog(parent),
@@ -95,6 +96,28 @@ bool ManyBarcodeDlg::isSampleBarcode(const QString& barcode)
         }
     }
     return false;
+}
+
+bool ManyBarcodeDlg::event(QEvent *event)
+{
+    if (event && event->type() == QEvent::KeyPress){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->matches(QKeySequence::Paste)){
+            QString strPaste = QApplication::clipboard()->text();
+
+            QStringList lstRowData = strPaste.split("\n", QString::SkipEmptyParts);
+            QModelIndex current_index = ui->tableWidget->currentIndex();
+            for (int i = 0; i < ui->tableWidget->rowCount() - current_index.row()
+                 && i < lstRowData.length(); i++)
+            {
+                ui->tableWidget->item(i + current_index.row(), 1)->setText(lstRowData.at(i));
+            }
+            event->accept();
+            return true;
+        }
+    }
+
+    return QDialog::event(event);
 }
 
 void ManyBarcodeDlg::accept()

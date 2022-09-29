@@ -150,6 +150,7 @@ bool OutputLocal::OutputTestProjectRst(const TestProjectRst& tpr)
     m_mpPath.clear();
 
     int nId = sqlQuery.lastInsertId().toInt();
+    m_rootId = nId;
     qDebug() << "**** inserted OK ****" << nId;
     m_mpPath[tpr.m_strPath] = nId;
     sqlQuery.finish();
@@ -312,30 +313,23 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
         return false;
     }
 
-    const int nRows = sqlQuery.numRowsAffected();
-    if(nRows <= 0) {
-        return true;
-    }
-
     QSqlQuery sqlQueryCase = QSqlQuery(m_dbSqlite);
-    QSqlQuery sqlQueryDetail = QSqlQuery(m_dbSqlite);
-
-    cout << "Commit results (" << nRows << ")";
+    QSqlQuery sqlQueryDetail = QSqlQuery(m_dbSqlite);    
 
     bool bOK = true;
     while (sqlQuery.next()) {
-        const int nId = sqlQuery.boundValue("id").toInt();
+        const int nId = sqlQuery.value("id").toInt();
 
         TestProjectRst tpr;
-        tpr.m_nCount = sqlQuery.boundValue("count").toInt();
-        tpr.m_strPath = sqlQuery.boundValue("longname").toString();
-        tpr.m_strName = sqlQuery.boundValue("name").toString();
-        tpr.m_strBarcode = sqlQuery.boundValue("barcode").toString();
-        tpr.m_strStation = sqlQuery.boundValue("station").toString();
-        tpr.m_tStart = QDateTime::fromString(sqlQuery.boundValue("time").toString(), TREEATE_DATETIME_FORMAT);
-        tpr.m_strUser = sqlQuery.boundValue("user").toString();
-        tpr.m_strVersion = sqlQuery.boundValue("version").toString();
-        tpr.m_strLineName = sqlQuery.boundValue("workingline").toString();
+        tpr.m_nCount = sqlQuery.value("count").toInt();
+        tpr.m_strPath = sqlQuery.value("longname").toString();
+        tpr.m_strName = sqlQuery.value("name").toString();
+        tpr.m_strBarcode = sqlQuery.value("barcode").toString();
+        tpr.m_strStation = sqlQuery.value("station").toString();
+        tpr.m_tStart = QDateTime::fromString(sqlQuery.value("time").toString(), TREEATE_DATETIME_FORMAT);
+        tpr.m_strUser = sqlQuery.value("user").toString();
+        tpr.m_strVersion = sqlQuery.value("version").toString();
+        tpr.m_strLineName = sqlQuery.value("workingline").toString();
         if(!pOutput->OutputTestProjectRst(tpr)) continue;
 
         // Testcase
@@ -347,13 +341,13 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
 
         while(sqlQueryCase.next()) {
             TestCaseRst tcr;
-            tcr.m_strPath = sqlQueryCase.boundValue("longname").toString();
-            tcr.m_strName = sqlQueryCase.boundValue("name").toString();
-            tcr.m_tStart = QDateTime::fromString(sqlQueryCase.boundValue("time").toString(), TREEATE_DATETIME_FORMAT);
+            tcr.m_strPath = sqlQueryCase.value("longname").toString();
+            tcr.m_strName = sqlQueryCase.value("name").toString();
+            tcr.m_tStart = QDateTime::fromString(sqlQueryCase.value("time").toString(), TREEATE_DATETIME_FORMAT);
             if(!pOutput->OutputTestCaseRst(tcr, tpr.m_strPath)) continue;
 
             // detail
-            strSQL = "SELECT name, longname, rst, desc, spend, standard FROM DetailRst WHERE parentId=" + QString::number(nId);
+            strSQL = "SELECT name, longname, rst, desc, time, standard FROM DetailRst WHERE parentId=" + QString::number(nId);
             if(!sqlQueryDetail.exec(strSQL)) {
                 qDebug() << TA_LOCALSQLITE_MODEL << strSQL << " Error:" << sqlQueryDetail.lastError().text();
                 continue;
@@ -361,27 +355,27 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
 
             while(sqlQueryDetail.next()) {
                 TestResult rst;
-                rst.m_strPath = sqlQueryDetail.boundValue("longname").toString();
-                rst.m_strName = sqlQueryDetail.boundValue("name").toString();
-                rst.m_eRst = TestResult::FromString(sqlQueryDetail.boundValue("rst").toString());
-                rst.m_tStart = QDateTime::fromString(sqlQueryDetail.boundValue("time").toString(),
+                rst.m_strPath = sqlQueryDetail.value("longname").toString();
+                rst.m_strName = sqlQueryDetail.value("name").toString();
+                rst.m_eRst = TestResult::FromString(sqlQueryDetail.value("rst").toString());
+                rst.m_tStart = QDateTime::fromString(sqlQueryDetail.value("time").toString(),
                                                      TREEATE_DATETIME_FORMAT);
-                rst.m_strDesc = sqlQueryDetail.boundValue("desc").toString();
-                rst.m_strStandard = sqlQueryDetail.boundValue("standard").toString();
+                rst.m_strDesc = sqlQueryDetail.value("desc").toString();
+                rst.m_strStandard = sqlQueryDetail.value("standard").toString();
                 (void)pOutput->OutputDetailRst(rst, rst.m_strPath);
             }
 
             // update for testcase
-            tcr.m_eRst = TestResult::FromString(sqlQueryCase.boundValue("rst").toString());
-            tcr.m_tSpend = QTime::fromString(sqlQueryCase.boundValue("spend").toString());
-            tcr.m_strDesc = sqlQueryCase.boundValue("desc").toString();
+            tcr.m_eRst = TestResult::FromString(sqlQueryCase.value("rst").toString());
+            tcr.m_tSpend = QTime::fromString(sqlQueryCase.value("spend").toString());
+            tcr.m_strDesc = sqlQueryCase.value("desc").toString();
             if(!pOutput->UpdateTestCaseRst(tcr)) continue;
         }
 
         // update for testproject
-        tpr.m_strDesc = sqlQuery.boundValue("desc").toString();
-        tpr.m_eRst = TestResult::FromString(sqlQuery.boundValue("rst").toString());
-        tpr.m_tSpend = QTime::fromString(sqlQuery.boundValue("spend").toString());
+        tpr.m_strDesc = sqlQuery.value("desc").toString();
+        tpr.m_eRst = TestResult::FromString(sqlQuery.value("rst").toString());
+        tpr.m_tSpend = QTime::fromString(sqlQuery.value("spend").toString());
         if(!pOutput->UpdateTestProjectRst(tpr)) continue;
 
         if(pOutput->Save("")) {

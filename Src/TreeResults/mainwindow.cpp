@@ -352,8 +352,9 @@ void MainWindow::on_actionExport_triggered()
     QStringList strLine;
     while(sqlRst.next()) {
         strLine.clear();
-        for(int i = 0; i < columCnt; i++)
-            strLine.append(sqlRst.value(i).toString());
+        for(int i = 0; i < columCnt; i++) {
+            strLine.append(sqlRst.value(i).toString() + (i == 0 ? "\t" : ""));
+        }
         out << strLine.join(',') << "\n";
     }
     out.flush();

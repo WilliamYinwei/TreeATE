@@ -41,7 +41,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow), m_ATEtop(parent)
 {
     setWindowFlags(Qt::WindowMinMaxButtonsHint);
 
@@ -130,6 +130,8 @@ MainWindow::MainWindow(QWidget *parent) :
     unLoad();
     openLogFile();
     setWindowState(Qt::WindowMaximized);
+
+    m_ATEtop.InitATEtop();
 }
 
 MainWindow::~MainWindow()
@@ -168,6 +170,8 @@ MainWindow::~MainWindow()
         m_pLogFile->close();
         delete m_pLogFile;
     }
+
+    m_ATEtop.ExitATEtop();
 
     delete ui;
 }
@@ -341,11 +345,36 @@ void MainWindow::on_actionPlay_triggered()
         mapSN = mbDlg.GetPrjsBarcodes();
     }
 
-    ui->textBrowser_Log->append("Start: " + mapSN.values().join(","));
+    QVariantMap vmSys = m_vaSysCfg.toMap();
+    QString strProcedure = vmSys["LineName"].toString();
 
-    int nSelectedCnt = m_pTestMgr->StartTest(mapSN);
-    m_totalStatus = Unload; // initizate to status of the Unload '0'
-    on_startLoading(nSelectedCnt);
+    QMap<QString, QString> mapRejectSN;
+    QMap<QString, QString> mapAcceptSN;
+    for(auto lsCheckSN = mapSN.begin(); lsCheckSN != mapSN.end(); lsCheckSN++) {
+        if(!m_ATEtop.VerifyProcedure(lsCheckSN.value(), strProcedure))
+        {
+            mapRejectSN.insert(lsCheckSN.key(), lsCheckSN.value());
+        }
+        else
+        {
+            mapAcceptSN.insert(lsCheckSN.key(), lsCheckSN.value());
+        }
+    }
+
+    ui->textBrowser_Log->append("Start: " + mapAcceptSN.values().join(","));
+    if(!mapRejectSN.isEmpty())
+    {
+        QString strErr = m_ATEtop.GetLastError() + "\n" + mapRejectSN.values().join("\n");
+        QMessageBox::warning(this, tr("Warning"), strErr);
+        ui->textBrowser_Log->append(strErr);
+    }
+
+    if(!mapAcceptSN.isEmpty())
+    {
+        int nSelectedCnt = m_pTestMgr->StartTest(mapAcceptSN);
+        m_totalStatus = Unload; // initizate to status of the Unload '0'
+        on_startLoading(nSelectedCnt);
+    }
 }
 
 void MainWindow::on_startLoading(int nCnt)
@@ -735,8 +764,11 @@ void MainWindow::on_barcode_returnPressed()
     if(strSrcSN.isEmpty())
         return;
 
-    if(!m_pTestMgr->IsLoaded()) {
-        QVariantMap vmSys = m_vaSysCfg.toMap();
+    QVariantMap vmSys = m_vaSysCfg.toMap();
+    m_ATEtop.DownloadProject(strSrcSN, vmSys["LineName"].toString(), vmSys["WorkPath"].toString());
+
+    if(!m_pTestMgr->IsLoaded())
+    {
         QVariantList vlPrjSN = vmSys["Projects"].toList();
         for(int i = 0; i < vlPrjSN.count(); i++) {
             QVariantMap vmPrj = vlPrjSN.at(i).toMap();

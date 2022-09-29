@@ -14,6 +14,7 @@
 
 #include "testmanger.h"
 #include "pluginsmgr.h"
+#include "ta_atetop.h"
 
 #include <QMainWindow>
 #include <QProcess>
@@ -157,6 +158,7 @@ private:
     QLabel*         m_labelExceCnts;
     QLabel*         m_labelExceRate;
     QLabel*         m_labelTotalCnts;
+    TA_ATEtop     m_ATEtop;
 };
 
 #endif // MAINWINDOW_H
