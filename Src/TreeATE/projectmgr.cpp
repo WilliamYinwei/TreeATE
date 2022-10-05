@@ -114,6 +114,11 @@ QString ProjectMgr::getPrjName()
     return m_joPrj["Name"].toString();
 }
 
+QString ProjectMgr::getPrjVer()
+{
+    return m_joPrj["Ver"].toString();
+}
+
 QString ProjectMgr::getPrjDescription()
 {
     return m_joPrj["Desc"].toString();

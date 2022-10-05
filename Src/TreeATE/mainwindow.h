@@ -14,6 +14,7 @@
 
 #include "testmanger.h"
 #include "pluginsmgr.h"
+#include "taheartbeat.h"
 #include "ta_atetop.h"
 
 #include <QMainWindow>
@@ -131,6 +132,7 @@ private:
     QLabel*         m_labelPath;
     QLabel*         m_labelUser;
     QLabel*         m_labelTime;
+    QLabel*         m_labelGuid;
     QLabel*         m_labelStationName;
     QLabel*         m_labelHistoryRst;
     QLineEdit*      m_leTotalSN;
@@ -149,6 +151,7 @@ private:
     QTextStream     m_tsLogFile;
     QFile*          m_pLogFile;
     eTestStatus     m_totalStatus;
+    TaHeartbeat     m_heartbeat;
     // DockWidget for Counts
     QDockWidget*    m_dockCounts;
     QLabel*         m_labelPassCnts;

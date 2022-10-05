@@ -35,6 +35,7 @@ SOURCES += main.cpp\
     talabel.cpp \
     tacustomtreewidget.cpp \
     tastandmsgbox.cpp \
+    taheartbeat.cpp \
     ta_atetop.cpp
 
 HEADERS  += mainwindow.h \
@@ -57,6 +58,7 @@ HEADERS  += mainwindow.h \
     talabel.h \
     tacustomtreewidget.h \
     tastandmsgbox.h \
+    taheartbeat.h \
     treeatetop.h \
     ta_atetop.h
 

@@ -75,7 +75,7 @@ void login::SetHost(const QString& strHost)
 {
     if(!strHost.isEmpty()) {
         ui->comboBox_host->addItem(strHost);
-        //ui->comboBox_host->setCurrentText(strHost);
+        ui->comboBox_host->setCurrentText(strHost);
     }
 }
 

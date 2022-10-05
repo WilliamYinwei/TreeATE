@@ -26,7 +26,8 @@ TaScriptEdit::TaScriptEdit(QWidget *parent)
     m_sciApis = new QsciAPIs(m_lexerJavaScript);
     m_textEdit->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
 
-    m_textEdit->setIndentationWidth(4);
+    m_textEdit->setIndentationWidth(0);
+    m_textEdit->setTabIndents(true);
     m_textEdit->setIndentationGuides(true);
     m_textEdit->setSelectionToEol(true);
     m_textEdit->setUtf8(true);
@@ -61,6 +62,7 @@ void TaScriptEdit::SwitchLang(const QString& suffix)
     }
     else if(suffix.compare("py", Qt::CaseInsensitive) == 0)
     {
+        m_textEdit->setTabWidth(4);
         m_textEdit->setLexer(m_lexerPython);
         m_textEdit->setAutoCompletionFillups(m_lexerPython->autoCompletionFillups());
     }

@@ -30,6 +30,7 @@ public:
     bool getStoppedForLoop();
     int  getLoopCounts();
     QString getPrjName();
+    QString getPrjVer();
     QString getPrjDescription();
     QStringList getTestPrjName();
     QString getTestPrjFileName(const QString& testPrjName);

@@ -59,7 +59,7 @@ bool OutputLocal::OpenOutput()
         m_dbSqlite.exec("PRAGMA synchronous = OFF");
         m_dbSqlite.exec("PRAGMA journal_mode = MEMORY");
 
-        QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+        QSqlQuery sqlQuery(m_dbSqlite);
         QStringList lsTables = m_dbSqlite.tables();
         if(lsTables.count() <= 0) {
             const QString strCreateTables = "CREATE TABLE \"TestProject\" (\"name\" TEXT,\
@@ -115,7 +115,7 @@ bool OutputLocal::Save(const QString &strFileName)
 
 bool OutputLocal::uploadTestPrjRst(const int id)
 {
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
     QString strSQL = "UPDATE TestProject SET uploaded=" + QString::number(TA_UPLOAD_TRUE)
             + " WHERE id=" + QString::number(id);
     if(!sqlQuery.exec(strSQL)) {
@@ -136,7 +136,7 @@ bool OutputLocal::OutputTestProjectRst(const TestProjectRst& tpr)
                               + "','" + tpr.m_strVersion + "','" + tpr.m_strLineName
                               + "','" + tpr.m_strBarcode + "'," + QString::number(tpr.m_nCount) + ","
                                + QString::number(TA_UPLOAD_FALSE) + ")";
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     int i = 0;
     while(!sqlQuery.exec(insertSQL) && i < TA_TRY_TIME) i++;
@@ -173,7 +173,7 @@ bool OutputLocal::UpdateTestProjectRst(const TestProjectRst& tpr)
             + "', desc = '" + tpr.m_strDesc
             + "' where id = " + QString::number(itor.value());
 
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     int i = 0;
     while(!sqlQuery.exec(strUpdate) && i < TA_TRY_TIME) i++;
@@ -223,7 +223,7 @@ bool OutputLocal::OutputTestCaseRst(const TestCaseRst& tcr, const QString& strPa
                         values('" + tcr.m_strName + "','" + tcr.m_strPath
                               + "','" + tcr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "'," + QString::number(itor.value()) + ")";
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     int i = 0;
     while(!sqlQuery.exec(insertSQL) && i < TA_TRY_TIME) i++;
@@ -255,7 +255,7 @@ bool OutputLocal::UpdateTestCaseRst(const TestCaseRst& tcr)
             + "', desc = '" + tcr.m_strDesc
             + "' where id = " + QString::number(itor.value());
 
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     int i = 0;
     while(!sqlQuery.exec(strUpdate) && i < TA_TRY_TIME) i++;
@@ -282,7 +282,7 @@ bool OutputLocal::OutputDetailRst(const TestResult& tdr, const QString& strPathP
                         values('" + tdr.m_strName + "','" + tdr.m_strPath + "','" + TestResult::ToString(tdr.m_eRst)
                               + "','" + tdr.m_strDesc + "','" + tdr.m_tStart.toString(TREEATE_DATETIME_FORMAT)
                               + "','" + tdr.m_strStandard + "'," + QString::number(itor.value()) + ")";
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     int i = 0;
     while(!sqlQuery.exec(insertSQL) && i < TA_TRY_TIME) i++;
@@ -303,7 +303,7 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
         return false;
     }
 
-    QSqlQuery sqlQuery = QSqlQuery(m_dbSqlite);
+    QSqlQuery sqlQuery(m_dbSqlite);
 
     QString strSQL = "SELECT id, name, longname, station, workingline," \
                      "user, time, barcode, count, rst, spend, desc, version" \
@@ -313,10 +313,19 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
         return false;
     }
 
-    QSqlQuery sqlQueryCase = QSqlQuery(m_dbSqlite);
-    QSqlQuery sqlQueryDetail = QSqlQuery(m_dbSqlite);    
+    const int nRows = sqlQuery.last() ? sqlQuery.at() + 1 : 0;
+    if(nRows <= 0) {
+        qDebug() << TA_LOCALSQLITE_MODEL << " need rows: " << nRows;
+        return true;
+    }
+
+    QSqlQuery sqlQueryCase(m_dbSqlite);
+    QSqlQuery sqlQueryDetail(m_dbSqlite);
+
+    cout << "Commit results (" << nRows << ")";
 
     bool bOK = true;
+    sqlQuery.seek(-1);
     while (sqlQuery.next()) {
         const int nId = sqlQuery.value("id").toInt();
 
@@ -347,7 +356,8 @@ bool OutputLocal::UploadResultTo(IOutput* pOutput)
             if(!pOutput->OutputTestCaseRst(tcr, tpr.m_strPath)) continue;
 
             // detail
-            strSQL = "SELECT name, longname, rst, desc, time, standard FROM DetailRst WHERE parentId=" + QString::number(nId);
+            strSQL = "SELECT name, longname, rst, desc, time, standard FROM DetailRst WHERE parentId="
+                    + sqlQueryCase.value("id").toString();
             if(!sqlQueryDetail.exec(strSQL)) {
                 qDebug() << TA_LOCALSQLITE_MODEL << strSQL << " Error:" << sqlQueryDetail.lastError().text();
                 continue;

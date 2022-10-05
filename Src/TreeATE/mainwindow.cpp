@@ -78,11 +78,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_labelPath = new QLabel(tr("Path of test project"), this);
     m_labelUser = new QLabel(tr("User name"), this);
     m_labelTime = new QLabel(tr("Current Time"), this);
+    m_labelGuid = new QLabel(tr("Device ID"), this);
     m_labelHistoryRst = new QLabel(tr("History Result"), this);
     m_labelHistoryRst->setToolTip(tr("Orange color indicates that there is local history result has not been uploaded to the server"));
     statusBar()->addWidget(m_labelPath, 1);
     statusBar()->addPermanentWidget(m_labelHistoryRst, 0);
     statusBar()->addPermanentWidget(m_labelUser, 1);
+    statusBar()->addPermanentWidget(m_labelGuid, 0);
     statusBar()->addPermanentWidget(m_labelTime, 0);
 
     // timer
@@ -274,6 +276,10 @@ void MainWindow::on_getSystemTime()
             m_LogoutTimeCnt > vmSys["Logout"].toInt() * 3600) { // one hour
         m_LogoutTimeCnt = 0;
         on_actionLogin_triggered();
+    }
+    if(((m_LogoutTimeCnt % 10) == 0) && m_pTestMgr) {// heartbeat to treeate.top
+        m_heartbeat.heartbeat(m_pTestMgr->GetMgr().getPrjName(),
+                              m_pTestMgr->GetMgr().getPrjVer(), m_totalStatus);
     }
 }
 
@@ -712,6 +718,8 @@ void MainWindow::openSysCfg()
     QVariantMap vmSysCfg = m_vaSysCfg.toMap();
     m_labelStationName->setText(vmSysCfg["LineName"].toString() + " - "
             + vmSysCfg["Station"].toString());
+    m_heartbeat.setHost(vmSysCfg["Server"].toString());
+    m_labelGuid->setText(m_heartbeat.guid());
 
     file.close();
 
