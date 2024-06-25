@@ -277,10 +277,6 @@ void MainWindow::on_getSystemTime()
         m_LogoutTimeCnt = 0;
         on_actionLogin_triggered();
     }
-    if(((m_LogoutTimeCnt % 10) == 0) && m_pTestMgr) {// heartbeat to treeate.top
-        m_heartbeat.heartbeat(m_pTestMgr->GetMgr().getPrjName(),
-                              m_pTestMgr->GetMgr().getPrjVer(), m_totalStatus);
-    }
 }
 
 void MainWindow::on_actionLoading_triggered()
@@ -718,8 +714,7 @@ void MainWindow::openSysCfg()
     QVariantMap vmSysCfg = m_vaSysCfg.toMap();
     m_labelStationName->setText(vmSysCfg["LineName"].toString() + " - "
             + vmSysCfg["Station"].toString());
-    m_heartbeat.setHost(vmSysCfg["Server"].toString());
-    m_labelGuid->setText(m_heartbeat.guid());
+    m_labelGuid->setText("");
 
     file.close();
 
@@ -770,25 +765,39 @@ void MainWindow::on_barcode_returnPressed()
 {
     QString strSrcSN = m_leTotalSN->text().trimmed();
     if(strSrcSN.isEmpty())
-        return;
-
-    QVariantMap vmSys = m_vaSysCfg.toMap();
-    m_ATEtop.DownloadProject(strSrcSN, vmSys["LineName"].toString(), vmSys["WorkPath"].toString());
+        return;   
 
     if(!m_pTestMgr->IsLoaded())
     {
-        QVariantList vlPrjSN = vmSys["Projects"].toList();
-        for(int i = 0; i < vlPrjSN.count(); i++) {
-            QVariantMap vmPrj = vlPrjSN.at(i).toMap();
-            QString pattern = vmPrj["barcode"].toString();
-            if(!pattern.isEmpty())
-            {
-                QRegExp rx(pattern);
-                if(strSrcSN.indexOf(rx) < 0 || rx.captureCount() < 0)
-                    continue;
+        QString strNewPrjName("");
+        QVariantMap vmSys = m_vaSysCfg.toMap();
+        if(!m_ATEtop.DownloadProject(strSrcSN, vmSys["LineName"].toString(), vmSys["WorkPath"].toString()))
+            qDebug() << m_ATEtop.GetLastError();
+        else
+        {
+            strNewPrjName = m_ATEtop.GetDownloadPrjName();
+        }
 
-                loadUnits(vmSys["WorkPath"].toString() + "/" + vmPrj["path"].toString());
-                return;
+        if(!strNewPrjName.isEmpty()) // loading test project from just download
+        {
+            loadUnits(strNewPrjName);
+            return;
+        }
+        else // found test project to load on local
+        {
+            QVariantList vlPrjSN = vmSys["Projects"].toList();
+            for(int i = 0; i < vlPrjSN.count(); i++) {
+                QVariantMap vmPrj = vlPrjSN.at(i).toMap();
+                QString pattern = vmPrj["barcode"].toString();
+                if(!pattern.isEmpty())
+                {
+                    QRegExp rx(pattern);
+                    if(strSrcSN.indexOf(rx) < 0 || rx.captureCount() < 0)
+                        continue;
+
+                    loadUnits(vmSys["WorkPath"].toString() + "/" + vmPrj["path"].toString());
+                    return;
+                }
             }
         }
         QMessageBox::information(this, tr("Info"), tr("No matching loadable test project, refer the System options."));

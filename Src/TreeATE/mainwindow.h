@@ -151,7 +151,6 @@ private:
     QTextStream     m_tsLogFile;
     QFile*          m_pLogFile;
     eTestStatus     m_totalStatus;
-    TaHeartbeat     m_heartbeat;
     // DockWidget for Counts
     QDockWidget*    m_dockCounts;
     QLabel*         m_labelPassCnts;

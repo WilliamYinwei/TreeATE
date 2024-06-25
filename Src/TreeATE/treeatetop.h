@@ -25,6 +25,7 @@ public:
     virtual bool InitATEtop() = 0;
     virtual bool VerifyProcedure(const QString& strSN, const QString& strProcedure) = 0;
     virtual bool DownloadProject(const QString& strSN, const QString& strProcedure, const QString& workingPath) = 0;
+    virtual QString GetDownloadPrjName() = 0;
     virtual void ExitATEtop() = 0;
     virtual QString GetLastError() = 0;
 };

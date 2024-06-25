@@ -24,6 +24,7 @@ public:
     bool InitATEtop();
     bool VerifyProcedure(const QString& strSN, const QString& strProcedure);
     bool DownloadProject(const QString& strSN, const QString& strProcedure, const QString& workingPath);
+    QString GetDownloadPrjName();
     void ExitATEtop();
     QString GetLastError();
 

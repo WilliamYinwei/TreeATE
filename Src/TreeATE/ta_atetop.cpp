@@ -79,6 +79,16 @@ bool TA_ATEtop::DownloadProject(const QString &strSN, const QString &strProcedur
     return ret;
 }
 
+QString TA_ATEtop::GetDownloadPrjName()
+{
+    if(m_pATEtop)
+    {
+        return m_pATEtop->GetDownloadPrjName();
+    }
+
+    return QString("");
+}
+
 void TA_ATEtop::ExitATEtop()
 {
     if(m_pATEtop)
