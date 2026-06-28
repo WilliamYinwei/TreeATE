@@ -14,6 +14,7 @@
 #include "outputmgr.h"
 #include "outputstd.h"
 #include "outputlocal.h"
+#include "tapluginloader.h"
 
 #include <QCoreApplication>
 #include <QSettings>
@@ -24,8 +25,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-
-typedef void* (*CreateInst)();
 
 OutputMgr::OutputMgr()
 {
@@ -54,20 +53,13 @@ bool OutputMgr::OpenOutput(QString& strErr)
 
     QFileInfo infoFile(outExName);
     if(infoFile.isFile()) {
-        QLibrary myLib(outExName);
-
-        CreateInst myFunction = (CreateInst) myLib.resolve("CreateOutputInst");
-        if (NULL == myFunction)
-        {
-            strErr = TA_TR("Failed to resolve the ") + outExName;
-            TA_OUT_DEBUG_INFO << strErr;
-            return false;
-        }
-
-        m_pOutputSvr = (IOutput*)myFunction();
+        void* inst = TAPluginLoader::createInstanceNoArg(outExName, "CreateOutputInst",
+                                                         m_lstLibs, strErr);
+        m_pOutputSvr = reinterpret_cast<IOutput*>(inst);
         if(NULL == m_pOutputSvr)
         {
-            strErr = TA_TR("Failed to create the instance.");
+            if(strErr.isEmpty())
+                strErr = TA_TR("Failed to create the instance.");
             TA_OUT_DEBUG_INFO << strErr;
             return false;
         }
@@ -92,6 +84,7 @@ void OutputMgr::CloseOutput()
         delete itor;
     }
     m_lstOutput.clear();
+    TAPluginLoader::unloadAll(m_lstLibs);
     m_pOutputSvr = NULL;
     m_pOutputLocal = NULL;
 }

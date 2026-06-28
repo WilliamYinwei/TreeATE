@@ -15,8 +15,11 @@
 #include "unitmgr.h"
 #include "resultmgr.h"
 
+#include <QAtomicInt>
 #include <QList>
 #include <QMap>
+
+class QLibrary;
 
 typedef QList<QObject*>         TA_ListObj;
 
@@ -45,12 +48,16 @@ protected:
     QStringList runningList(const QStringList& selPath);
 
 private:
-    quint32         m_nStopped;
+    bool loadLanguagePlugin(UnitMgr::TaLang lang);
+    bool loadDevicePlugins(const QString& prjPath);
+
+    QAtomicInt      m_nStopped;
     UnitMgr*        m_pUnitMgr;
     QString         m_lastErr;
     TA_ListObj      m_lstObj;
+    QList<QLibrary*> m_lstLibs;
     QStringList     m_lstPath;
-    IMutliLang*     m_pCurretLang;    
+    IMutliLang*     m_pCurretLang;
 };
 
 #endif // TESTRUNNER_H

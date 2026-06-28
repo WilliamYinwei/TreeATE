@@ -10,8 +10,13 @@ QT       += widgets network
 TARGET = GUI_TA_MsgBox
 TEMPLATE = lib
 
-CONFIG(release, debug|release): DESTDIR = ../../bin/libs
-CONFIG(debug, debug|release): DESTDIR = ../../bind/libs
+contains(QT_ARCH, x86_64) {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x64/libs
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x64/libs
+} else {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x86/libs
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x86/libs
+}
 
 DEFINES += GUI_TA_MSGBOX_LIBRARY
 

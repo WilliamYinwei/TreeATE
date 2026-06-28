@@ -15,6 +15,8 @@
 #include "testrststruct.h"
 #include "ioutput.h"
 
+class QLibrary;
+
 class OutputMgr
 {
 public:
@@ -40,6 +42,7 @@ public:
 
 private:
     QList<IOutput*> m_lstOutput;
+    QList<QLibrary*> m_lstLibs;
     IOutput*        m_pOutputSvr;
     IOutput*        m_pOutputLocal;
     QString         m_appStrPath;

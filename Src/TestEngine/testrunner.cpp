@@ -13,6 +13,7 @@
 #include "testrunner.h"
 #include "imutlilang.h"
 #include "langqs.h"
+#include "tapluginloader.h"
 
 #include <QScriptValue>
 #include <QMetaObject>
@@ -21,8 +22,6 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QCoreApplication>
-
-typedef void* (*CreateInst)(const char*);
 
 TestRunner::TestRunner(UnitMgr* pMgr)
 {
@@ -39,15 +38,13 @@ TestRunner::~TestRunner()
     m_lstObj.clear();
     if(m_pCurretLang)
         delete m_pCurretLang;
+    TAPluginLoader::unloadAll(m_lstLibs);
 }
 
 void TestRunner::stop()
 {
-    m_nStopped++;
-    qDebug() << "---- stopped click counts: " <<  m_nStopped;
-    if(m_nStopped > 3) {
-        exit(TA_ERR_BY_STOPPED);
-    }
+    m_nStopped.ref();
+    qDebug() << "---- stop requested, count:" << m_nStopped.load();
 }
 
 QString TestRunner::getLastError()
@@ -55,99 +52,61 @@ QString TestRunner::getLastError()
     return m_lastErr;
 }
 
-bool TestRunner::initScript(const QString& prjPath)
+bool TestRunner::loadLanguagePlugin(UnitMgr::TaLang lang)
 {
-    if(NULL == m_pUnitMgr) {
-        m_lastErr = TA_TR("No assign the unit manager.");
-        return false;
+    if(m_pCurretLang) {
+        delete m_pCurretLang;
+        m_pCurretLang = NULL;
     }
 
-    UnitMgr::TaLang lang = m_pUnitMgr->getCurrentLanguage();
     if(UnitMgr::JavaScript == lang) {
-        if(m_pCurretLang)
-            delete m_pCurretLang;
         m_pCurretLang = new LangQS();
+        return true;
     }
-    else if(UnitMgr::Python == lang) {
-        if(m_pCurretLang)
-            delete m_pCurretLang;
 
-        QDir dir;
-        dir.setPath(qApp->applicationDirPath());
-        QStringList pythonDlls = dir.entryList(QStringList() << TA_DEV_LANG_PYTHON, QDir::Files);
-        if(pythonDlls.count() <= 0) {
-            m_lastErr = TA_TR("Can't found the DevLangPython*.dll");
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-        const QString strDllFile(dir.path() + "/" + pythonDlls.at(0));
-        QLibrary myLib(strDllFile);
-        if(!myLib.load()) {
-            m_lastErr = TA_TR("Failed to load the ") + strDllFile + ". error:" + myLib.errorString();
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        CreateInst myFunction = (CreateInst) myLib.resolve("CreateLanguageInst");
-        if (NULL == myFunction)
-        {
-            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        m_pCurretLang = (IMutliLang*)myFunction("py");
-        if(m_pCurretLang == NULL)
-        {
-            m_lastErr = TA_TR("The current language is NULL.");
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
+    QString dllPattern;
+    QString langArg;
+    if(UnitMgr::Python == lang) {
+        dllPattern = TA_DEV_LANG_PYTHON;
+        langArg = "py";
     }
     else if(UnitMgr::Cpp == lang) {
-        if(m_pCurretLang)
-            delete m_pCurretLang;
-
-        QDir dir;
-        dir.setPath(qApp->applicationDirPath());
-        QStringList cppDlls = dir.entryList(QStringList() << "DevLangCpp*.dll", QDir::Files);
-        if(cppDlls.count() <= 0) {
-            m_lastErr = TA_TR("Can't found the DevLangCpp*.dll");
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-        const QString strDllFile(cppDlls.at(0));
-        QLibrary myLib(strDllFile);
-        if(!myLib.load()) {
-            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        CreateInst myFunction = (CreateInst) myLib.resolve("CreateLanguageInst");
-        if (NULL == myFunction)
-        {
-            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        m_pCurretLang = (IMutliLang*)myFunction("cpp");
-        if(m_pCurretLang == NULL)
-        {
-            m_lastErr = TA_TR("The current language is NULL.");
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
+#ifdef WIN32
+        dllPattern = "DevLangCpp*.dll";
+#else
+        dllPattern = "libDevLangCpp*.so";
+#endif
+        langArg = "cpp";
     }
-
-    // load script
-    if(!m_pCurretLang->loadScript(m_pUnitMgr->getScript())) {
-        m_lastErr = m_pCurretLang->getLastErr();
+    else {
+        m_lastErr = TA_TR("Unsupported test language.");
         return false;
     }
 
-    // load Model
+    const QString dllPath = TAPluginLoader::findFirstDll(qApp->applicationDirPath(), dllPattern);
+    if(dllPath.isEmpty()) {
+        m_lastErr = TA_TR("Can't found the language plugin: ") + dllPattern;
+        TA_OUT_DEBUG_INFO << m_lastErr;
+        return false;
+    }
+
+    const QByteArray langArgBytes = langArg.toUtf8();
+    void* inst = TAPluginLoader::createInstance(dllPath, "CreateLanguageInst",
+                                                langArgBytes.constData(),
+                                                m_lstLibs, m_lastErr);
+    m_pCurretLang = reinterpret_cast<IMutliLang*>(inst);
+    if(NULL == m_pCurretLang) {
+        if(m_lastErr.isEmpty())
+            m_lastErr = TA_TR("The current language is NULL.");
+        TA_OUT_DEBUG_INFO << m_lastErr;
+        return false;
+    }
+
+    return true;
+}
+
+bool TestRunner::loadDevicePlugins(const QString& prjPath)
+{
     QVariantList vlObj = m_pUnitMgr->getModelList();
     for(int i = 0; i < vlObj.count(); i++)
     {
@@ -161,37 +120,42 @@ bool TestRunner::initScript(const QString& prjPath)
 
         strDllFile = prjPath + "/libs/" + strDllFile;
 
-        QLibrary myLib(strDllFile);
-        if(!myLib.load()) {
-            m_lastErr = TA_TR("Failed to load the ") + strDllFile;
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        CreateInst myFunction = (CreateInst) myLib.resolve("CreateDeviceInst");
-        if (NULL == myFunction)
-        {
-            m_lastErr = TA_TR("Failed to resolve the ") + strDllFile;
-            TA_OUT_DEBUG_INFO << m_lastErr;
-            return false;
-        }
-
-        QObject* pObj = (QObject*)myFunction("");
-        if(NULL == pObj)
-        {
-            m_lastErr = TA_TR("Failed to create the instance.");
+        void* inst = TAPluginLoader::createInstance(strDllFile, "CreateDeviceInst",
+                                                    "", m_lstLibs, m_lastErr);
+        QObject* pObj = reinterpret_cast<QObject*>(inst);
+        if(NULL == pObj) {
+            if(m_lastErr.isEmpty())
+                m_lastErr = TA_TR("Failed to create the instance.");
             TA_OUT_DEBUG_INFO << m_lastErr;
             return false;
         }
 
         m_lstObj.append(pObj);
-
         m_pCurretLang->addModel(strModelObj, pObj);
     }
 
-    // load public Parameter
-    m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
+    return true;
+}
 
+bool TestRunner::initScript(const QString& prjPath)
+{
+    if(NULL == m_pUnitMgr) {
+        m_lastErr = TA_TR("No assign the unit manager.");
+        return false;
+    }
+
+    if(!loadLanguagePlugin(m_pUnitMgr->getCurrentLanguage()))
+        return false;
+
+    if(!m_pCurretLang->loadScript(m_pUnitMgr->getScript())) {
+        m_lastErr = m_pCurretLang->getLastErr();
+        return false;
+    }
+
+    if(!loadDevicePlugins(prjPath))
+        return false;
+
+    m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
     return true;
 }
 
@@ -231,6 +195,9 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
     QString strLastExceptionFunc;
     for(int i = 0; i < runLst.count(); i++){
+        if(m_nStopped.load() > 0)
+            break;
+
         QString path = runLst.at(i);
 
         QString strScriptFunc = "setup_";
@@ -261,15 +228,12 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
         }
 
         if(!bTeardown) {
-            // Create the result buffer of the current test unit
             rstMgr.CreateResult(path, objUnit);
         }
 
         int iRet = m_pCurretLang->executeScript(strScriptFunc, m_pUnitMgr->getLocalParameter(objUnit));
-        // recovery the public parameter
         m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
 
-        // Exception(iRet < 0)
         if(iRet < 0) {
             m_lastErr = m_pCurretLang->getLastErr();
             rstMgr.UpdateResult(path, objUnit, iRet, m_lastErr);
@@ -288,19 +252,16 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             }
         }
 
-        // stopped, or failed to stop
-        if(m_nStopped || (iRet > 0 && bStopWhenFailed)) {
+        if(m_nStopped.load() > 0 || (iRet > 0 && bStopWhenFailed)) {
             rstMgr.UpdateResult(path, objUnit, 1, TA_TR("Stopped by TreeATE."));
             break;
         }
 
-        // record test result of the current test unit
         rstMgr.UpdateResult(path, objUnit, iRet);
         TA_OUT_DEBUG_INFO << path << " : " << iRet;
     }
 
     QString strScriptFunc = "teardown_";
-    // After stopped running the teardown of suite or project
     for(QStringList::reverse_iterator itor = lstTeardown.rbegin();
         itor != lstTeardown.rend(); ++itor) {
         QString path = *itor;
@@ -311,7 +272,6 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
         int iRet = m_pCurretLang->executeScript(strTeardownFunc,
                 m_pUnitMgr->getLocalParameter(objUnit));
-        // recovery the public parameter
         m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
         m_lastErr = m_pCurretLang->getLastErr();
 
@@ -320,7 +280,6 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             bSuccess = false;
         }
         else {
-            // result of teardown
             rstMgr.UpdateResult(path, objUnit, iRet);
         }
     }
@@ -330,5 +289,5 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
 bool TestRunner::IsStopped()
 {
-    return (bool)m_nStopped;
+    return m_nStopped.load() > 0;
 }

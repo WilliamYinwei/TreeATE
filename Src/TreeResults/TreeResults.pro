@@ -11,8 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TreeResults
 TEMPLATE = app
 
-CONFIG(release, debug|release): DESTDIR = ../../bin
-CONFIG(debug, debug|release): DESTDIR = ../../bind
+contains(QT_ARCH, x86_64) {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x64
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x64
+} else {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x86
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x86
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp \

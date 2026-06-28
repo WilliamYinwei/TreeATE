@@ -13,23 +13,33 @@
 #include "testctrl.h"
 
 TestCtrl::TestCtrl(TestRunner *runner)
+    : m_pRunner(runner)
+    , m_bContinue(true)
 {
-    m_pRunner = runner;
 }
 
 TestCtrl::~TestCtrl()
 {
-    QThread::terminate();
-    QThread::wait(300);
+    m_bContinue = false;
+    requestInterruption();
+    if(!wait(3000)) {
+        qWarning() << "TestCtrl thread did not stop within timeout";
+    }
 }
 
 void TestCtrl::run()
-{    
-    while(1) {
+{
+    while(m_bContinue && !isInterruptionRequested()) {
         string strStopped;
-        cin >> strStopped;
+        if(!(cin >> strStopped)) {
+            if(cin.eof() || cin.bad())
+                break;
+            continue;
+        }
         if(0 == QString::fromStdString(strStopped).compare(TA_STOPPED, Qt::CaseInsensitive))
             break;
     }
-    m_pRunner->stop();
+
+    if(m_pRunner)
+        m_pRunner->stop();
 }

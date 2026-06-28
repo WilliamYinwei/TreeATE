@@ -54,12 +54,23 @@ bool TALocalSocket::receiveFromClient(int mSecs, QStringList& lstData)
 
     QByteArray data = m_lsServer->readAll();
     qDebug() << "MsgDispatchThread read data: " << data.toHex();
-    if((uchar)data.at(0) == TA_LOCAL_START_REQ) {
-        int nLen = data.at(2);
-        nLen = (nLen << 8) + data.at(3);
-
-        lstData.append(data.mid(4, nLen));
+    if(data.size() < 4) {
+        m_strErr = "Invalid message: too short";
+        return false;
     }
+    if((uchar)data.at(0) != TA_LOCAL_START_REQ) {
+        m_strErr = "Invalid message header";
+        return false;
+    }
+
+    int nLen = (uchar)data.at(2);
+    nLen = (nLen << 8) + (uchar)data.at(3);
+    if(nLen < 0 || 4 + nLen > data.size()) {
+        m_strErr = "Invalid message length";
+        return false;
+    }
+
+    lstData.append(data.mid(4, nLen));
 
     return true;
 }
@@ -129,10 +140,18 @@ bool TALocalSocket::sendToServer(const QString& data, int mSecs)
 
     QByteArray buf = m_lsClient->readAll();
     qDebug() << "sendToServer Recieve: " << buf.toHex();
+    if(buf.size() < 4) {
+        m_strErr = "Invalid ACK: too short";
+        return false;
+    }
     // is Async Reply, success to receive at server
     if((uchar)buf.at(0) == TA_LOCAL_START_REP && buf.at(1) == TA_LOCAL_FLAG_ASYN) {
-        int rLen = buf.at(2);
-        rLen = (rLen << 8) + buf.at(3);
+        int rLen = (uchar)buf.at(2);
+        rLen = (rLen << 8) + (uchar)buf.at(3);
+        if(rLen < 0 || 4 + rLen > buf.size()) {
+            m_strErr = "Invalid ACK length";
+            return false;
+        }
         if(QString(buf.mid(4, rLen)).compare(TA_LOCAL_ACK, Qt::CaseInsensitive) != 0)
         {
             m_strErr = "Failed to ACK";
@@ -152,10 +171,18 @@ bool TALocalSocket::returnFromServer(int mSecs, QString &data)
     }
 
     QByteArray buf = m_lsClient->readAll();
-    // is Async Reply, success to receive at server
+    if(buf.size() < 4) {
+        m_strErr = "Invalid reply: too short";
+        return false;
+    }
+    // is Sync Reply
     if(((uchar)buf.at(0) == TA_LOCAL_START_REP) && buf.at(1) == TA_LOCAL_FLAG_SYNC) {
-        int rLen = buf.at(2);
-        rLen = (rLen << 8) + buf.at(3);
+        int rLen = (uchar)buf.at(2);
+        rLen = (rLen << 8) + (uchar)buf.at(3);
+        if(rLen < 0 || 4 + rLen > buf.size()) {
+            m_strErr = "Invalid reply length";
+            return false;
+        }
         data = QString(buf.mid(4, rLen));
         return true;
     }

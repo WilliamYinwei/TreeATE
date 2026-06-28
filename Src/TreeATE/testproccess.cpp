@@ -190,7 +190,7 @@ void TestProcess::on_testEngineFinished(int nCode)
 bool TestProcess::StopTest()
 {
     if(state() == QProcess::Running){
-        if(write("stop\r\nstop\r\nstop\r\n") < 0)
+        if(write("stop\n") < 0)
         {
             return false;
         }

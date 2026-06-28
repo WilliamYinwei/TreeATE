@@ -17,7 +17,7 @@
 #include <QThread>
 #include <QLocalServer>
 #include <QScriptEngine>
-#include <QSharedPointer>
+#include <QLibrary>
 
 
 class MsgDispatchThread : public QThread
@@ -72,11 +72,14 @@ public slots:
     QString on_msg_process(const QString& strCmd);
 
 private:
+    bool isSafePluginCommand(const QString& strCmd) const;
+
     MsgDispatchSvr* m_pMsgServer;
     QWidget*        m_pParent;
     QString         m_strLastErr;
     QScriptEngine   m_engine;
     QList<QObject*> m_lstObj;
+    QList<QLibrary*> m_lstLibs;
 };
 
 #endif // PLUGINSMGR_H

@@ -12,10 +12,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TreeATE
 TEMPLATE = app
 
-CONFIG(release, debug|release): DESTDIR = ../../bin
-CONFIG(debug, debug|release): DESTDIR = ../../bind
+contains(QT_ARCH, x86_64) {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x64
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x64
+} else {
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x86
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x86
+}
 
-INCLUDEPATH += $$PWD/../../Libs/TALocalSocket
+INCLUDEPATH += $$PWD/../../Libs/TALocalSocket \
+    $$PWD/../../Libs/TACommon
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -77,7 +83,7 @@ RC_FILE += ate.rc
 
 DEFINES += QT_MESSAGELOGCONTEXT
 
-LIBS += -L$$DESTDIR/libs/ -lTALocalSocket
+LIBS += -L$$DESTDIR/libs/ -lTALocalSocket -lTACommon
 
 win32:TRANSLATIONS += $${PWD}/i18n/en.ts \
     $${PWD}/i18n/zh.ts

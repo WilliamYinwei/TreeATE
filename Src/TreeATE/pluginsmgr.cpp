@@ -11,6 +11,7 @@
 #include "tadefine.h"
 #include "pluginsmgr.h"
 #include "talocalsocket.h"
+#include "tapluginloader.h"
 
 #include <QLocalSocket>
 #include <QLibrary>
@@ -19,8 +20,6 @@
 #include <QDebug>
 #include <QWaitCondition>
 #include <QMetaType>
-
-typedef void* (*CreateInst)(const void*);
 
 ////////////////////////////////////////////////////////////////
 /// \brief MsgDispatchThread::MsgDispatchThread
@@ -83,7 +82,6 @@ MsgDispatchSvr::~MsgDispatchSvr()
 void MsgDispatchSvr::incomingConnection(quintptr socketDescriptor)
 {
     MsgDispatchThread *thread = new MsgDispatchThread(socketDescriptor);
-    // delete later when finished
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(msgRecived(QString)),
             m_pParent, SLOT(on_msg_process(QString)), Qt::BlockingQueuedConnection);
@@ -107,6 +105,7 @@ PluginsMgr::PluginsMgr(QWidget* parent) : m_engine(parent)
 
 PluginsMgr::~PluginsMgr()
 {
+    UnloadPluginObj();
     if(m_pMsgServer) {
         m_pMsgServer->close();
         delete m_pMsgServer;
@@ -126,6 +125,7 @@ void PluginsMgr::UnloadPluginObj()
         }
     }
     m_lstObj.clear();
+    TAPluginLoader::unloadAll(m_lstLibs);
 }
 
 bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
@@ -137,7 +137,6 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
     }
 
     UnloadPluginObj();
-
 
     QVariantList vlObj = lstPlugin;
     for(int i = 0; i < vlObj.count(); i++)
@@ -152,23 +151,13 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
 
         strDllFile = strPath + "/libs/" + strDllFile;
 
-        QLibrary myLib(strDllFile);
-        if(!myLib.load()) {
-            m_strLastErr = tr("Failed to load the ") + strDllFile;
-            return false;
-        }
-
-        CreateInst myFunction = (CreateInst) myLib.resolve("CreateGuiInst");
-        if (NULL == myFunction)
-        {
-            m_strLastErr = tr("Failed to resolve the ") + strDllFile;
-            return false;
-        }
-
-        QObject* pObj = (QObject*)myFunction(m_pParent);
+        void* inst = TAPluginLoader::createInstance(strDllFile, "CreateGuiInst",
+                                                    m_pParent, m_lstLibs, m_strLastErr);
+        QObject* pObj = reinterpret_cast<QObject*>(inst);
         if(NULL == pObj)
         {
-            m_strLastErr = tr("Failed to create the instance.");
+            if(m_strLastErr.isEmpty())
+                m_strLastErr = tr("Failed to create the instance.");
             return false;
         }
 
@@ -189,8 +178,28 @@ void PluginsMgr::AddModelObj(QString strModelObj, QObject* pObj)
     m_engine.globalObject().setProperty(strModelObj, scriptObj);
 }
 
+bool PluginsMgr::isSafePluginCommand(const QString& strCmd) const
+{
+    static const QStringList blockedPatterns = QStringList()
+            << "eval(" << "Function(" << "import " << "require("
+            << "XMLHttpRequest" << "ActiveXObject";
+
+    foreach(const QString& pattern, blockedPatterns) {
+        if(strCmd.contains(pattern, Qt::CaseInsensitive))
+            return false;
+    }
+
+    return true;
+}
+
 QString PluginsMgr::on_msg_process(const QString& strCmd)
 {
+    if(!isSafePluginCommand(strCmd)) {
+        m_strLastErr = tr("Rejected unsafe plugin command.");
+        qWarning() << m_strLastErr << strCmd;
+        return QString();
+    }
+
     QString script = "(function() {" + strCmd + "})";
     qDebug() << "Msg Process: " << script;
     QScriptValue func = m_engine.evaluate(script);
