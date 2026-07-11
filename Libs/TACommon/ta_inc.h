@@ -9,8 +9,8 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#ifndef STDINC_H
-#define STDINC_H
+#ifndef TA_INC_H
+#define TA_INC_H
 
 #include <iostream>
 
@@ -66,4 +66,4 @@ typedef enum {
 #define TA_DEV_LANG_PYTHON  "libDevLangPython*.so"
 #endif
 
-#endif // STDINC_H
+#endif // TA_INC_H

@@ -47,51 +47,69 @@
 
 #include <QByteArray>
 #include <QMetaMethod>
+#include <QMetaType>
 
-namespace PythonQtUtils
+namespace PythonQtUtils {
+inline QByteArray signature(const QMetaMethod& method)
 {
-  inline QByteArray signature(const QMetaMethod& method) {
-#if( QT_VERSION >= QT_VERSION_CHECK(5,0,0) )
-    return method.methodSignature();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+  return method.methodSignature();
 #else
-    return QByteArray(method.signature());
+  return QByteArray(method.signature());
 #endif
-  }
+}
 
-  inline QByteArray methodName(const QMetaMethod& method) {
-#if( QT_VERSION >= QT_VERSION_CHECK(5,0,0) )
-    return method.name();
+inline QByteArray methodName(const QMetaMethod& method)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+  return method.name();
 #else
-    QByteArray sig(method.signature());
-    int idx = sig.indexOf('(');
-    sig = sig.left(idx);
-    return sig;
+  QByteArray sig(method.signature());
+  int idx = sig.indexOf('(');
+  sig = sig.left(idx);
+  return sig;
 #endif
-  }
+}
 
-  inline QByteArray typeName(const QMetaMethod& method) {
-#if( QT_VERSION >= QT_VERSION_CHECK(5,0,0) )
-    QByteArray result = method.typeName();
-    if (result == "void") {
-      return QByteArray();
-    } else {
-      return result;
-    }
-#else
-    return method.typeName();
-#endif
+inline QByteArray typeName(const QMetaMethod& method)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+  QByteArray result = method.typeName();
+  if (result == "void") {
+    return QByteArray();
+  } else {
+    return result;
   }
+#else
+  return method.typeName();
+#endif
+}
 
-  //! Returns of the python object is a class type
-  inline bool isPythonClassType(PyObject* obj) {
-#ifdef PY3K
-    return PyType_Check(obj);
+//! Returns of the python object is a class type
+inline bool isPythonClassType(PyObject* obj)
+{
+  return PyType_Check(obj);
+}
+
+//! Returns the meta type ID from a type name
+inline int metaTypeIdFromTypeName(const QByteArray& className)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  return QMetaType::fromName(className.constData()).id();
 #else
-    // support old-style classes and new style classes
-    return (obj->ob_type == &PyClass_Type || obj->ob_type == &PyType_Type);
+  return QMetaType::type(className.constData());
 #endif
-  }
+}
+
+//! Returns the type name from a meta type ID
+inline const char* typeNameFromMetaTypeId(int metaTypeId)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  return QMetaType(metaTypeId).name();
+#else
+  return QMetaType::typeName(metaTypeId);
+#endif
+}
 }
 
 #endif
-

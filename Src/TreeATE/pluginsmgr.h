@@ -16,7 +16,7 @@
 #include <QWidget>
 #include <QThread>
 #include <QLocalServer>
-#include <QScriptEngine>
+#include <QJSEngine>
 #include <QLibrary>
 
 
@@ -77,7 +77,7 @@ private:
     MsgDispatchSvr* m_pMsgServer;
     QWidget*        m_pParent;
     QString         m_strLastErr;
-    QScriptEngine   m_engine;
+    QJSEngine       m_engine;
     QList<QObject*> m_lstObj;
     QList<QLibrary*> m_lstLibs;
 };

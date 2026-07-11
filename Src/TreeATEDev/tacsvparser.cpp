@@ -90,7 +90,7 @@ bool TACsvParser::parserFile()
     }
 
     QTextStream in(m_pFileCsv);
-    in.setCodec("ANSI");
+    in.setEncoding(QStringConverter::Latin1);
     clear();
     while(!in.atEnd()) {
         QString strLine = in.readLine();
@@ -118,7 +118,7 @@ bool TACsvParser::saveFile()
     }
 
     QTextStream out(m_pFileCsv);
-    out.setCodec("ANSI");
+    out.setEncoding(QStringConverter::Latin1); //  "ANSI"
     foreach(QString strLine, m_strData) {
         if(strLine.split(',').count() <= 0)
             continue;

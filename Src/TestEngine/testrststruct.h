@@ -15,7 +15,7 @@
 #include <QString>
 #include <QDebug>
 #include <QDateTime>
-#include <QTime>
+#include <QElapsedTimer>
 
 // detail result and based result
 class TestResult
@@ -42,7 +42,7 @@ public:
             strRst = "Exce";
             break;
         default:
-            qDebug() << "No defined, eRst = " << eRst << endl;
+            qDebug() << "No defined, eRst = " << eRst;
             break;
         };
         return strRst;
@@ -70,7 +70,7 @@ public:
 public:
     TypeTestRst m_eRst;     // test result
     QDateTime  m_tStart;        // start time of test
-    QTime   m_tTime;
+    QElapsedTimer   m_tTime;
     QString m_strName;      // test name
     QString m_strDesc;      // description of test result
     QString m_strPath;      // path of name

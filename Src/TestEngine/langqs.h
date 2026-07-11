@@ -15,7 +15,7 @@
 
 #include "imutlilang.h"
 
-#include <QScriptEngine>
+#include <QJSEngine>
 
 class LangQS : public IMutliLang
 {
@@ -28,7 +28,7 @@ public:
     virtual int executeScript(const QString& funcName, const TA_MapParaValue& localValue);
 
 private:
-    QScriptEngine   m_engine;
+    QJSEngine   m_engine;
 };
 
 #endif // LANGQS_H

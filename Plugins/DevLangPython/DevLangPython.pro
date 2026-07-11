@@ -6,6 +6,8 @@
 
 QT       -= gui
 
+CONFIG += c++11
+
 TARGET = DevLangPython
 TEMPLATE = lib
 
@@ -17,10 +19,13 @@ contains(QT_ARCH, x86_64) {
     CONFIG(debug, debug|release): DESTDIR = ../../bind/x86
 }
 
+PYTHONQT_GENERATED_PATH = $$PWD/../../3part/PythonQt/generated_cpp
+
 include ( ../../3part/PythonQt/build/common.prf )
 include ( ../../3part/PythonQt/build/PythonQt.prf )
 
 INCLUDEPATH += $$PWD/../../Libs/TACommon
+INCLUDEPATH += $$PWD/../../3part/PythonQt/include
 
 DEFINES += DEVLANGCHOOSE_LIBRARY
 

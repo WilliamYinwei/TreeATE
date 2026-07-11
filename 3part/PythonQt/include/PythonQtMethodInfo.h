@@ -58,19 +58,16 @@ typedef struct _object PyObject;
 class PYTHONQT_EXPORT PythonQtMethodInfo
 {
 public:
-  enum ParameterType {
-    Unknown = -1,
-    Variant = -2
-  };
+  enum ParameterType { Unknown = -1, Variant = -2 };
 
   //! stores various informations about a parameter/type name
   struct ParameterInfo {
     QByteArray name;
-    QByteArray innerName; // if the type is a template, this stores the inner name
-    PyObject*  enumWrapper; // if it is an enum, a pointer to the enum wrapper
-    int  typeId; // a mixture from QMetaType and ParameterType
-    char pointerCount; // the number of pointer indirections
-    char innerNamePointerCount; // the number of pointer indirections in the inner name 
+    QByteArray innerName;       // if the type is a template, this stores the inner name
+    PyObject* enumWrapper;      // if it is an enum, a pointer to the enum wrapper
+    int typeId;                 // a mixture from QMetaType and ParameterType
+    char pointerCount;          // the number of pointer indirections
+    char innerNamePointerCount; // the number of pointer indirections in the inner name
     bool isConst;
     bool isReference;
     bool isQList;
@@ -79,13 +76,12 @@ public:
     bool newOwnerOfThis;
   };
 
-  PythonQtMethodInfo() {
-    _shouldAllowThreads = true;
-  };
+  PythonQtMethodInfo() { _shouldAllowThreads = true; };
   ~PythonQtMethodInfo() {};
   PythonQtMethodInfo(const QMetaMethod& meta, PythonQtClassInfo* classInfo);
   PythonQtMethodInfo(const QByteArray& typeName, const QList<QByteArray>& args);
-  PythonQtMethodInfo(const PythonQtMethodInfo& other) {
+  PythonQtMethodInfo(const PythonQtMethodInfo& other)
+  {
     _parameters = other._parameters;
     _shouldAllowThreads = other._shouldAllowThreads;
   }
@@ -101,7 +97,7 @@ public:
   static void cleanupCachedMethodInfos();
 
   //! returns the number of parameters including the return value
-  int  parameterCount() const { return _parameters.size(); };
+  int parameterCount() const { return _parameters.size(); };
 
   //! returns the id for the given type (using an internal dictionary)
   static int nameToType(const char* name);
@@ -113,7 +109,7 @@ public:
   static void addParameterTypeAlias(const QByteArray& alias, const QByteArray& name);
 
   //! fill the parameter info for the given type name
-  static void fillParameterInfo(ParameterInfo& type, const QByteArray& name, PythonQtClassInfo* classInfo = NULL);
+  static void fillParameterInfo(ParameterInfo& type, const QByteArray& name, PythonQtClassInfo* classInfo = nullptr);
 
   //! returns a parameter info for the given metatype (and creates and caches one if it is not yet present)
   static const ParameterInfo& getParameterInfoForMetaType(int type);
@@ -145,41 +141,41 @@ protected:
 
   QList<ParameterInfo> _parameters;
   bool _shouldAllowThreads;
-
 };
 
 //! stores information about a slot, including a next pointer to overloaded slots
 class PYTHONQT_EXPORT PythonQtSlotInfo : public PythonQtMethodInfo
 {
 public:
-  enum Type {
-    MemberSlot, InstanceDecorator, ClassDecorator
-  };
+  enum Type { MemberSlot, InstanceDecorator, ClassDecorator };
 
-  PythonQtSlotInfo(const PythonQtSlotInfo& info):PythonQtMethodInfo() {
+  PythonQtSlotInfo(const PythonQtSlotInfo& info)
+    : PythonQtMethodInfo()
+  {
     _meta = info._meta;
     _parameters = info._parameters;
     _shouldAllowThreads = info._shouldAllowThreads;
     _slotIndex = info._slotIndex;
-    _next = NULL;
+    _next = nullptr;
     _decorator = info._decorator;
     _type = info._type;
     _upcastingOffset = 0;
   }
 
-  PythonQtSlotInfo(PythonQtClassInfo* classInfo, const QMetaMethod& meta, int slotIndex, QObject* decorator = NULL, Type type = MemberSlot ):PythonQtMethodInfo()
-  { 
+  PythonQtSlotInfo(PythonQtClassInfo* classInfo, const QMetaMethod& meta, int slotIndex, QObject* decorator = nullptr,
+    Type type = MemberSlot)
+    : PythonQtMethodInfo()
+  {
     const PythonQtMethodInfo* info = getCachedMethodInfo(meta, classInfo);
     _meta = meta;
     _parameters = info->parameters();
     _shouldAllowThreads = info->shouldAllowThreads();
     _slotIndex = slotIndex;
-    _next = NULL;
+    _next = nullptr;
     _decorator = decorator;
     _type = type;
     _upcastingOffset = 0;
   }
-
 
 public:
   //! get the parameter infos for the arguments, without return type and instance decorator.
@@ -197,16 +193,16 @@ public:
   int slotIndex() const { return _slotIndex; }
 
   //! get next overloaded slot (which has the same name)
-  PythonQtSlotInfo* nextInfo()  const { return _next; }
+  PythonQtSlotInfo* nextInfo() const { return _next; }
 
   //! set the next overloaded slot
   void setNextInfo(PythonQtSlotInfo* next) { _next = next; }
 
   //! returns if the slot is a decorator slot
-  bool isInstanceDecorator() const { return _decorator!=NULL && _type == InstanceDecorator; }
+  bool isInstanceDecorator() const { return _decorator != nullptr && _type == InstanceDecorator; }
 
   //! returns if the slot is a constructor slot
-  bool isClassDecorator() const { return _decorator!=NULL && _type == ClassDecorator; }
+  bool isClassDecorator() const { return _decorator != nullptr && _type == ClassDecorator; }
 
   QObject* decorator() const { return _decorator; }
 
@@ -238,15 +234,14 @@ public:
   static bool getGlobalShouldAllowThreads();
 
 private:
-  int               _slotIndex;
+  int _slotIndex;
   PythonQtSlotInfo* _next;
-  QObject*          _decorator;
-  Type              _type;
-  QMetaMethod       _meta;
-  int               _upcastingOffset;
+  QObject* _decorator;
+  Type _type;
+  QMetaMethod _meta;
+  int _upcastingOffset;
 
   static bool _globalShouldAllowThreads;
 };
-
 
 #endif

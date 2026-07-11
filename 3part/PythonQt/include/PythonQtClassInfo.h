@@ -44,9 +44,12 @@
 class PythonQtSlotInfo;
 class PythonQtClassInfo;
 
-struct PythonQtDynamicClassInfo
-{
-  PythonQtDynamicClassInfo() { _dynamicMetaObject = NULL; _classInfo = NULL; }
+struct PythonQtDynamicClassInfo {
+  PythonQtDynamicClassInfo()
+  {
+    _dynamicMetaObject = nullptr;
+    _classInfo = nullptr;
+  }
   ~PythonQtDynamicClassInfo();
 
   const QMetaObject* _dynamicMetaObject;
@@ -54,31 +57,36 @@ struct PythonQtDynamicClassInfo
 };
 
 struct PythonQtMemberInfo {
-  enum Type {
-    Invalid, Slot, Signal, EnumValue, EnumWrapper, Property, NestedClass, NotFound 
-  };
+  enum Type { Invalid, Slot, Signal, EnumValue, EnumWrapper, Property, NestedClass, NotFound };
 
-  PythonQtMemberInfo():_type(Invalid),_slot(NULL),_pythonType(NULL),_enumValue(0) { }
-  
+  PythonQtMemberInfo()
+    : _type(Invalid)
+    , _slot(nullptr)
+    , _pythonType(nullptr)
+    , _enumValue(nullptr)
+  {
+  }
+
   PythonQtMemberInfo(PythonQtSlotInfo* info);
 
   PythonQtMemberInfo(const PythonQtObjectPtr& enumValue);
 
   PythonQtMemberInfo(const QMetaProperty& prop);
 
-  Type              _type;
+  Type _type;
 
   // TODO: this could be a union...
   PythonQtSlotInfo* _slot;
-  PyObject*         _pythonType;
+  PyObject* _pythonType;
   PythonQtObjectPtr _enumValue;
-  QMetaProperty     _property;
+  QMetaProperty _property;
 };
 
 //! a class that stores all required information about a Qt object (and an optional associated C++ class name)
 /*! for fast lookup of slots when calling the object from Python
 */
-class PYTHONQT_EXPORT PythonQtClassInfo {
+class PYTHONQT_EXPORT PythonQtClassInfo
+{
 
 public:
   PythonQtClassInfo();
@@ -86,13 +94,13 @@ public:
 
   //! store information about parent classes
   struct ParentClassInfo {
-    ParentClassInfo(PythonQtClassInfo* parent, int upcastingOffset=0):_parent(parent),_upcastingOffset(upcastingOffset)
-    {};
+    ParentClassInfo(PythonQtClassInfo* parent, int upcastingOffset = 0)
+      : _parent(parent)
+      , _upcastingOffset(upcastingOffset) {};
 
     PythonQtClassInfo* _parent;
-    int                _upcastingOffset;
+    int _upcastingOffset;
   };
-
 
   //! setup as a QObject, taking the meta object as meta information about the QObject
   void setupQObject(const QMetaObject* meta);
@@ -110,7 +118,7 @@ public:
 
   //! get access to the constructor slot (which may be overloaded if there are multiple constructors)
   PythonQtSlotInfo* constructors();
-  
+
   //! get access to the destructor slot
   PythonQtSlotInfo* destructor();
 
@@ -146,7 +154,7 @@ public:
 
   //! returns if this class inherits from the given classname
   bool inherits(const char* classname);
-  
+
   //! returns if this class inherits from the given classinfo
   bool inherits(PythonQtClassInfo* info);
 
@@ -167,12 +175,12 @@ public:
   //! get the meta type id of this class (only valid for isCPPWrapper() == true)
   int metaTypeId() { return _metaTypeId; }
 
-  //! set an additional decorator provider that offers additional decorator slots for this class 
+  //! set an additional decorator provider that offers additional decorator slots for this class
   void setDecoratorProvider(PythonQtQObjectCreatorFunctionCB* cb);
 
   //! get the decorator qobject instance
   QObject* decorator();
-  
+
   //! add the parent class info of a CPP object
   void addParentClass(const ParentClassInfo& info) { _parentClasses.append(info); }
 
@@ -183,14 +191,10 @@ public:
   PyObject* pythonQtClassWrapper() { return _pythonQtClassWrapper; }
 
   //! set the shell set instance wrapper cb
-  void setShellSetInstanceWrapperCB(PythonQtShellSetInstanceWrapperCB* cb) {
-    _shellSetInstanceWrapperCB = cb;
-  }
-  
+  void setShellSetInstanceWrapperCB(PythonQtShellSetInstanceWrapperCB* cb) { _shellSetInstanceWrapperCB = cb; }
+
   //! get the shell set instance wrapper cb
-  PythonQtShellSetInstanceWrapperCB* shellSetInstanceWrapperCB() {
-    return _shellSetInstanceWrapperCB;
-  }
+  PythonQtShellSetInstanceWrapperCB* shellSetInstanceWrapperCB() { return _shellSetInstanceWrapperCB; }
 
   //! add a handler for polymorphic downcasting
   void addPolymorphicHandler(PythonQtPolymorphicHandlerCB* cb) { _polymorphicHandlers.append(cb); }
@@ -199,7 +203,7 @@ public:
   void* castDownIfPossible(void* ptr, PythonQtClassInfo** resultClassInfo);
 
   //! returns if the localScope has an enum of that type name or if the enum contains a :: scope, if that class contails the enum
-  static PyObject* findEnumWrapper(const QByteArray& name, PythonQtClassInfo* localScope, bool* isLocalEnum = NULL);
+  static PyObject* findEnumWrapper(const QByteArray& name, PythonQtClassInfo* localScope, bool* isLocalEnum = nullptr);
 
   //! clear all members that where cached as "NotFound"
   void clearNotFoundCachedMembers();
@@ -229,13 +233,24 @@ public:
   PyObject* getPythonTypeForProperty(const QString& name);
 
   //! Returns the class info for given property, if available.
-  PythonQtClassInfo* getClassInfoForProperty( const QString& name );
+  PythonQtClassInfo* getClassInfoForProperty(const QString& name);
 
   //! Returns if the class supports rich compare. This tests for
   //! __eq__, __ne__, __lt__, __le__, __gt__, __ge__ slots and if
   //! any of the slots is present it returns true and modifies the
   //! _typeSlots with Type_RichCompare. The result is cached internally.
   bool supportsRichCompare();
+
+  //! Sometimes enum values use a reserved name in Python. In this case
+  //! replace it with something that is not reserved
+  static QByteArray escapeReservedNames(const QByteArray& name);
+
+  //! Add a wrapper that contains global enums
+  static void addGlobalNamespaceWrapper(PythonQtClassInfo* namespaceWrapper);
+
+  //! Clear the registry of global-namespace wrappers (used for top-level enums).
+  //! Must be called before destroying PythonQtClassInfo instances and before a fresh init.
+  static void clearGlobalNamespaceWrappers();
 
 private:
   void updateRefCountingCBs();
@@ -249,9 +264,11 @@ private:
 
   void* recursiveCastDownIfPossible(void* ptr, const char** resultClassName);
 
-  PythonQtSlotInfo* findDecoratorSlotsFromDecoratorProvider(const char* memberName, PythonQtSlotInfo* inputInfo, bool &found, QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
+  PythonQtSlotInfo* findDecoratorSlotsFromDecoratorProvider(const char* memberName, PythonQtSlotInfo* inputInfo,
+    bool& found, QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
   void listDecoratorSlotsFromDecoratorProvider(QStringList& list, bool metaOnly);
-  PythonQtSlotInfo* recursiveFindDecoratorSlotsFromDecoratorProvider(const char* memberName, PythonQtSlotInfo* inputInfo, bool &found, QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
+  PythonQtSlotInfo* recursiveFindDecoratorSlotsFromDecoratorProvider(const char* memberName,
+    PythonQtSlotInfo* inputInfo, bool& found, QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
 
   void recursiveCollectClassInfos(QList<PythonQtClassInfo*>& classInfoObjects);
   void recursiveCollectDecoratorObjects(QList<QObject*>& decoratorObjects);
@@ -260,49 +277,52 @@ private:
   bool lookForMethodAndCache(const char* memberName);
   bool lookForEnumAndCache(const QMetaObject* m, const char* memberName);
 
-  PythonQtSlotInfo* findDecoratorSlots(const char* memberName, PythonQtSlotInfo* tail, bool &found, QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
+  PythonQtSlotInfo* findDecoratorSlots(const char* memberName, PythonQtSlotInfo* tail, bool& found,
+    QHash<QByteArray, PythonQtMemberInfo>& memberCache, int upcastingOffset);
   int findCharOffset(const char* sigStart, char someChar);
- 
+
   QHash<QByteArray, PythonQtMemberInfo> _cachedMembers;
 
-  PythonQtSlotInfo*                    _constructors;
-  PythonQtSlotInfo*                    _destructor;
+  PythonQtSlotInfo* _constructors;
+  PythonQtSlotInfo* _destructor;
 
-  PythonQtVoidPtrCB*                   _refCallback;
-  PythonQtVoidPtrCB*                   _unrefCallback;
+  PythonQtVoidPtrCB* _refCallback;
+  PythonQtVoidPtrCB* _unrefCallback;
 
-  QList<PythonQtSlotInfo*>             _decoratorSlots;
+  QList<PythonQtSlotInfo*> _decoratorSlots;
 
-  QList<PythonQtObjectPtr>             _enumWrappers;
+  QList<PythonQtObjectPtr> _enumWrappers;
 
-  const QMetaObject*                   _meta;
+  const QMetaObject* _meta;
 
-  QByteArray                           _wrappedClassName;
-  QList<ParentClassInfo>               _parentClasses;
+  QByteArray _wrappedClassName;
+  QList<ParentClassInfo> _parentClasses;
 
   QList<PythonQtPolymorphicHandlerCB*> _polymorphicHandlers;
 
-  QList<PythonQtClassInfo*>            _nestedClasses;
+  QList<PythonQtClassInfo*> _nestedClasses;
 
-  QObject*                             _decoratorProvider;
-  PythonQtQObjectCreatorFunctionCB*    _decoratorProviderCB;
-  
-  PyObject*                            _pythonQtClassWrapper;
-  
-  PythonQtShellSetInstanceWrapperCB*   _shellSetInstanceWrapperCB;
-  
-  int  _metaTypeId;
-  int  _typeSlots;
+  QObject* _decoratorProvider;
+  PythonQtQObjectCreatorFunctionCB* _decoratorProviderCB;
+
+  PyObject* _pythonQtClassWrapper;
+
+  PythonQtShellSetInstanceWrapperCB* _shellSetInstanceWrapperCB;
+
+  int _metaTypeId;
+  int _typeSlots;
 
   bool _isQObject;
   bool _enumsCreated;
   bool _richCompareDetectionDone;
   bool _searchPolymorphicHandlerOnParent;
   bool _searchRefCountCB;
-  
+
+  static QList<PythonQtClassInfo*> _globalNamespaceWrappers;
+
+  static QSet<QByteArray> _reservedNames;
 };
 
 //---------------------------------------------------------------
-
 
 #endif

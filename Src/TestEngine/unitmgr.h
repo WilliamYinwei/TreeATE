@@ -13,7 +13,7 @@
 #ifndef UNITMGR_H
 #define UNITMGR_H
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include <QJsonValue>
 #include <QVariantList>
 #include <QMap>

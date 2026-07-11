@@ -42,7 +42,6 @@
 */
 //----------------------------------------------------------------------------------
 
-
 #include "PythonQtPythonInclude.h"
 #include "structmember.h"
 #include <QString>
@@ -54,10 +53,11 @@ extern PyTypeObject PythonQtStdInRedirectType;
 typedef QString PythonQtInputChangedCB(void* callData);
 
 //! declares the stdin redirection class
-typedef struct {
+struct PythonQtStdInRedirect {
   PyObject_HEAD
   PythonQtInputChangedCB* _cb;
-  void * _callData;
-} PythonQtStdInRedirect;
+  void* _callData;
+  bool _isatty;
+};
 
 #endif

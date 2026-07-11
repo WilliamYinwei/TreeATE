@@ -12,7 +12,7 @@
 #ifndef RESULTMGR_H
 #define RESULTMGR_H
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include "testrststruct.h"
 #include "outputmgr.h"
 

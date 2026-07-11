@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui script
+QT       += core gui qml
 QT += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

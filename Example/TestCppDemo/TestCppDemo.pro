@@ -12,11 +12,11 @@ TEMPLATE = lib
 DEFINES += TESTCPPDEMO_LIBRARY
 
 contains(QT_ARCH, x86_64) {
-    CONFIG(release, debug|release): DESTDIR = ../../bin/x64
-    CONFIG(debug, debug|release): DESTDIR = ../../bind/x64
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x64/libs
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x64/libs
 } else {
-    CONFIG(release, debug|release): DESTDIR = ../../bin/x86
-    CONFIG(debug, debug|release): DESTDIR = ../../bind/x86
+    CONFIG(release, debug|release): DESTDIR = ../../bin/x86/libs
+    CONFIG(debug, debug|release): DESTDIR = ../../bind/x86/libs
 }
 
 INCLUDEPATH += ../../Libs/TACppBase

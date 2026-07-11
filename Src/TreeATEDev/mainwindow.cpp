@@ -26,6 +26,7 @@
 #include <QTreeView>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QJsonDocument>
 #include <QJsonParseError>
 #include <Qsci/qsciscintilla.h>
 #include <QStandardItemModel>
@@ -543,9 +544,16 @@ void MainWindow::on_actionImport_triggered()
     const QString strLibSuff = "Lib files (*.dll *.js *.py)";
     const QString strImgSuff = "Images (*.jpg *.png *.gif)";
     const QString strCSV = "CSV (*.csv)";
+
+    QFileDialog::Options opt;
+    opt |= QFileDialog::DontUseNativeDialog;
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    opt |= QFileDialog::DontUseSheet;
+#endif
+
     QStringList lstFiles = QFileDialog::getOpenFileNames(this, tr("Import Files"),
                            "", strLibSuff + ";;" + strImgSuff + ";;" + strCSV,
-                           &selectedFilter, QFileDialog::DontUseSheet);
+                           &selectedFilter, opt);
     if(lstFiles.count() <= 0) {
         return;
     }

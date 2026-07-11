@@ -9,7 +9,7 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include "unitmgr.h"
 
 #include <QFile>
@@ -21,6 +21,7 @@
 #include <QJsonArray>
 #include <QTextStream>
 #include <QDebug>
+#include <QStringConverter>
 
 UnitMgr::UnitMgr()
 {
@@ -301,7 +302,7 @@ QStringList UnitMgr::selectedUnit(const QString& fileName)
     }
 
     QTextStream in(&selFile);
-    in.setCodec("UTF-8");
+    in.setEncoding(QStringConverter::Utf8);
     while(!in.atEnd()) {
         QString line = in.readLine();
         if(m_lstUnits.contains(line)) {

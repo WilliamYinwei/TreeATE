@@ -346,7 +346,7 @@ void MainWindow::on_actionExport_triggered()
     }
 
     QTextStream out(&file);
-    out.setCodec("ANSI");
+    out.setEncoding(QStringConverter::Latin1); //"ANSI"
     out << strLstItems.join(',') << "\n";
     const int columCnt = strLstItems.count();
     QStringList strLine;

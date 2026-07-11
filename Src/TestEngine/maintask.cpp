@@ -10,7 +10,7 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include "maintask.h"
 
 #include "unitmgr.h"

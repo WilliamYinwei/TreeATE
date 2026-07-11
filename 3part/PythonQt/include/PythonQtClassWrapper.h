@@ -49,7 +49,6 @@
 #include "structmember.h"
 #include "methodobject.h"
 #include "compile.h"
-#include "eval.h"
 #include <QString>
 
 class PythonQtClassInfo;
@@ -63,7 +62,7 @@ struct PythonQtDynamicClassInfo;
 //! a Python wrapper object for PythonQt wrapped classes
 //! which inherits from the Python type object to allow
 //! deriving of wrapped CPP classes from Python.
-typedef struct {
+struct PythonQtClassWrapper {
   PyHeapTypeObject _base;
 
   //! the additional class information that PythonQt stores for the CPP class
@@ -73,8 +72,7 @@ typedef struct {
   PythonQtClassInfo* classInfo() { return _classInfo; }
 
   PythonQtDynamicClassInfo* _dynamicClassInfo;
-
-} PythonQtClassWrapper;
+};
 
 //---------------------------------------------------------------
 

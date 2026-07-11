@@ -14,6 +14,7 @@
 
 #include <QLocalSocket>
 #include <QCoreApplication>
+#include <QDebug>
 
 #define TA_MSGBOX_OK        "OK"
 #define TA_MSGBOX_TIMEOUT   "Timeout"

@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QWaitCondition>
 #include <QMetaType>
+#include <QQmlEngine>
 
 ////////////////////////////////////////////////////////////////
 /// \brief MsgDispatchThread::MsgDispatchThread
@@ -174,7 +175,8 @@ bool PluginsMgr::StartMsgListen(const QVariantList& lstPlugin,
 
 void PluginsMgr::AddModelObj(QString strModelObj, QObject* pObj)
 {
-    QScriptValue scriptObj = m_engine.newQObject(pObj);
+    QJSValue scriptObj = m_engine.newQObject(pObj);
+    QQmlEngine::setObjectOwnership(pObj, QQmlEngine::CppOwnership);
     m_engine.globalObject().setProperty(strModelObj, scriptObj);
 }
 
@@ -202,17 +204,16 @@ QString PluginsMgr::on_msg_process(const QString& strCmd)
 
     QString script = "(function() {" + strCmd + "})";
     qDebug() << "Msg Process: " << script;
-    QScriptValue func = m_engine.evaluate(script);
+    QJSValue func = m_engine.evaluate(script);
 
-    QScriptValue ret = func.call(QScriptValue());
-    if (m_engine.hasUncaughtException())
+    QJSValue ret = func.call();
+    if (ret.isError())
     {
-        int line = m_engine.uncaughtExceptionLineNumber();
+        int line = ret.property("lineNumber").toInt();
         m_strLastErr = tr("Script exception at line(%1):%2")
                 .arg(QString::number(line))
                 .arg(ret.toString());
         qDebug() << m_strLastErr;
-        m_engine.clearExceptions();
     }
 
     return ret.toString();

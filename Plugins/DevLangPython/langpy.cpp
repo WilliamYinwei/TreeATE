@@ -10,7 +10,7 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#include "stdinc.h"
+#include "ta_inc.h"
 #include "langpy.h"
 
 #include <QFile>

@@ -15,6 +15,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QClipboard>
+#include <QRegularExpression>
 
 ManyBarcodeDlg::ManyBarcodeDlg(QWidget *parent) :
     QDialog(parent),
@@ -105,7 +106,7 @@ bool ManyBarcodeDlg::event(QEvent *event)
         if (keyEvent->matches(QKeySequence::Paste)){
             QString strPaste = QApplication::clipboard()->text();
 
-            QStringList lstRowData = strPaste.split("\n", QString::SkipEmptyParts);
+            QStringList lstRowData = strPaste.split("\n", Qt::SkipEmptyParts);
             QModelIndex current_index = ui->tableWidget->currentIndex();
             for (int i = 0; i < ui->tableWidget->rowCount() - current_index.row()
                  && i < lstRowData.length(); i++)
@@ -139,8 +140,9 @@ void ManyBarcodeDlg::accept()
 
             if(!m_strSNReg.isEmpty())
             {
-                QRegExp rx(m_strSNReg);
-                if(strSrcSN.indexOf(rx) < 0 || rx.captureCount() < 0)
+                QRegularExpression rx(m_strSNReg);
+                QRegularExpressionMatch m = rx.match(strSrcSN);
+                if(!m.hasMatch())
                 {
                     QMessageBox::critical(this, tr("Critical"),
                                           tr("Please scan the barcode for the correct rules, refer the project option."));
@@ -149,7 +151,7 @@ void ManyBarcodeDlg::accept()
                     return;
                 }
 
-                ui->lineEdit_SN->setText(rx.cap(0));
+                ui->lineEdit_SN->setText(m.captured());
             }
 
             ui->tableWidget->setCurrentCell(row + 1, 1);

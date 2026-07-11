@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>274</width>
-    <height>365</height>
+    <height>374</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
+    <enum>QLayout::SizeConstraint::SetFixedSize</enum>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -68,14 +68,14 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string notr="true">Version: 2.3.3</string>
+          <string notr="true">Version: 2.4.0</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Copyright 2025 David Yin</string>
+          <string>Copyright 2026 David Yin</string>
          </property>
         </widget>
        </item>
@@ -103,10 +103,10 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Ok</set>
      </property>
     </widget>
    </item>

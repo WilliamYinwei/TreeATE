@@ -61,3 +61,4 @@ RESOURCES += \
 
 CONFIG += qscintilla2
 DEFINES += QT_MESSAGELOGCONTEXT
+LIBS += -lqscintilla2_qt6

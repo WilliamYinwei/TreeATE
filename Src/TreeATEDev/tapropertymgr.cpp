@@ -416,7 +416,10 @@ QStringList TAPropertyMgrWidget::OpenDllFunc(const QString& strFile, bool bRet)
                     && method.name() != "_q_reregisterTimers") {
                 QString strMethod;
                 if(bRet)
-                    strMethod = QMetaType::typeName(method.returnType()) + QString(" ");
+                {
+                    QMetaType ret(method.returnType());
+                    strMethod = ret.name() + QString(" ");
+                }
                 strMethod += method.name();
                 strMethod += "(" + method.parameterNames().join(',') + ")";
                 lstFunc << strMethod;

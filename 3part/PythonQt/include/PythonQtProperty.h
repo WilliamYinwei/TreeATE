@@ -43,15 +43,15 @@ extern PYTHONQT_EXPORT PyTypeObject PythonQtProperty_Type;
 
 #define PythonQtProperty_Check(op) (Py_TYPE(op) == &PythonQtProperty_Type)
 
-struct PythonQtPropertyData
-{
-  PythonQtPropertyData() {
-    fget = NULL;
-    fset = NULL;
-    fdel = NULL;
-    freset = NULL;
-    notify = NULL;
-    doc = NULL;
+struct PythonQtPropertyData {
+  PythonQtPropertyData()
+  {
+    fget = nullptr;
+    fset = nullptr;
+    fdel = nullptr;
+    freset = nullptr;
+    notify = nullptr;
+    doc = nullptr;
     designable = true;
     scriptable = true;
     stored = true;
@@ -88,7 +88,7 @@ struct PythonQtPropertyData
   bool final;
 };
 
-typedef struct {
+struct PythonQtProperty {
   PyObject_HEAD
   PythonQtPropertyData* data;
-} PythonQtProperty;
+};

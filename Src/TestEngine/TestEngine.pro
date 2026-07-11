@@ -1,4 +1,4 @@
-QT += core script sql
+QT += core qml sql
 QT -= gui
 
 CONFIG += c++11
@@ -42,7 +42,6 @@ HEADERS += \
     testrststruct.h \
     outputstd.h \
     unitmgr.h \
-    stdinc.h \
     outputmgr.h \
     testrunner.h \
     resultmgr.h \

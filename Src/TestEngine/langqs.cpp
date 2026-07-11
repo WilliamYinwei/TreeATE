@@ -10,11 +10,12 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include "langqs.h"
 
 #include <QDebug>
 #include <QFile>
+#include <QQmlEngine>
 
 LangQS::LangQS()
 {
@@ -40,25 +41,23 @@ bool LangQS::loadScript(const QStringList &scriptFiles)
         script += contents;
         scriptFile.close();
 
-        QScriptValue result = m_engine.evaluate(contents, scrFile);
-        if(m_engine.hasUncaughtException()) {
-            int line = m_engine.uncaughtExceptionLineNumber();
+        QJSValue result = m_engine.evaluate(contents, scrFile);
+        if(result.isError()) {
+            int line = result.property("lineNumber").toInt();
             m_lastErr = TA_TR("Script exception at file(%1) line(%2):%3")
                     .arg(scrFile)
                     .arg(QString::number(line))
                     .arg(result.toString());
-            m_engine.clearExceptions();
             return false;
         }
     }
 
-    QScriptValue result = m_engine.evaluate(script);
-    if(m_engine.hasUncaughtException()) {
-        int line = m_engine.uncaughtExceptionLineNumber();
+    QJSValue result = m_engine.evaluate(script);
+    if(result.isError()) {
+        int line = result.property("lineNumber").toInt();
         m_lastErr = TA_TR("Script exception at line(%1):%2")
                 .arg(QString::number(line))
                 .arg(result.toString());
-        m_engine.clearExceptions();
         return false;
     }
 
@@ -67,7 +66,8 @@ bool LangQS::loadScript(const QStringList &scriptFiles)
 
 void LangQS::addModel(const QString& strObjName, QObject* obj)
 {
-    QScriptValue scriptObj = m_engine.newQObject(obj);
+    QJSValue scriptObj = m_engine.newQObject(obj);
+    QQmlEngine::setObjectOwnership(obj, QQmlEngine::CppOwnership);
     m_engine.globalObject().setProperty(strObjName, scriptObj);
 }
 
@@ -76,7 +76,7 @@ bool LangQS::initPublicPara(const TA_MapParaValue& publicPara)
     for(TA_MapParaValue::const_iterator itorTotal = publicPara.begin();
             itorTotal != publicPara.end(); ++itorTotal )
     {
-        QScriptValue scriptValue = m_engine.newVariant(itorTotal.value());
+        QJSValue scriptValue = m_engine.toScriptValue(itorTotal.value());
         m_engine.globalObject().setProperty(itorTotal.key(), scriptValue);
     }
 
@@ -88,27 +88,26 @@ int LangQS::executeScript(const QString& funcName, const TA_MapParaValue& localV
     int iRet = 0;
     for(TA_MapParaValue::const_iterator itor = localValue.begin(); itor != localValue.end(); ++itor)
     {
-        QScriptValue scriptValue = m_engine.newVariant(itor.value());
+        QJSValue scriptValue = m_engine.toScriptValue(itor.value());
         m_engine.globalObject().setProperty(itor.key(), scriptValue);
     }
 
-    QScriptValue global = m_engine.globalObject();
-    QScriptValue func = global.property(funcName);
-    if(func.isFunction())
+    QJSValue global = m_engine.globalObject();
+    QJSValue func = global.property(funcName);
+    if(func.isCallable())
     {
-        QScriptValue ret = func.call(QScriptValue());
-        if (m_engine.hasUncaughtException())
+        QJSValue ret = func.call();
+        if (ret.isError())
         {
-            int line = m_engine.uncaughtExceptionLineNumber();
+            int line = ret.property("lineNumber").toInt();
             m_lastErr = TA_TR("Script exception at line(%1):%2")
                     .arg(QString::number(line))
                     .arg(ret.toString());
-            m_engine.clearExceptions();
             TA_OUT_DEBUG_INFO << m_lastErr;
             iRet = -1;
         }
         else
-            iRet = ret.toUInt32() /*& TA_MASK_RST*/;
+            iRet = ret.toUInt() /*& TA_MASK_RST*/;
     }
     else {
         m_lastErr = TA_TR("Not found this function name(%1) in script.").arg(funcName);

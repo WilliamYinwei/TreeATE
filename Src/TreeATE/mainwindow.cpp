@@ -38,6 +38,7 @@
 #include <QBrush>
 #include <QMdiSubWindow>
 #include <QGridLayout>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -303,15 +304,16 @@ void MainWindow::on_actionPlay_triggered()
         pattern = pattern.trimmed();
         if(!pattern.isEmpty())
         {
-            QRegExp rx(pattern);
-            if(strSN.indexOf(rx) < 0 || rx.captureCount() < 0)
+            QRegularExpression rx(pattern);
+            QRegularExpressionMatch m = rx.match(strSN);
+            if(!m.hasMatch())
             {
                 QMessageBox::critical(this, tr("Critical"),
                                       tr("Please scan the barcode for the correct rules, refer the project option."));
                 return;
             }
 
-            m_leTotalSN->setText(rx.cap(0));
+            m_leTotalSN->setText(m.captured());
         }
 
         strSN = m_leTotalSN->text().trimmed();
@@ -685,7 +687,7 @@ void MainWindow::on_actionSys_options_triggered()
         m_vaSysCfg = varMapNew;
         QJsonDocument jsonDocCfg = QJsonDocument::fromVariant(m_vaSysCfg);
         QTextStream out(&file);
-        out.setCodec("UTF-8");
+        out.setEncoding(QStringConverter::Utf8); //"UTF-8"
         out << jsonDocCfg.toJson();
 
         file.close();
@@ -791,8 +793,9 @@ void MainWindow::on_barcode_returnPressed()
                 QString pattern = vmPrj["barcode"].toString();
                 if(!pattern.isEmpty())
                 {
-                    QRegExp rx(pattern);
-                    if(strSrcSN.indexOf(rx) < 0 || rx.captureCount() < 0)
+                    QRegularExpression rx(pattern);
+                    QRegularExpressionMatch m = rx.match(strSrcSN);
+                    if(!m.hasMatch())
                         continue;
 
                     loadUnits(vmSys["WorkPath"].toString() + "/" + vmPrj["path"].toString());
@@ -807,15 +810,16 @@ void MainWindow::on_barcode_returnPressed()
         pattern = pattern.trimmed();
         if(!pattern.isEmpty())
         {
-            QRegExp rx(pattern);
-            if(strSrcSN.indexOf(rx) < 0 || rx.captureCount() < 0)
+            QRegularExpression rx(pattern);
+            QRegularExpressionMatch m = rx.match(strSrcSN);
+            if(!m.hasMatch())
             {
                 QMessageBox::critical(this, tr("Critical"),
                                       tr("Please scan the SN for the correct rules, refer the project option."));
                 return;
             }
 
-            m_leTotalSN->setText(rx.cap(0));
+            m_leTotalSN->setText(m.captured());
         }
 
         on_actionPlay_triggered();

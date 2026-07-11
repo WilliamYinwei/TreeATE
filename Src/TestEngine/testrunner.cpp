@@ -9,13 +9,12 @@
 /// http://www.gnu.org/licenses/lgpl-3.0.html)
 ///
 
-#include "stdinc.h"
+#include "../../Libs/TACommon/ta_inc.h"
 #include "testrunner.h"
 #include "imutlilang.h"
 #include "langqs.h"
 #include "tapluginloader.h"
 
-#include <QScriptValue>
 #include <QMetaObject>
 #include <QLibrary>
 #include <QDebug>
@@ -44,7 +43,7 @@ TestRunner::~TestRunner()
 void TestRunner::stop()
 {
     m_nStopped.ref();
-    qDebug() << "---- stop requested, count:" << m_nStopped.load();
+    qDebug() << "---- stop requested, count:" << m_nStopped.loadRelaxed();
 }
 
 QString TestRunner::getLastError()
@@ -195,7 +194,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
     QString strLastExceptionFunc;
     for(int i = 0; i < runLst.count(); i++){
-        if(m_nStopped.load() > 0)
+        if(m_nStopped.loadRelaxed() > 0)
             break;
 
         QString path = runLst.at(i);
@@ -252,16 +251,18 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             }
         }
 
-        if(m_nStopped.load() > 0 || (iRet > 0 && bStopWhenFailed)) {
+        if(m_nStopped.loadRelaxed() > 0 || (iRet > 0 && bStopWhenFailed)) {
             rstMgr.UpdateResult(path, objUnit, 1, TA_TR("Stopped by TreeATE."));
             break;
         }
 
+        // record test result of the current test unit
         rstMgr.UpdateResult(path, objUnit, iRet);
         TA_OUT_DEBUG_INFO << path << " : " << iRet;
     }
 
     QString strScriptFunc = "teardown_";
+    // After stopped running the teardown of suite or project
     for(QStringList::reverse_iterator itor = lstTeardown.rbegin();
         itor != lstTeardown.rend(); ++itor) {
         QString path = *itor;
@@ -272,6 +273,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
         int iRet = m_pCurretLang->executeScript(strTeardownFunc,
                 m_pUnitMgr->getLocalParameter(objUnit));
+        // recovery the public parameter
         m_pCurretLang->initPublicPara(m_pUnitMgr->getPublicParameter());
         m_lastErr = m_pCurretLang->getLastErr();
 
@@ -280,6 +282,7 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
             bSuccess = false;
         }
         else {
+            // result of teardown
             rstMgr.UpdateResult(path, objUnit, iRet);
         }
     }
@@ -289,5 +292,5 @@ bool TestRunner::runner(const QStringList &selPath, ResultMgr& rstMgr, bool bSto
 
 bool TestRunner::IsStopped()
 {
-    return m_nStopped.load() > 0;
+    return m_nStopped.loadRelaxed() > 0;
 }

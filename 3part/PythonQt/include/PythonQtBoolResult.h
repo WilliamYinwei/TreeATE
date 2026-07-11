@@ -51,10 +51,9 @@ extern PYTHONQT_EXPORT PyTypeObject PythonQtBoolResult_Type;
 #define PythonQtBoolResult_Check(op) (Py_TYPE(op) == &PythonQtBoolResult_Type)
 
 //! defines a python object that stores a single bool
-typedef struct {
-    PyObject_HEAD
-    bool _value;
-} PythonQtBoolResultObject;
-
+struct PythonQtBoolResultObject {
+  PyObject_HEAD
+  bool _value;
+};
 
 #endif

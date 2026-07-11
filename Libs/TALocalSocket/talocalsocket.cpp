@@ -12,6 +12,7 @@
 #include "talocalsocket.h"
 
 #include <QLocalSocket>
+#include <QDebug>
 
 #define TA_LOCAL_ACK          "OK"
 
