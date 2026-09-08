@@ -1,6 +1,6 @@
 ///
 /// @brief         Stop the current testing with command line
-/// @author        David Yin  2018-12 willage.yin@163.com
+/// @author        David Yin  2026-9 willage.yin@163.com
 /// 
 /// @license       GNU LGPL v3
 ///
@@ -15,6 +15,8 @@
 #include "testrunner.h"
 #include <QThread>
 
+#include <atomic>
+
 class TestCtrl : public QThread
 {
     Q_OBJECT
@@ -27,7 +29,7 @@ protected:
 
 private:
     TestRunner* m_pRunner;
-    bool m_bContinue;
+    std::atomic_bool m_bContinue;
 };
 
 #endif // TESTCTRL_H

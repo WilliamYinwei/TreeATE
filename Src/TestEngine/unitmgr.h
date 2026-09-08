@@ -60,6 +60,7 @@ public:
 protected:
     void initUnitPath(QJsonValue &jsonCfg);
     bool loadScriptCom(const QVariantList& vlModels, const QString& strPath, const QString &suffix);
+    bool readTpxInstanceFirstFile(const QString& fileTpxName, QString& tpFileName);
 
 private:
     QString     m_lastErr;

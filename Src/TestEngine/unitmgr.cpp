@@ -41,14 +41,32 @@ bool UnitMgr::LoadUnitConfig(const QString& strFileName)
         m_lastErr = strFileName + TA_TR(" is not file.");
         return false;
     }
-    if(cfgFileInfo.suffix() != "tp") {
-        m_lastErr = strFileName + TA_TR(" is not test project *.tp).");
-        return false;
-    }
 
     m_strPrjPath = cfgFileInfo.absolutePath();
 
-    QFile cfgFile(strFileName);
+    QString strSuffix = cfgFileInfo.suffix().toLower();
+    QString strTpFilePathName;
+
+    if("tpx" == strSuffix)
+    {
+        QString strTpFileName;
+        if(!readTpxInstanceFirstFile(strFileName, strTpFileName)) {
+            return false;
+        }
+
+        strTpFilePathName = m_strPrjPath + "/" + strTpFileName;
+    }
+    else if("tp" == strSuffix)
+    {
+        strTpFilePathName = strFileName;
+    }
+    else
+    {
+        m_lastErr = strFileName + TA_TR(" is not test project file(*.tp or *.tpx)");
+        return false;
+    }   
+
+    QFile cfgFile(strTpFilePathName);
     if(!cfgFile.open(QIODevice::ReadOnly)) {
         m_lastErr = cfgFile.errorString();
         return false;
@@ -59,7 +77,7 @@ bool UnitMgr::LoadUnitConfig(const QString& strFileName)
     cfgFile.close();
 
     if(jsonDoc.isNull()) {
-        m_lastErr = jsonErr.errorString() + " : " + strFileName;
+        m_lastErr = jsonErr.errorString() + " : " + strTpFilePathName;
         return false;
     }
 
@@ -181,6 +199,42 @@ bool UnitMgr::loadScriptCom(const QVariantList& vlModels, const QString& strPath
         }
     }
 
+    return true;
+}
+
+bool UnitMgr::readTpxInstanceFirstFile(const QString& fileTpxName, QString& tpFileName)
+{
+    QFile file(fileTpxName);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        m_lastErr = "Failed to open:" + file.errorString();
+        return false;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    QJsonParseError parseErr;
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData, &parseErr);
+    if(parseErr.error != QJsonParseError::NoError)
+    {
+        m_lastErr = "JSON Parse Err:" + parseErr.errorString();
+        return false;
+    }
+
+    QJsonObject rootObj = doc.object();
+    // 获取Instance数组
+    QJsonArray instanceArr = rootObj["Instance"].toArray();
+
+    if(instanceArr.isEmpty())
+    {
+        m_lastErr = "Instance Array is Null";
+        return false;
+    }
+
+    // 取数组第0个对象
+    QJsonObject firstObj = instanceArr[0].toObject();
+    tpFileName = firstObj["File"].toString();
     return true;
 }
 

@@ -37,7 +37,7 @@ void MainTask::run()
 int MainTask::mainTest()
 {
     QCommandLineParser parser;
-    parser.setApplicationDescription(TA_TR("Copyright 2019 David Yin.\r\nTreeATE TestEngine. It's based-command-line test executer"));
+    parser.setApplicationDescription(TA_TR("Copyright 2019-2026 David Yin.\r\nTreeATE TestEngine. It's based-command-line test executer"));
     parser.addHelpOption();
     parser.addVersionOption();
     QCommandLineOption startOption(
@@ -139,6 +139,7 @@ int MainTask::mainTest()
     if(!run.initScript(utMgr.getPrjPath()))
     {
         cerr << run.getLastError().toStdString() << endl;
+        run.stop();
         return TA_ERR_INIT_RUNNER;
     }
 
@@ -156,13 +157,13 @@ int MainTask::mainTest()
     else if(parser.isSet(listOption))
     {
         utMgr.printUnitToStd();
+        run.stop();
         return TA_LIST_OK;
     }
 
 
     if(selPath.isEmpty()) {
-        cerr << utMgr.getLastError().toStdString() << endl;
-        return TA_ERR_UNSELECTED;
+        selPath = utMgr.selectedUnitForPath("/");
     }
 
     TestCtrl testCtrl(&run);
@@ -176,5 +177,6 @@ int MainTask::mainTest()
     }
 
     rstMgr.ExitResult();
+    cerr << "Finished!" << endl;
     return TA_OK;
 }

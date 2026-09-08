@@ -19,7 +19,7 @@ TreeATE是Tree Automatic Test Equipment的缩写，专注服务于工厂成品�
 * 支持无服务器和网络自动切换为本地工作模式，测试结果本地留存；
 * 支持测试结果本地查看和管理；
 * 提供界面插件扩展接口；
-* 支持二次自定义开发(TreeATE Dev)：
+* 支持二次自定义开发(TreeATE Copilot)：
   * 支持QtScript（类JavaScript，基于ECMA标准脚本语言）快速开发自动化测试用例；
   * 支持Python语言开发自动化测试用例；
   * 提供设备控制组件化支持；
@@ -31,8 +31,6 @@ TreeATE界面预览
 -------------------------------------------------------------------------------
 ![TreeATE GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE.png)
 
-TreeATE Dev界面预览
+TreeATE架构图
 -------------------------------------------------------------------------------
-![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png)
-
-
+![TreeATE Arch](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/arch.png)

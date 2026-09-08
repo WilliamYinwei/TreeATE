@@ -27,7 +27,13 @@ LangPy::LangPy():m_sharedMemory("TreeATE_python_script")
 
 LangPy::~LangPy()
 {
-    PythonQt::cleanup();
+    disconnect(PythonQt::self(), nullptr, this, nullptr);
+
+    // PythonQtObjectPtr must release its Python reference while the
+    // interpreter is still alive. Members are otherwise destroyed only
+    // after this destructor body has finished.
+    m_mainModule = PythonQtObjectPtr();
+    //PythonQt::cleanup();
 }
 
 void LangPy::strOut(const QString &out)

@@ -2,6 +2,12 @@
 2、登录TreeATE的默认用户名/密码: admin/123
 3、加载Example中的测试工程，点击Play(测试)
 
+V3.0.0
+-------------------
+1、移除TreeATE Dev，采用基于VS Code的TreeATE Copilot替代
+2、解决TestEngine只带tp文件参数时的问题
+3、增加TestEngine只带tpx文件参数时默认运行第一个tp测试工程功能
+
 V2.4.0
 -------------------
 1、支持Qt6

@@ -1,0 +1,23 @@
+TreeATE incorporates the following third-party software:
+
+--------------------------------------------------
+Qt
+--------------------------------------------------
+
+Qt is used by TreeATE under the applicable Qt license.
+
+Copyright (C) The Qt Company Ltd.
+
+License:
+GNU Lesser General Public License
+or Qt Commercial License, as applicable.
+
+--------------------------------------------------
+PythonQt
+--------------------------------------------------
+
+PythonQt is used by TreeATE under the GNU Lesser
+General Public License.
+
+Copyright notices and license information are
+retained as required by the applicable license.

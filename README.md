@@ -25,7 +25,7 @@ TreeATE借鉴了Chrome的多进程设计思路，支持并行化测试。每个�
 * 支持无服务器和网络自动切换为本地工作模式，测试结果本地留存；
 * 支持测试结果本地查看和管理；
 * 提供界面插件扩展接口；
-* 支持二次自定义开发(TreeATE Dev)：
+* 支持二次自定义开发(TreeATE Copilot)：
   * 支持QtScript（类JavaScript，基于ECMA标准脚本语言）快速开发自动化测试用例；
   * 支持Python语言开发自动化测试用例；
   * 提供设备控制组件化支持；
@@ -38,23 +38,14 @@ TreeATE界面预览
 ![TreeATE GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE.png)
 关于如何使用TreeATE，请点击[这里](https://github.com/WilliamYinwei/TreeATE/wiki/Start-TreeATE)
 
-TreeATE Dev界面预览
+基于TreeATE二次开发
 -------------------------------------------------------------------------------
-![TreeATE Dev GUI](https://raw.githubusercontent.com/WilliamYinwei/TreeATE/master/Doc/images/TreeATE%20Dev.png)
-关于如何使用TreeATE Dev，请点击[这里](https://github.com/WilliamYinwei/TreeATE/wiki/TreeATE-Dev)
+**注意：TreeATE 3.x开始移除TreeATE Dev，采用基于VS Code的TreeATE Copilot替代二次开发**
 
 ## 开发编译
 
 TreeATE基于QT开发，从v2.4版本以上支持x64位系统。在编译TreeATE之前，你需要安装以下开发工具：
 * Qt6.11.1
-* [QScintilla 2.14.1](https://www.riverbankcomputing.com/software/qscintilla/download)
-```
-  // 进入QT命令行模式 + VS 2022 x64命令行模式
-  cd src
-  qmake
-  nmake
-  nmake install 
-```
 * [PythonQt 4.1.0](https://github.com/MeVisLab/pythonqt/tags)
   - 请根据PythonQT的说明编译(参见 3part\PythonQt\README.md)构建出dll和lib文件，例如PythonQt-Qt6-Python3.14和PythonQt-Qt6-Python3.14.lib
   - 再将lib文件复制到 3part/PythonQT/lib目录下
@@ -78,7 +69,6 @@ x表示你实际安装的磁盘
 再执行以下命令
 * windeployqt TestEngine.exe
 * windeployqt TreeATE.exe
-* windeployqt TreeATEDev.exe
 * windeployqt TreeResults.exe
 
 ### 打包成安装文件
