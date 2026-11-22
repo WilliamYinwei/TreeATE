@@ -1,0 +1,652 @@
+/*
+ *  TreeATE 暗色主题（弱光车间、夜间班次）
+ *  @author David Yin  2026-11-22  M2 新增三主题资源
+ */
+
+QWidget {
+    background: #0B1220;
+    color: #E6EDF6;
+    font-family: "Microsoft YaHei UI", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+QLabel, QCheckBox, QRadioButton {
+    background: transparent;
+}
+
+QLineEdit, QSpinBox, QComboBox, QDateTimeEdit {
+    background: #1B2A3D;
+    border: 1px solid #27384D;
+    border-radius: 4px;
+    padding: 3px 6px;
+    color: #E6EDF6;
+    selection-background-color: #4C9AFF;
+    selection-color: #06121F;
+}
+
+QLineEdit[readOnly="true"] {
+    color: #8A9BB0;
+}
+
+QComboBox QAbstractItemView {
+    background: #121D2E;
+    color: #E6EDF6;
+    border: 1px solid #27384D;
+    selection-background-color: #4C9AFF;
+    selection-color: #06121F;
+}
+
+QTreeView, QTableView, QListView, QTextEdit, QTextBrowser {
+    background: #121D2E;
+    border: 1px solid #27384D;
+    alternate-background-color: #16243A;
+}
+
+QTreeView::item {
+    border-bottom: 1px solid #1B2A3D;
+    border-right: 1px solid #1B2A3D;
+    padding-right: 8px;
+}
+
+QTreeView::item:hover {
+    background: #22344A;
+    color: #E6EDF6;
+}
+
+QTreeView::item:selected:active, QTreeView::item:selected:!active {
+    background: #4C9AFF;
+    color: #06121F;
+}
+
+QTableView QTableCornerButton::section {
+    background-color: #18273B;
+}
+
+QHeaderView::section, QTableView QHeaderView::section {
+    background-color: #18273B;
+    padding-left: 4px;
+    border: 1px solid #27384D;
+    color: #9FB0C4;
+}
+
+QDockWidget::title {
+    text-align: left;
+    background: #18273B;
+    padding: 4px 8px;
+}
+
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+    background: #22344A;
+}
+
+QPushButton {
+    background: #18273B;
+    border: 1px solid #27384D;
+    border-radius: 4px;
+    padding: 4px 12px;
+}
+
+QPushButton:hover {
+    background: #22344A;
+}
+
+QPushButton:pressed {
+    background: #4C9AFF;
+    color: #06121F;
+}
+
+QPushButton:disabled {
+    color: #6E8199;
+}
+
+QToolButton {
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    padding: 3px 6px;
+}
+
+QToolButton:hover, QToolButton:checked {
+    background: #18273B;
+}
+
+QToolButton:pressed {
+    background: #4C9AFF;
+    color: #06121F;
+}
+
+QToolButton:disabled {
+    color: #6E8199;
+}
+
+QMenuBar {
+    background-color: #18273B;
+}
+
+QMenuBar::item {
+    spacing: 8px;
+    padding: 5px 5px;
+    background: transparent;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed {
+    background: #4C9AFF;
+    color: #06121F;
+}
+
+QMenu {
+    background: #121D2E;
+    border: 1px solid #27384D;
+}
+
+QMenu::item {
+    padding: 4px 24px;
+}
+
+QMenu::item:selected {
+    background: #4C9AFF;
+    color: #06121F;
+}
+
+QMenu::item:disabled {
+    color: #6E8199;
+}
+
+QTabWidget::pane {
+    border: 1px solid #27384D;
+}
+
+QTabBar::tab {
+    background: #18273B;
+    padding: 6px 12px;
+    border-right: 2px solid #0B1220;
+}
+
+QTabBar::tab:selected {
+    background: #121D2E;
+}
+
+QProgressBar {
+    border: 1px solid #4C9AFF;
+    background: #1B2A3D;
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: #2ECC71;
+}
+
+QProgressBar#CycleProgress[state="pass"]::chunk,
+QProgressBar#CycleProgress[state="neutral"]::chunk {
+    background-color: #2ECC71;
+}
+
+QProgressBar#CycleProgress[state="fail"]::chunk {
+    background-color: #F04438;
+}
+
+QProgressBar#CycleProgress[state="exce"]::chunk {
+    background-color: #F5B301;
+}
+
+QMdiSubWindow {
+    border: 1px solid #27384D;
+}
+
+QStatusBar {
+    background: #18273B;
+}
+
+QToolTip {
+    background: #121D2E;
+    color: #E6EDF6;
+    border: 1px solid #4C9AFF;
+    padding: 3px 6px;
+}
+
+QDialog {
+    background: #0B1220;
+}
+
+/* 结果横幅 */
+QLabel#ResultBanner {
+    font-size: 56pt;
+    font-weight: 600;
+}
+
+QLabel#ResultBanner[state="pass"] {
+    background-color: #1E7E34;
+    color: #FFFFFF;
+}
+
+QLabel#ResultBanner[state="fail"] {
+    background-color: #C62828;
+    color: #FFFFFF;
+}
+
+QLabel#ResultBanner[state="exce"] {
+    background-color: #C77700;
+    color: #2A1A00;
+}
+
+QLabel#ResultBanner[state="neutral"] {
+    background-color: transparent;
+    color: #E6EDF6;
+}
+
+/* 状态栏历史结果提示 */
+QLabel#HistoryResult {
+    padding: 0 6px;
+}
+
+QLabel#HistoryResult[pending="true"] {
+    background-color: #F5B301;
+    color: #201600;
+}
+
+/* 扫描执行条与 UUT 页头 */
+QLineEdit#BarcodeInput {
+    background: #1B2A3D;
+    border: 2px solid #4C9AFF;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 28pt;
+    font-family: "Bahnschrift", "Consolas", monospace;
+}
+
+QLabel#BarcodeIcon {
+    image: url(:/code.png);
+}
+
+QLabel#StationLabel {
+    font-size: 18pt;
+}
+
+QLabel#UutTitle {
+    font-size: 24pt;
+}
+
+QLabel#UutSN {
+    font-size: 14pt;
+}
+
+QLabel#UutSpendTime {
+    font-size: 12pt;
+}
+
+QLabel#UutStatus {
+    font-size: 56pt;
+    font-weight: 600;
+}
+
+QLabel#UutStatus[state="pass"] {
+    background-color: #1E7E34;
+    color: #FFFFFF;
+}
+
+QLabel#UutStatus[state="fail"] {
+    background-color: #C62828;
+    color: #FFFFFF;
+}
+
+QLabel#UutStatus[state="exce"] {
+    background-color: #C77700;
+    color: #2A1A00;
+}
+
+QLabel#UutStatus[state="neutral"] {
+    background-color: transparent;
+    color: #E6EDF6;
+}
+
+QLabel#AboutTitle {
+    font-size: 28pt;
+}
+
+QLineEdit#BarcodeEntry {
+    font-size: 24pt;
+}
+
+QToolButton#ThemeButton {
+    border: 1px solid #27384D;
+    border-radius: 4px;
+    padding: 0 8px;
+}
+
+/* 并发消息框 */
+QLabel#StandMsgInfo {
+    font-size: 16pt;
+}
+
+QLineEdit#StandMsgInput {
+    font-size: 16pt;
+}
+
+QPushButton#StandMsgOk {
+    background-color: #1E7E34;
+    color: #FFFFFF;
+    font-size: 16pt;
+}
+
+QPushButton#StandMsgCancel {
+    font-size: 16pt;
+}
+
+/* 登录窗口 */
+QLabel#LoginBanner {
+    background-image: url(:/login.jpg);
+    color: #FFFFFF;
+    font-size: 18pt;
+    font-weight: 600;
+}
+
+QDialog#LoginDialog QLabel,
+QDialog#LoginDialog QLineEdit,
+QDialog#LoginDialog QComboBox,
+QDialog#LoginDialog QPushButton {
+    font-size: 12pt;
+}
+
+/* ===== 2026-11-22 M3 主界面骨架 ===== */
+QToolBar#AppBarToolBar, QToolBar#ScanBarToolBar {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    spacing: 0;
+}
+QFrame#AppBar, QFrame#ScanBar {
+    background: #18273B;
+    border: 0;
+    border-bottom: 1px solid #0B1220;
+}
+QLabel#BrandIcon {
+    background: transparent;
+}
+QLabel#BrandTitle {
+    font-size: 18pt;
+    font-weight: 600;
+    color: #E6EDF6;
+}
+QLabel#BrandVersion {
+    color: #8A9BB0;
+    font-size: 10pt;
+}
+QLabel#AppStation {
+    font-size: 12pt;
+    color: #9FB0C4;
+}
+QToolButton#MenuButton, QToolButton#LanguageButton, QToolButton#ThemeButton, QToolButton#ExitButton {
+    background: #1B2A3D;
+    border: 1px solid #27384D;
+    border-radius: 4px;
+    padding: 0 10px;
+    min-height: 40px;
+    color: #E6EDF6;
+}
+QToolButton#LanguageButton {
+    font-size: 15px;
+}
+QToolButton#ThemeButton, QToolButton#ExitButton {
+    min-width: 40px;
+    max-width: 40px;
+    padding: 0;
+    font-size: 30px;
+}
+QToolButton#ExitButton {
+    font-size: 24px;
+}
+QToolButton#MenuButton:hover, QToolButton#LanguageButton:hover,
+QToolButton#ThemeButton:hover, QToolButton#ExitButton:hover {
+    background: #22344A;
+}
+QLineEdit#BarcodeInput {
+    font-size: 22pt;
+    background: #1B2A3D;
+}
+QLineEdit#BarcodeInput[invalid="true"] {
+    border: 2px solid #FF6464;
+    background: #3A1A1A;
+}
+QLabel#StatusChip {
+    border: 1px solid #27384D;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12pt;
+    background: #1B2A3D;
+    color: #E6EDF6;
+}
+QLabel#StatusChip[state="pass"] {
+    background: #00AA0A;
+    color: #FFFFFF;
+    border-color: #00AA0A;
+}
+QLabel#StatusChip[state="fail"] {
+    background: #D32F2F;
+    color: #FFFFFF;
+    border-color: #D32F2F;
+}
+QLabel#StatusChip[state="exce"] {
+    background: #FFBF00;
+    color: #8C0000;
+    border-color: #FFBF00;
+}
+QToolButton#BtnLoad, QToolButton#BtnTest, QToolButton#BtnStop, QToolButton#BtnProperty {
+    background: #1B2A3D;
+    border: 1px solid #27384D;
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 12pt;
+    color: #E6EDF6;
+}
+QToolButton#BtnTest {
+    background: #4C9AFF;
+    border-color: #4C9AFF;
+    color: #06121F;
+    font-weight: 600;
+}
+QToolButton#BtnStop {
+    background: #3A1A1A;
+    border-color: #FF6464;
+    color: #FFB0B0;
+}
+QToolButton#BtnLoad:hover, QToolButton#BtnStop:hover, QToolButton#BtnProperty:hover {
+    background: #22344A;
+}
+QToolButton#BtnTest:hover {
+    background: #6FB0FF;
+}
+QToolButton#BtnLoad:disabled, QToolButton#BtnTest:disabled, QToolButton#BtnStop:disabled,
+QToolButton#BtnProperty:disabled {
+    color: #8A9BB0;
+    background: #121D2E;
+    border-color: #27384D;
+}
+QFrame#ErrorBanner {
+    background: #3A2E12;
+    border: 0;
+    border-left: 4px solid #FFBF00;
+    color: #F0DBA0;
+}
+QFrame#ErrorBanner[level="error"] {
+    background: #3A1616;
+    border-left-color: #FF6464;
+    color: #FFC9C9;
+}
+QFrame#ErrorBanner[level="info"] {
+    background: #122A40;
+    border-left-color: #4C9AFF;
+    color: #C9E0FF;
+}
+QLabel#ErrorBannerText {
+    background: transparent;
+    color: inherit;
+}
+QPushButton#BannerAction {
+    background: transparent;
+    border: 1px solid #4C9AFF;
+    border-radius: 4px;
+    padding: 2px 10px;
+    color: #4C9AFF;
+}
+QWidget#UutHeader {
+    background: #18273B;
+    border-bottom: 1px solid #0B1220;
+}
+QLabel#UutTitle {
+    font-size: 18pt;
+    font-weight: 600;
+    color: #E6EDF6;
+}
+QLabel#UutSN {
+    font-size: 15pt;
+    color: #9FB0C4;
+}
+QLabel#UutSpendTime {
+    font-size: 12pt;
+    color: #9FB0C4;
+}
+QLabel#UutStatus {
+    font-size: 16pt;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+QLabel#UutStatus[state="pass"] {
+    background: #00AA0A;
+    color: #FFFFFF;
+}
+QLabel#UutStatus[state="fail"] {
+    background: #D32F2F;
+    color: #FFFFFF;
+}
+QLabel#UutStatus[state="exce"] {
+    background: #FFBF00;
+    color: #8C0000;
+}
+QLabel#UutStatus[state="neutral"] {
+    background: transparent;
+    color: #E6EDF6;
+}
+QLabel#EmptyHint {
+    color: #8A9BB0;
+    font-size: 13pt;
+    background: transparent;
+}
+QFrame#ResultOverlay {
+    background: rgba(11, 18, 32, 240);
+    border: 2px solid #4C9AFF;
+    border-radius: 8px;
+}
+QLabel#OverlayStatus {
+    font-size: 40pt;
+    font-weight: 700;
+}
+QLabel#OverlayStatus[state="pass"] {
+    color: #00E05A;
+}
+QLabel#OverlayStatus[state="fail"] {
+    color: #FF6464;
+}
+QLabel#OverlayStatus[state="exce"] {
+    color: #FFBF00;
+}
+QLabel#OverlayStatus[state="neutral"] {
+    color: #E6EDF6;
+}
+QLabel#OverlayKpi {
+    font-size: 13pt;
+    color: #9FB0C4;
+}
+QPushButton#OverlayDetail {
+    background: #4C9AFF;
+    color: #06121F;
+    border-radius: 4px;
+    padding: 4px 16px;
+}
+QLabel#PropertyPlaceholder {
+    color: #8A9BB0;
+    font-size: 12pt;
+}
+/* 2026-11-22 属性面板：当前工程作用域 + 区块标题 + 表格 */
+QLabel#PropertySectionTitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #E6EDF6;
+}
+QFrame#PropertyScope {
+    background: #0B1220;
+    border-bottom: 1px solid #18273B;
+}
+QLabel#PropertyScopeChip {
+    background: #1B2A3D;
+    border: 1px solid #4C9AFF;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #E6EDF6;
+}
+QLabel#PropertyScopeChip[empty="true"] {
+    background: transparent;
+    color: #8A9BB0;
+    font-weight: 400;
+}
+QLabel#PropertyScopeHint {
+    color: #8A9BB0;
+    font-size: 11px;
+}
+QTableWidget#tableWidget_Property {
+    background: #0F1928;
+    border: 0;
+    alternate-background-color: #18273B;
+}
+QTableWidget#tableWidget_Property::item {
+    padding: 0 8px;
+}
+/* 2026-11-22 统计页签：卡片式 KPI，与设计稿一致 */
+QFrame#CountsCard {
+    background: #18273B;
+    border: 1px solid #27384D;
+    border-top: 3px solid #27384D;
+    border-radius: 6px;
+}
+QFrame#CountsCard[kind="pass"] {
+    border-top-color: #00AA0A;
+}
+QFrame#CountsCard[kind="fail"] {
+    border-top-color: #D32F2F;
+}
+QFrame#CountsCard[kind="exce"] {
+    border-top-color: #FFBF00;
+}
+QLabel#CountsCardTitle {
+    color: #8A9BB0;
+    font-size: 11px;
+}
+QLabel#CountsCardValue {
+    font-size: 28px;
+    font-weight: 600;
+    color: #E6EDF6;
+}
+QFrame#CountsCard[kind="pass"] QLabel#CountsCardValue {
+    color: #00AA0A;
+}
+QFrame#CountsCard[kind="fail"] QLabel#CountsCardValue {
+    color: #FF6464;
+}
+QFrame#CountsCard[kind="exce"] QLabel#CountsCardValue {
+    color: #FFBF00;
+}
+QLabel#CountsCardRate {
+    color: #8A9BB0;
+    font-size: 11px;
+}
+QWidget#LogToolBar {
+    background: #18273B;
+}
+QTreeView#UutTree::item {
+    min-height: 40px;
+}
+QLabel#StatusPath {
+    color: #9FB0C4;
+}

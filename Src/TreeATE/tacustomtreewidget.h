@@ -1,6 +1,6 @@
-///
+﻿///
 /// @brief         TreeATE TAcustomTreeWidget class
-/// @author        David Yin  2021-05 willage.yin@163.com
+/// @author        David Yin  2021-05 willage.yin@163.com  2026-11-22 M2 右键菜单动态重翻译
 ///
 /// @license       GNU LGPL v3
 ///
@@ -24,6 +24,9 @@ signals:
     void startTest(const QString& who, const QString& strPath);
     void stopTest(const QString& who);
 
+protected:
+    void changeEvent(QEvent* e);
+
 private slots:
     void on_customContextMenuRequested(const QPoint& pos);
     void on_action_Start_clicked();
@@ -31,6 +34,8 @@ private slots:
 
 private:
     QMenu*       m_popMenuPara;
+    QAction*     m_pActStart;
+    QAction*     m_pActStop;
 };
 
 #endif // TACUSTOMTREEWIDGET_H

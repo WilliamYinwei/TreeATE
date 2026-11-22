@@ -1,6 +1,6 @@
 ///
 /// @brief         Scan the barcode for every one of the test project
-/// @author        David Yin  2018-12 willage.yin@163.com
+/// @author        David Yin  2018-12 willage.yin@163.com  2026-11-22 M3 批量条码输入框主题对象名
 /// 
 /// @license       GNU LGPL v3
 ///
@@ -22,6 +22,7 @@ ManyBarcodeDlg::ManyBarcodeDlg(QWidget *parent) :
     ui(new Ui::ManyBarcodeDlg)
 {
     ui->setupUi(this);
+    ui->lineEdit_SN->setObjectName("BarcodeEntry");
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 

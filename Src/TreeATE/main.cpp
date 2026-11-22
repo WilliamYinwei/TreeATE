@@ -11,6 +11,8 @@
 
 #include "mainwindow.h"
 #include "login.h"
+#include "thememanager.h"
+#include "languagemanager.h"
 
 #include <QApplication>
 #include <QObject>
@@ -27,38 +29,11 @@
 
 extern void customMessageHandler(QtMsgType type, const QMessageLogContext & logContext, const QString& str);
 
-QString getTranLang() {
-    QFile file(qApp->applicationDirPath() + "/Config/sys.cfg");
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        qWarning() << file.errorString();
-        return "";
-    }
-
-    QJsonParseError jsonErr;
-    QJsonDocument jsonDocCfg = QJsonDocument::fromJson(file.readAll(), &jsonErr);
-    if(jsonDocCfg.isNull())
-    {
-        qWarning() <<  file.fileName() + " " + jsonErr.errorString();
-        return "";
-    }
-
-    QVariantMap vm = jsonDocCfg.toVariant().toMap();
-    return vm["Language"].toString();
-}
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     int iRet = 0;
 
-    QFile file(":/Qss/blue.qss");
-    if(file.open(QFile::ReadOnly)) {
-        QTextStream filetext(&file);
-        QString stylesheet = filetext.readAll();
-        qApp->setStyleSheet(stylesheet);
-        file.close();
-    }
 #ifdef WIN32
     QSharedMemory sharedMemory("TreeATE_exe");
     if (sharedMemory.create(1) && sharedMemory.error() != QSharedMemory::AlreadyExists)
@@ -66,12 +41,10 @@ int main(int argc, char *argv[])
 #endif
         qInstallMessageHandler(customMessageHandler);
 
-        QString strLangPath = qApp->applicationDirPath() + "/i18n/treeate/";
-
-        QTranslator trans;
-        if(trans.load(getTranLang(), strLangPath)) {
-            qApp->installTranslator(&trans);
-        }
+        // 2026-11-22 M2 启动前先应用主题与语言，避免白屏/半翻译
+        ThemeManager::instance()->initialize();
+        LanguageManager::instance()->initialize();
+        LanguageManager::instance()->applyLanguage(LanguageManager::instance()->startupCode());
 
         MainWindow w;
         w.showFullScreen();

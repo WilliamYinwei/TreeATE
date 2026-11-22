@@ -1,0 +1,17 @@
+{
+    "default": "en-US",
+    "languages": [
+        {
+            "code": "zh-CN",
+            "nativeName": "简体中文",
+            "englishName": "Chinese (Simplified)",
+            "qm": "zh.qm"
+        },
+        {
+            "code": "en-US",
+            "nativeName": "English",
+            "englishName": "English",
+            "qm": "en.qm"
+        }
+    ]
+}

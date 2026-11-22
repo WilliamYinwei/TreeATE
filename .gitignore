@@ -1,3 +1,53 @@
-*.o
-*.user
+# ============================================================
+# TreeATE 版本控制忽略清单
+# 说明：仅排除构建产物、IDE 用户文件、缓存与临时文件；
+#       源码、资源、文档与工程配置全部纳入版本控制。
+# ============================================================
+
+# ---------- 构建产物 ----------
+build/
 bin/
+bind/
+debug/
+release/
+Makefile
+Makefile.Debug
+Makefile.Release
+.qmake.stash
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.idb
+*.pch
+*.tlog
+*.res
+*.o
+
+# ---------- 发布/安装包产物 ----------
+Setup/*.exe
+Setup/*.zip
+
+# ---------- IDE 用户文件 ----------
+*.pro.user
+*.pro.user.*
+.qtcreator/
+.vscode/
+.VSCodeCounter/
+.idea/
+TreeATE.si4project/
+*.autosave
+
+# ---------- 缓存 ----------
+__pycache__/
+*.pyc
+*.pyo
+
+# ---------- 日志与临时输出 ----------
+*.log
+.screenshots/
+.trae-html-share-packages/
+
+# ---------- 操作系统 ----------
+Thumbs.db
+desktop.ini

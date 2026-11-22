@@ -1,6 +1,6 @@
 ///
 /// @brief         about this system
-/// @author        David Yin  2018-12 willage.yin@163.com
+/// @author        David Yin  2018-12 willage.yin@163.com  2026-11-22 版本行改为从单一版本源动态生成
 /// 
 /// @license       GNU LGPL v3
 ///
@@ -14,6 +14,8 @@
 
 #include <QDialog>
 
+class QEvent;
+
 namespace Ui {
 class AboutDialog;
 }
@@ -25,6 +27,12 @@ class AboutDialog : public QDialog
 public:
     explicit AboutDialog(QWidget *parent = 0);
     ~AboutDialog();
+
+protected:
+    void changeEvent(QEvent* e) override;
+
+private:
+    void updateVersionText();
 
 private:
     Ui::AboutDialog *ui;

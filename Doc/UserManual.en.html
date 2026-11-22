@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TreeATE v3.1.0 User Manual</title>
+<style>
+  :root {
+    --bg: #f4f6fa;
+    --panel: #ffffff;
+    --ink: #1f2937;
+    --muted: #667085;
+    --brand: #0a6cff;
+    --brand-dark: #0847a8;
+    --accent: #0e9f8a;
+    --border: #e3e8ef;
+    --code-bg: #f1f5f9;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.8;
+    font-size: 16px;
+  }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .hero {
+    background: linear-gradient(135deg, #071a3d 0%, #0a3d91 55%, #0a6cff 100%);
+    color: #fff;
+    padding: 46px 28px 40px;
+  }
+  .hero-inner { max-width: 1120px; margin: 0 auto; }
+  .brand-line { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .brand-name { font-size: 34px; font-weight: 700; letter-spacing: .5px; margin: 0; }
+  .version {
+    display: inline-block;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 999px;
+    padding: 3px 13px;
+    font-size: 14px;
+    letter-spacing: .4px;
+  }
+  .hero p { margin: 14px 0 0; max-width: 860px; color: #dbe7ff; }
+  .site-note {
+    display: inline-block;
+    margin-top: 18px;
+    background: #fff;
+    color: #0a3d91;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 26px;
+    align-items: start;
+  }
+  nav.toc {
+    position: sticky;
+    top: 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  nav.toc h2 { margin: 0 0 10px; font-size: 14px; color: var(--muted); letter-spacing: 1px; }
+  nav.toc ol { margin: 0; padding-left: 18px; }
+  nav.toc li { margin: 5px 0; font-size: 14px; }
+  .content { min-width: 0; }
+  section.card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    scroll-margin-top: 16px;
+  }
+  h2 { font-size: 22px; margin: 0 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+  h2 .num {
+    display: inline-block;
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 8px;
+    background: #e8f0ff;
+    color: var(--brand);
+    font-size: 15px;
+    margin-right: 10px;
+  }
+  h3 { font-size: 17px; margin: 22px 0 8px; color: #111827; }
+  h4 { font-size: 15px; margin: 16px 0 6px; color: #243247; }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0; padding-left: 24px; }
+  li { margin: 5px 0; }
+  code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-family: Consolas, "Cascadia Mono", monospace;
+    font-size: 14px;
+  }
+  kbd {
+    display: inline-block;
+    min-width: 26px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 0 6px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    color: #334155;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+  th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: #f8fafc; font-weight: 600; }
+  tbody tr:nth-child(even) { background: #fbfcfe; }
+  .note {
+    border-left: 4px solid var(--brand);
+    background: #eef4ff;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .warn {
+    border-left: 4px solid #d97706;
+    background: #fff7e6;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .steps { counter-reset: step; list-style: none; padding-left: 0; }
+  .steps > li {
+    position: relative;
+    padding-left: 44px;
+    margin: 14px 0;
+  }
+  .steps > li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .ui-map {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    font-size: 13px;
+    margin: 14px 0;
+  }
+  .ui-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .ui-row:last-child { border-bottom: 0; }
+  .ui-label { font-weight: 700; color: var(--brand-dark); min-width: 108px; }
+  .ui-desc { color: var(--muted); }
+  .ui-body { display: flex; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border); background: #fff; }
+  .ui-main { flex: 1; border: 1px dashed #b9c7dd; border-radius: 8px; padding: 18px; text-align: center; color: #41536e; background: #f2f7ff; }
+  .ui-side { width: 190px; border: 1px dashed #b9c7dd; border-radius: 8px; padding: 18px 10px; text-align: center; color: #41536e; background: #f7f9fc; }
+  .ui-status { padding: 7px 14px; color: var(--muted); background: #f8fafc; }
+  .chip {
+    display: inline-block;
+    min-width: 66px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 1px 9px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .chip.unload { background: #eef1f5; color: #475467; }
+  .chip.loading { background: #e8f0ff; color: #0a4bb5; }
+  .chip.ready { background: #e8f7f4; color: #0b7a69; }
+  .chip.go { background: #fff3d6; color: #9a6700; }
+  .chip.pass { background: #e7f7ea; color: #157347; }
+  .chip.fail { background: #fdecec; color: #b42318; }
+  .chip.error { background: #f4e8ff; color: #7a1fa2; }
+  .faq-q { font-weight: 650; color: #111827; margin-top: 16px; }
+  .faq-a { margin: 4px 0 0 0; color: #374151; }
+  footer.site-footer {
+    max-width: 1120px;
+    margin: 0 auto 40px;
+    padding: 22px 24px;
+    color: var(--muted);
+    font-size: 14px;
+    border-top: 1px solid var(--border);
+  }
+  footer.site-footer strong { color: var(--ink); }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; max-height: none; }
+    .ui-body { flex-direction: column; }
+    .ui-side { width: auto; }
+    section.card { padding: 18px; }
+    .hero { padding: 32px 20px; }
+    .brand-name { font-size: 27px; }
+  }
+  @media print {
+    body { background: #fff; font-size: 11pt; }
+    .hero { background: #0a3d91 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    nav.toc { display: none; }
+    .layout { display: block; padding: 0 8mm; }
+    section.card { break-inside: avoid; border: 0; padding: 0 0 12px; }
+    a { color: var(--ink); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand-line">
+      <h1 class="brand-name">TreeATE User Manual</h1>
+      <span class="version">v3.1.0</span>
+    </div>
+    <p>This manual is intended for TreeATE users and secondary developers. It covers login, system configuration, project loading, test execution, result queries, themes and language, and common questions in operational order. The content is based on the actual v3.1.0 functionality.</p>
+    <div class="site-note">For details, please visit www.treeate.top</div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Table of contents">
+    <h2>CONTENTS</h2>
+    <ol>
+      <li><a href="#env">System Requirements</a></li>
+      <li><a href="#install">Installation and Startup</a></li>
+      <li><a href="#login">Logging In</a></li>
+      <li><a href="#main">Main Window</a></li>
+      <li><a href="#syscfg">Configuring System Options</a></li>
+      <li><a href="#load">Loading a Test Project</a></li>
+      <li><a href="#option">Editing Project Options</a></li>
+      <li><a href="#property">Editing Project Properties</a></li>
+      <li><a href="#test">Starting a Test</a></li>
+      <li><a href="#stop">Stopping a Test</a></li>
+      <li><a href="#status">Test Status</a></li>
+      <li><a href="#results">Viewing Local Test Results</a></li>
+      <li><a href="#theme">Themes and Language</a></li>
+      <li><a href="#layout">Layout and Position Memory</a></li>
+      <li><a href="#shortcut">Shortcuts</a></li>
+      <li><a href="#error">Error Messages and Handling</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#manual-check">Manual Regression Checklist</a></li>
+      <li><a href="#support">Support and Contact</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+
+    <section class="card" id="env">
+      <h2><span class="num">01</span>System Requirements</h2>
+      <ul>
+        <li>Operating system: Windows 10 / Windows 11, 64-bit.</li>
+        <li>Runtime: Qt 6.11.1 runtime and Python 3.14 runtime deployed with the installer.</li>
+        <li>Display: 1920×1080 recommended; compact sizes such as 1024×768 automatically collapse some panels.</li>
+        <li>Scanner: keyboard-wedge barcode scanners are supported; scan directly while the barcode input has focus.</li>
+        <li>Network: the MES server must be reachable when connecting to MES; without a network the program switches to local working mode automatically.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="install">
+      <h2><span class="num">02</span>Installation and Startup</h2>
+      <h3>Installation</h3>
+      <ol class="steps">
+        <li>Run <code>Setup_TreeATE_x64_V3.1.0.exe</code> as administrator.</li>
+        <li>Follow the wizard to choose the install directory; the default is <code>{pf}\TreeATE</code>.</li>
+        <li>The installer deploys the <code>Example</code> projects, the initial <code>Config\sys.cfg</code>, and the documents under <code>Doc</code>.</li>
+        <li>After installation, start TreeATE from the Start menu or the desktop shortcut.</li>
+      </ol>
+      <h3>Startup</h3>
+      <p>Double-click <code>TreeATE.exe</code> to start the program. A login dialog appears on first start; loading projects and running tests require a successful login.</p>
+      <div class="note">Portable use: in the build output directory (for example <code>build\...\bin\x64</code>), make sure <code>windeployqt</code> has been run and <code>PythonQt-Qt6-Python3.14.dll</code> has been copied, then run <code>TreeATE.exe</code> directly.</div>
+    </section>
+
+    <section class="card" id="login">
+      <h2><span class="num">03</span>Logging In</h2>
+      <p>TreeATE requires authorization. Enter the correct user name and password in the login dialog.</p>
+      <ul>
+        <li>Default local debugging account: <code>admin</code>, password: <code>123</code>.</li>
+        <li>Local mode is for on-site debugging only. For production, connect to the MES server for process control.</li>
+        <li>The server address can be selected on the login screen or configured later via "System → System Options".</li>
+      </ul>
+      <div class="warn"><strong>Warning</strong>: Local mode does not submit test results to MES, which may leave the process uncontrolled. Use server mode in production and verify the line and station settings.</div>
+    </section>
+
+    <section class="card" id="main">
+      <h2><span class="num">04</span>Main Window</h2>
+      <p>The v3.1.0 main window is divided from top to bottom into the app bar, barcode toolbar, error banner, UUT workspace, bottom info area and status bar.</p>
+      <div class="ui-map" role="img" aria-label="TreeATE v3.1.0 main window areas">
+        <div class="ui-row"><span class="ui-label">App bar</span><span class="ui-desc">Brand and version, menu, Load / Test / Stop / Properties, line and station, language, theme, exit</span></div>
+        <div class="ui-row"><span class="ui-label">Barcode bar</span><span class="ui-desc">Barcode input and status chip at the far right</span></div>
+        <div class="ui-row"><span class="ui-label">Error banner</span><span class="ui-desc">Graded warning / error messages, optional action button, auto-hides after a timeout</span></div>
+        <div class="ui-body">
+          <div class="ui-main">UUT workspace<br>One top tab per test project<br>Pass / Fail / Exception / Total / Pass-rate KPIs</div>
+          <div class="ui-side">Property inspector<br>about 320px by default<br>collapsible</div>
+        </div>
+        <div class="ui-row"><span class="ui-label">Bottom area</span><span class="ui-desc">Log and counts tabs; the log supports pause, clear and copy</span></div>
+        <div class="ui-status">Status bar: project path (click to copy), history results, current user, device ID, current time</div>
+      </div>
+
+      <h3>App Bar</h3>
+      <table>
+        <thead><tr><th style="width:170px">Area</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Brand area</td><td>Application icon, TreeATE name, version <code>v3.1.0</code>.</td></tr>
+          <tr><td>Menu</td><td>Opens the full menu: TreeATE, Test Project, System, View, Help.</td></tr>
+          <tr><td>Load</td><td>Select and load a <code>*.tpx</code> test project; shortcut <kbd>F2</kbd>.</td></tr>
+          <tr><td>Test</td><td>Start testing the selected test cases; shortcut <kbd>F5</kbd>.</td></tr>
+          <tr><td>Stop</td><td>Request a test stop; shortcut <kbd>F8</kbd>.</td></tr>
+          <tr><td>Properties</td><td>Show or hide the right-side property inspector.</td></tr>
+          <tr><td>Line / Station</td><td>Shows the current line and station names from system options.</td></tr>
+          <tr><td>Language</td><td>Switch Simplified Chinese / English, effective immediately.</td></tr>
+          <tr><td>Theme</td><td>Switch Classic / Light / Dark, effective immediately and remembered.</td></tr>
+          <tr><td>Exit</td><td>Close TreeATE; the window layout is saved first.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>UUT Workspace</h3>
+      <ul>
+        <li>Each loaded test project adds a top tab to the workspace.</li>
+        <li>Each tab shows the project's test tree and KPIs: pass, fail, exception, total and pass rate.</li>
+        <li>The View menu switches tiling, cascade and full-screen tab display.</li>
+        <li>When no project is loaded, the workspace center shows "Please load a test project and then start the test".</li>
+        <li>Result overlays can be viewed on the test tree and closed with <kbd>Esc</kbd>.</li>
+      </ul>
+
+      <h3>Property Inspector and Bottom Info Area</h3>
+      <ul>
+        <li>The property inspector is on the right; it shows guidance when no project is selected and editable properties when one is selected.</li>
+        <li>The bottom info area contains log and counts tabs; counts show good and bad counts.</li>
+        <li>Log tools support pause, clear and copy for on-site troubleshooting.</li>
+        <li>The project path in the status bar is clickable to copy; history results use a dot indicator, orange meaning local results not yet uploaded.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="syscfg">
+      <h2><span class="num">05</span>Configuring System Options</h2>
+      <p>Choose menu "System → System Options" to open the system configuration dialog.</p>
+      <table>
+        <thead><tr><th style="width:180px">Option</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Line name</td><td>Distinguishes production lines; should be unique within the factory. Naming is user-defined.</td></tr>
+          <tr><td>Station name</td><td>Identifies the station test, e.g. burn-in, unit test 1, unit test 2; need not be unique within a line.</td></tr>
+          <tr><td>Server</td><td>MES server address for TreeATE integration; also shown on the login screen.</td></tr>
+          <tr><td>UI language</td><td>Simplified Chinese or English; since v3.1.0 it can also be switched in the app bar with immediate effect.</td></tr>
+          <tr><td>UI theme</td><td>Classic, Light or Dark; also switchable in the app bar, and the choice is remembered.</td></tr>
+          <tr><td>Working path</td><td>Root directory of test projects. Click "..." to browse or type directly, e.g. <code>D:/Projects/TreeATE/Example</code>. Keeping all projects under one root is recommended.</td></tr>
+          <tr><td>Barcode loading rules</td><td>Maps product barcode rules to relative project paths for automatic loading by scan.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Configuring Barcode Loading Rules</h3>
+      <ol class="steps">
+        <li>Click "+" in the "Barcode loading rules" area to add a rule.</li>
+        <li>Enter the barcode rule in "Product barcode regular expression", usually the product type prefix. For barcode <code>21201345678</code>, <code>212</code> is the product type, so enter <code>212</code>.</li>
+        <li>Enter the project path relative to the working path in "Test project path and name". For project <code>D:\Projects\TreeATE\Example\TestDemo\TestDemo.tpx</code> with working path <code>D:\Projects\TreeATE\Example</code>, enter <code>/TestDemo/TestDemo.tpx</code>.</li>
+        <li>Always use <code>/</code> as the path separator.</li>
+        <li>Click "OK" to save or "Cancel" to discard changes.</li>
+      </ol>
+    </section>
+
+    <section class="card" id="load">
+      <h2><span class="num">06</span>Loading a Test Project</h2>
+      <p>After logging in, load a test project created with TreeATE Copilot before testing. There are two ways to load.</p>
+      <h3>Manual Loading</h3>
+      <ol class="steps">
+        <li>Click "Load" in the app bar, choose menu "Test Project → Load", or press <kbd>F2</kbd>.</li>
+        <li>Locate the <code>*.tpx</code> file in the file dialog and open it.</li>
+        <li>After loading, a tab appears in the workspace showing the project, suite and case names, descriptions, test status, test criteria, start time and duration.</li>
+      </ol>
+      <h3>Automatic Loading by Scan</h3>
+      <ol class="steps">
+        <li>Make sure barcode rules and relative project paths are configured in system options.</li>
+        <li>Click the barcode input or press <kbd>Ctrl</kbd> + <kbd>L</kbd> to focus it.</li>
+        <li>Scan the product barcode and press Enter; the matching project loads automatically.</li>
+      </ol>
+      <div class="note">Multiple test projects can be loaded at the same time and tested in parallel. A project can contain multiple suites, and a suite can contain multiple test cases.</div>
+    </section>
+
+    <section class="card" id="option">
+      <h2><span class="num">07</span>Editing Project Options</h2>
+      <p>Choose menu "Test Project → Options" to open the project options dialog.</p>
+      <table>
+        <thead><tr><th style="width:220px">Option</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Test project name</td><td>Display only; defined by the developer and not editable.</td></tr>
+          <tr><td>Test project description</td><td>Display only; defined by the developer and not editable.</td></tr>
+          <tr><td>Product barcode regular expression</td><td>Display only; the developer defines the barcode matching and checking rules.</td></tr>
+          <tr><td>Overall loop count</td><td>Sets how many times the whole project loops, up to 1,000,000.</td></tr>
+          <tr><td>Stop on failure</td><td>Two choices: stop remaining unstarted test cases after a failure in the current run; stop subsequent loops when a failure occurs in loop testing.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="property">
+      <h2><span class="num">08</span>Editing Project Properties</h2>
+      <ol class="steps">
+        <li>Select the test project node in the workspace.</li>
+        <li>Choose menu "Test Project → Properties", or click "Properties" in the app bar, to show the inspector on the right.</li>
+        <li>The properties depend on the project configuration; only editable properties of the current project are shown.</li>
+        <li>After editing values, click "Save" below the property panel to apply them.</li>
+      </ol>
+      <div class="note">When no project is selected the inspector shows guidance. In compact windows such as 1024×768 the panel collapses automatically; reopen it with the app bar Properties button or the View menu.</div>
+    </section>
+
+    <section class="card" id="test">
+      <h2><span class="num">09</span>Starting a Test</h2>
+      <ol class="steps">
+        <li>Make sure a test project is loaded and at least one test case is checked in the test tree. Checked means run, unchecked means skip.</li>
+        <li>Scan or type the product barcode in the barcode input. If the project defines a barcode rule, it is validated automatically and testing is blocked with a hint when it does not match.</li>
+        <li>Click "Test" in the app bar, choose menu "Test Project → Test", or press <kbd>F5</kbd>.</li>
+        <li>During testing the status chip at the right of the barcode toolbar shows "GO...", and the test tree and KPIs update in real time.</li>
+        <li>When the test finishes, the chip shows "Done" (pass), "Failed", or "ERROR" (exception).</li>
+      </ol>
+      <h3>Starting a Test by Scan</h3>
+      <p>When barcode rules and the project are ready, scanning the product barcode starts the test directly; no mouse click on "Test" is needed.</p>
+      <div class="note">A barcode is required before starting, and at least one test case must be checked. When no project is loaded, the workspace shows "Please load a test project and then start the test".</div>
+    </section>
+
+    <section class="card" id="stop">
+      <h2><span class="num">10</span>Stopping a Test</h2>
+      <p>During a test, click "Stop" in the app bar, choose menu "Test Project → Stop", or press <kbd>F8</kbd> to request a stop.</p>
+      <div class="warn"><strong>Warning</strong>: The stop takes effect between test cases. If the current case takes a long time, it is not interrupted immediately; the test stops after the current case finishes and before the next one starts, protecting the test process and related systems.</div>
+    </section>
+
+    <section class="card" id="status">
+      <h2><span class="num">11</span>Test Status</h2>
+      <p>The status chip at the far right of the barcode toolbar indicates the current phase; text and color change together:</p>
+      <table>
+        <thead><tr><th style="width:130px">Status</th><th style="width:150px">Chip Display</th><th>Color and Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Unload</td><td><span class="chip unload">Unload</span></td><td>Gray. No test project loaded, or the project has been closed.</td></tr>
+          <tr><td>Loading</td><td><span class="chip loading">Loading...</span></td><td>Blue. The test project is being parsed and loaded.</td></tr>
+          <tr><td>Ready</td><td><span class="chip ready">Ready</span></td><td>Teal. The project is loaded and waiting for a barcode.</td></tr>
+          <tr><td>GO</td><td><span class="chip go">GO...</span></td><td>Amber. Testing is in progress.</td></tr>
+          <tr><td>Pass</td><td><span class="chip pass">Done</span></td><td>Green. The current run finished and passed.</td></tr>
+          <tr><td>Fail</td><td><span class="chip fail">Failed</span></td><td>Red. The test result did not pass.</td></tr>
+          <tr><td>Exception</td><td><span class="chip error">ERROR</span></td><td>Orange-yellow. An exception or error occurred during testing.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">"Done" and the counts card title "Good count" use different text sources, so the chip never shows the count title by mistake.</div>
+    </section>
+
+    <section class="card" id="results">
+      <h2><span class="num">12</span>Viewing Local Test Results</h2>
+      <p>Choose menu "System → Local Test Results" to open the TreeResults console.</p>
+      <h3>Result Levels</h3>
+      <ol>
+        <li><strong>Project result</strong>: barcode, start time, line, station, overall result, etc.</li>
+        <li><strong>Test case result</strong>: case result (Pass, Fail, etc.), description, etc.</li>
+        <li><strong>Detailed result</strong>: individual detailed records within a test case.</li>
+      </ol>
+      <p>The three levels are parent-child related: a project result contains multiple test case results, and a test case result contains zero or more detailed results. Click a parent row to expand its children.</p>
+      <h3>Query and Export</h3>
+      <ul>
+        <li>The database is opened read-only to prevent accidental changes to history.</li>
+        <li>Query by barcode / SN with parameterized statements.</li>
+        <li>Paged browsing avoids loading a large number of records at once.</li>
+        <li>CSV export in UTF-8, directly openable in Excel.</li>
+        <li>Follows the main program's theme and language settings and provides empty-state hints.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="theme">
+      <h2><span class="num">13</span>Themes and Language</h2>
+      <h3>Switching Themes</h3>
+      <p>Click the theme button in the app bar to switch among Classic, Light and Dark. The change takes effect immediately and is remembered for the next start; if a theme file is missing, the built-in resource is used.</p>
+      <h3>Switching Language</h3>
+      <p>Click the language button in the app bar to switch between Simplified Chinese and English. The change is immediate and does not require a restart. The default follows the operating system language, falling back to English when unknown. The language list is in <code>Src/TreeATE/i18n/languages.json</code>, with <code>zh.qm</code> and <code>en.qm</code> translation files.</p>
+    </section>
+
+    <section class="card" id="layout">
+      <h2><span class="num">14</span>Layout and Position Memory</h2>
+      <ul>
+        <li>The positions and visibility of the menu toolbar, barcode toolbar and dock windows are saved on exit.</li>
+        <li>They are stored in <code>Config\layout.ini</code> under the program directory and restored on the next start.</li>
+        <li>On first start without layout records, the counts dock is placed at the bottom-right corner.</li>
+        <li>The toolbar list in the View menu uses readable names: <strong>Menu Toolbar</strong> and <strong>Barcode Toolbar</strong>, each of which can be toggled.</li>
+        <li>To restore the default layout, exit TreeATE, delete <code>Config\layout.ini</code>, and start again.</li>
+      </ul>
+      <div class="note">Layout memory is stored under the program directory. If that directory is not writable, run with a privileged account or adjust its permissions.</div>
+    </section>
+
+    <section class="card" id="shortcut">
+      <h2><span class="num">15</span>Shortcuts</h2>
+      <table>
+        <thead><tr><th style="width:200px">Shortcut</th><th>Function</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>F2</kbd></td><td>Load a test project</td></tr>
+          <tr><td><kbd>F5</kbd></td><td>Start testing</td></tr>
+          <tr><td><kbd>F8</kbd></td><td>Stop testing</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>L</kbd></td><td>Focus the barcode input and select all</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>F</kbd></td><td>Focus the test tree search / focus</td></tr>
+          <tr><td><kbd>F11</kbd></td><td>Toggle full screen</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Close the result overlay on the test tree</td></tr>
+          <tr><td><kbd>Alt</kbd></td><td>Show or hide the classic menu bar</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="error">
+      <h2><span class="num">16</span>Error Messages and Handling</h2>
+      <table>
+        <thead><tr><th style="width:190px">Form</th><th>Trigger</th><th>Suggestion</th></tr></thead>
+        <tbody>
+          <tr><td>Top error banner</td><td>Load failure, barcode mismatch, test exception, etc.</td><td>Read the banner; if it has an action button, follow it. The banner hides automatically after a timeout.</td></tr>
+          <tr><td>Inline hint in the barcode input</td><td>Empty barcode or a barcode that does not match the project rule.</td><td>Scan or type a valid barcode; check the barcode rule in system options.</td></tr>
+          <tr><td>Button shake</td><td>Clicking Test when conditions are not met.</td><td>Check that a project is loaded, at least one case is checked, and a barcode is entered.</td></tr>
+          <tr><td>ERROR status chip</td><td>An exception is thrown during testing.</td><td>Check the log and the exception in the test tree; stop the test if needed and inspect devices or scripts.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="faq">
+      <h2><span class="num">17</span>FAQ</h2>
+      <p class="faq-q">Q1: I cannot load a test project after startup.</p>
+      <p class="faq-a">Confirm that you are logged in, the working path is correct, and the selected file is a <code>*.tpx</code>. If loading by scan, check the barcode rule and the relative project path.</p>
+
+      <p class="faq-q">Q2: Clicking "Test" does nothing.</p>
+      <p class="faq-a">Testing requires a loaded project, at least one checked test case, and an entered barcode. Otherwise the UI shows an inline hint or a button shake.</p>
+
+      <p class="faq-q">Q3: The test does not stop immediately after clicking "Stop".</p>
+      <p class="faq-a">This is expected. The stop takes effect between test cases; the current case finishes first to protect equipment and the test process.</p>
+
+      <p class="faq-q">Q4: Does the status chip show "Done" instead of "Good count"?</p>
+      <p class="faq-a">This was fixed in v3.1.0. After a passed test the chip shows "Done"; the good count appears only as a counts card title.</p>
+
+      <p class="faq-q">Q5: The language or theme switch does not take effect.</p>
+      <p class="faq-a">v3.1.0 applies changes at runtime. If nothing changes, verify that <code>zh.qm</code> / <code>en.qm</code> exist under <code>i18n</code> and the qss files exist under <code>Themes</code>; missing files fall back to built-in resources.</p>
+
+      <p class="faq-q">Q6: The layout or counts window position changes after restart.</p>
+      <p class="faq-a">The layout is stored in <code>Config\layout.ini</code> under the program directory. Make sure the directory is writable; to reset, exit, delete the file and start again.</p>
+
+      <p class="faq-q">Q7: Local result queries do not open or have no data.</p>
+      <p class="faq-a">Confirm that the local result database exists and the current account can read it. TreeResults opens it read-only; without a network, results are kept locally and can be uploaded later.</p>
+
+      <p class="faq-q">Q8: What permission should the installer run with?</p>
+      <p class="faq-a">Run the installer as administrator so it can write to <code>Program Files</code> and create common shortcuts.</p>
+    </section>
+
+    <section class="card" id="manual-check">
+      <h2><span class="num">18</span>Manual Regression Checklist for Test Status</h2>
+      <p>Use this to verify how the six test statuses (Loading / Ready / GO / Pass / Fail / Error) appear in the UI. Confirm and record each item on the test machine.</p>
+      <table>
+        <thead><tr><th style="width:60px">#</th><th style="width:120px">Status</th><th>Steps</th><th style="width:250px">Expected Result</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Loading</td><td>After login, click "Load", choose a large <code>*.tpx</code> project and confirm.</td><td>The chip shows "Loading...", then switches automatically when loading finishes.</td></tr>
+          <tr><td>2</td><td>Ready</td><td>The project is loaded; do not enter a barcode.</td><td>The chip shows "Ready"; a project tab and test tree appear.</td></tr>
+          <tr><td>3</td><td>GO</td><td>Check test cases, enter a barcode, click "Test" or press F5.</td><td>The chip shows "GO..."; KPIs and the test tree update in real time.</td></tr>
+          <tr><td>4</td><td>Pass</td><td>Run a passing project such as <code>Example\TestDemo</code> to completion.</td><td>The chip shows "Done"; the good count increases by 1.</td></tr>
+          <tr><td>5</td><td>Fail</td><td>Use a project with a failing case, or set a criterion that must fail, then run.</td><td>The chip shows "Failed"; the bad count increases by 1.</td></tr>
+          <tr><td>6</td><td>Error</td><td>Use a script that throws, or disconnect a device and run a case that depends on it.</td><td>The chip shows "ERROR"; the log contains exception information and a top banner may appear.</td></tr>
+        </tbody>
+      </table>
+      <h3>Common Checks</h3>
+      <ul>
+        <li>Color and text change together for each status, with clearly distinguishable colors.</li>
+        <li>After switching to English, the chip shows Loading..., Ready, GO..., Done, Failed and ERROR respectively.</li>
+        <li>The chip width is fixed so the toolbar does not jitter when the text changes.</li>
+        <li>The enabled state of Load / Test / Stop matches the current phase.</li>
+        <li>After a test finishes, scanning again starts the next round, and the chip returns from "Done" to "Ready" or "GO".</li>
+      </ul>
+      <div class="note">Recording suggestion: status, time, barcode, test project, actual text and color, and whether it matches expectations; attach a log screenshot for exceptions.</div>
+    </section>
+
+    <section class="card" id="support">
+      <h2><span class="num">19</span>Support and Contact</h2>
+      <table>
+        <tbody>
+          <tr><th style="width:160px">Website</th><td><a href="http://www.treeate.top" target="_blank" rel="noopener">www.treeate.top</a></td></tr>
+          <tr><th>Repository</th><td><a href="https://github.com/WilliamYinwei/TreeATE" target="_blank" rel="noopener">github.com/WilliamYinwei/TreeATE</a></td></tr>
+          <tr><th>Tech column</th><td><a href="https://blog.csdn.net/vivasoft/column/info/31202" target="_blank" rel="noopener">CSDN TreeATE column</a></td></tr>
+          <tr><th>Email</th><td>willage.yin@163.com</td></tr>
+          <tr><th>Community</th><td>QQ: 499722676 / 226406709</td></tr>
+        </tbody>
+      </table>
+      <div class="site-note" style="background:#eef4ff;color:#0a3d91;">For details, please visit www.treeate.top</div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <strong>TreeATE v3.1.0 User Manual</strong> · For details, please visit www.treeate.top<br>
+  This document is based on the actual v3.1.0 functionality. Related documents: <code>Doc\UserManual.zh.md</code>, <code>Doc\UserManual.en.md</code>, <code>README.md</code>, <code>README.en.md</code>.
+</footer>
+
+</body>
+</html>

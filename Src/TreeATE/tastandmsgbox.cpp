@@ -33,22 +33,20 @@ TAStandMsgBox::TAStandMsgBox(QWidget *parent) : QWidget(parent)
     pVLayout->addWidget(m_lbPic);
 
     m_lbInfo = new QLabel(this);
-    m_lbInfo->setStyleSheet("font: 16pt \"Arial\";");
+    m_lbInfo->setObjectName("StandMsgInfo");
     pVLayout->addWidget(m_lbInfo);
 
     m_leInput = new QLineEdit(this);
-    m_leInput->setStyleSheet("font: 16pt \"Arial\";");
+    m_leInput->setObjectName("StandMsgInput");
     pVLayout->addWidget(m_leInput);
 
     m_pbOK = new QPushButton(this);
-    m_pbOK->setText("OK");
-    m_pbOK->setStyleSheet("background-color: rgb(0, 170, 0);\
-                          font: 16pt \"Arial\";\
-                          color: rgb(255, 255, 255);");
+    m_pbOK->setObjectName("StandMsgOk");
+    m_pbOK->setText(tr("OK"));
     pVLayout->addWidget(m_pbOK);
     m_pbCancel = new QPushButton(this);
-    m_pbCancel->setText("Cancel");
-    m_pbCancel->setStyleSheet("font: 16pt \"Arial\"");
+    m_pbCancel->setObjectName("StandMsgCancel");
+    m_pbCancel->setText(tr("Cancel"));
     pVLayout->addWidget(m_pbCancel);
     connect(m_pbOK, SIGNAL(clicked(bool)), this, SLOT(on_pushButton_OK_clicked()));
     connect(m_pbCancel, SIGNAL(clicked(bool)), this, SLOT(on_pushButton_Cancel_clicked()));
@@ -102,15 +100,15 @@ void TAStandMsgBox::on_TimeOut()
 
         if(m_type == 1) // is OK button dialog
         {
-            m_pbOK->setText("OK(" + QString::number(m_totalTime) + ")");
+            m_pbOK->setText(tr("OK") + "(" + QString::number(m_totalTime) + ")");
         }
         else if(m_type == 2) // NA button Dialog
         {
-            m_pbOK->setText("Cancel(" + QString::number(m_totalTime) + ")");
+            m_pbOK->setText(tr("Cancel") + "(" + QString::number(m_totalTime) + ")");
         }
         else    // 0/3 is Cancel | OK and Input Dialog
         {
-            m_pbCancel->setText("Cancel(" + QString::number(m_totalTime) + ")");
+            m_pbCancel->setText(tr("Cancel") + "(" + QString::number(m_totalTime) + ")");
         }
     }
     else

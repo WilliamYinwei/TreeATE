@@ -1,7 +1,7 @@
 ///
 /// @project       TreeATE
 /// @brief         For default size of the DockWidget
-/// @author        David Yin  2018-12 willage.yin@163.com
+/// @author        David Yin  2018-12 willage.yin@163.com  2026-11-22 M3 属性检查器默认 320 宽
 ///
 /// @license       GNU LGPL v3
 ///
@@ -19,5 +19,5 @@ TASizeDockWidget::TASizeDockWidget(QWidget *parent) : QWidget(parent)
 
 QSize TASizeDockWidget::sizeHint() const
 {
-    return QSize(500, 600);
+    return QSize(320, 600);
 }

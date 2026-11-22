@@ -124,39 +124,6 @@
    <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="focusPolicy">
-    <enum>Qt::StrongFocus</enum>
-   </property>
-   <property name="windowTitle">
-    <string>Main Toolbar</string>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextBesideIcon</enum>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionLoading"/>
-   <addaction name="actionPlay"/>
-   <addaction name="actionStop"/>
-   <addaction name="actionProperty"/>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_Property">
    <property name="windowTitle">
@@ -302,49 +269,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_Rst">
-   <property name="minimumSize">
-    <size>
-     <width>100</width>
-     <height>38</height>
-    </size>
-   </property>
-   <property name="windowTitle">
-    <string>Status</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_rst">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label_rst">
-       <property name="text">
-        <string notr="true">TextLabel</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <action name="actionLoading">
    <property name="icon">
     <iconset resource="res.qrc">
@@ -393,7 +317,7 @@
      <normaloff>:/modify.png</normaloff>:/modify.png</iconset>
    </property>
    <property name="text">
-    <string>Proper&amp;ty...</string>
+    <string>Property</string>
    </property>
    <property name="toolTip">
     <string>Property</string>
@@ -486,7 +410,7 @@
   </action>
   <action name="action_Edit">
    <property name="text">
-    <string>&amp;Devlop...</string>
+    <string>&amp;Develop...</string>
    </property>
   </action>
   <action name="actionTile_View">

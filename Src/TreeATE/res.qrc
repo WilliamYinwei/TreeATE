@@ -17,4 +17,13 @@
     <qresource prefix="/Qss">
         <file>blue.qss</file>
     </qresource>
+    <qresource prefix="/Themes">
+        <file alias="classic.qss">Themes/classic.qss</file>
+        <file alias="light.qss">Themes/light.qss</file>
+        <file alias="dark.qss">Themes/dark.qss</file>
+        <file alias="theme.json">Themes/theme.json</file>
+    </qresource>
+    <qresource prefix="/i18n">
+        <file alias="languages.json">i18n/languages.json</file>
+    </qresource>
 </RCC>

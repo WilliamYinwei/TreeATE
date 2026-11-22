@@ -83,7 +83,7 @@ void login::on_pushButton_Login_clicked()
     QString strUser = ui->lineEdit_User->text();
     QString strPwd = ui->lineEdit_Pwd->text();
     bool bOk = false;
-    m_strUser = tr("");
+    m_strUser = QString();
 
     QString strErr(tr("Your user name and password are invalided!"));
     QString strHost = ui->comboBox_host->currentText();

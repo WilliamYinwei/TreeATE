@@ -223,7 +223,7 @@ bool UnitMgr::readTpxInstanceFirstFile(const QString& fileTpxName, QString& tpFi
     }
 
     QJsonObject rootObj = doc.object();
-    // »ñÈ¡InstanceÊı×é
+    // è·å–Instanceæ•°ç»„
     QJsonArray instanceArr = rootObj["Instance"].toArray();
 
     if(instanceArr.isEmpty())
@@ -232,7 +232,7 @@ bool UnitMgr::readTpxInstanceFirstFile(const QString& fileTpxName, QString& tpFi
         return false;
     }
 
-    // È¡Êı×éµÚ0¸ö¶ÔÏó
+    // å–æ•°ç»„ç¬¬0ä¸ªå¯¹è±¡
     QJsonObject firstObj = instanceArr[0].toObject();
     tpFileName = firstObj["File"].toString();
     return true;

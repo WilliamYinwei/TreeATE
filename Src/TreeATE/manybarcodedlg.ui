@@ -91,11 +91,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_SN">
-       <property name="styleSheet">
-        <string notr="true">font: 24pt &quot;Arial&quot;;</string>
-       </property>
-      </widget>
+      <widget class="QLineEdit" name="lineEdit_SN"/>
      </item>
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">

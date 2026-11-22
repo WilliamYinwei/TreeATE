@@ -7,5 +7,10 @@
         <file>LastPage.png</file>
         <file>ate_rst.ico</file>
         <file>output.png</file>
+        <file>Themes/classic.qss</file>
+        <file>Themes/light.qss</file>
+        <file>Themes/dark.qss</file>
+        <file>i18n/treeresults_zh.qm</file>
+        <file>i18n/treeresults_en.qm</file>
     </qresource>
 </RCC>

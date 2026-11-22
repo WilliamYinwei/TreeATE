@@ -1,6 +1,6 @@
 ///
 /// @brief         TreeATE system option
-/// @author        David Yin  2018-12 willage.yin@163.com
+/// @author        David Yin  2018-12 willage.yin@163.com  2026-11-22 M2 语言清单与主题入口
 /// 
 /// @license       GNU LGPL v3
 ///
@@ -11,8 +11,10 @@
 
 #include "syscfgdlg.h"
 #include "ui_syscfgdlg.h"
+#include "thememanager.h"
 
 #include <QFileDialog>
+#include <QEvent>
 
 SysCfgDlg::SysCfgDlg(QWidget *parent) :
     QDialog(parent),
@@ -22,6 +24,7 @@ SysCfgDlg::SysCfgDlg(QWidget *parent) :
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->pushButton_add->setIcon(QIcon(":/add.png"));
     ui->pushButton_del->setIcon(QIcon(":/minus.png"));
+    populateThemeList();
 }
 
 SysCfgDlg::~SysCfgDlg()
@@ -29,10 +32,39 @@ SysCfgDlg::~SysCfgDlg()
     delete ui;
 }
 
+void SysCfgDlg::populateThemeList()
+{
+    ThemeManager* pThemeMgr = ThemeManager::instance();
+    ui->comboBox_theme->clear();
+    for(int i = 0; i < ThemeManager::ThemeCount; i++) {
+        ui->comboBox_theme->addItem(pThemeMgr->themeName(i), pThemeMgr->themeKey(i));
+    }
+}
+
+void SysCfgDlg::selectLanguage(const QString& strCode)
+{
+    int nIdx = ui->comboBox_lang->findData(strCode);
+    if(nIdx >= 0)
+        ui->comboBox_lang->setCurrentIndex(nIdx);
+}
+
+void SysCfgDlg::changeEvent(QEvent* e)
+{
+    QDialog::changeEvent(e);
+    if(e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        const QString strTheme = ui->comboBox_theme->currentData().toString();
+        populateThemeList();
+        int nIdx = ui->comboBox_theme->findData(strTheme);
+        if(nIdx >= 0)
+            ui->comboBox_theme->setCurrentIndex(nIdx);
+    }
+}
+
 void SysCfgDlg::on_brownButton_clicked()
 {
     QString strPath = ui->lineEdit_Path->text();
-    strPath = QFileDialog::getExistingDirectory(this, "Get Path", strPath);
+    strPath = QFileDialog::getExistingDirectory(this, tr("Get Path"), strPath);
     if(!strPath.isEmpty())
         ui->lineEdit_Path->setText(strPath);
 }
@@ -76,9 +108,17 @@ void SysCfgDlg::SetSysConfig(const QVariant &sysCfg)
             ui->tableWidget->setItem(i, 1, item);
         }
     }
-    if(varMapCfg["Language"].isValid())
+    QString strLangCode = LanguageManager::normalizeCode(varMapCfg["LanguageCode"].toString());
+    if(strLangCode.isEmpty())
+        strLangCode = LanguageManager::normalizeCode(varMapCfg["Language"].toString());
+    if(!strLangCode.isEmpty())
+        selectLanguage(strLangCode);
+
+    if(varMapCfg["Theme"].isValid())
     {
-        ui->comboBox_lang->setCurrentText(varMapCfg["Language"].toString());
+        int nIdx = ui->comboBox_theme->findData(varMapCfg["Theme"].toString());
+        if(nIdx >= 0)
+            ui->comboBox_theme->setCurrentIndex(nIdx);
     }
     if(varMapCfg["Logout"].isValid())
     {
@@ -95,7 +135,15 @@ QVariantMap SysCfgDlg::GetDataValue()
     varMapCfg.insert("WorkPath", ui->lineEdit_Path->text());
     varMapCfg.insert("Station", ui->lineEdit_Station->text());
     varMapCfg.insert("Server", ui->lineEdit_Server->text());
-    varMapCfg.insert("Language", ui->comboBox_lang->currentText());
+    const QString strLangCode = ui->comboBox_lang->currentData().toString();
+    varMapCfg.insert("LanguageCode", strLangCode);
+    if(strLangCode == "zh-CN")
+        varMapCfg.insert("Language", "zh.qm");
+    else if(strLangCode == "en-US")
+        varMapCfg.insert("Language", "en.qm");
+    else
+        varMapCfg.insert("Language", strLangCode + ".qm");
+    varMapCfg.insert("Theme", ui->comboBox_theme->currentData().toString());
     varMapCfg.insert("Logout", ui->spinBox->value());
 
     QVariantList vlPrj;
@@ -138,7 +186,10 @@ void SysCfgDlg::on_pushButton_del_clicked()
     ui->tableWidget->removeRow(row);
 }
 
-void SysCfgDlg::SetLanguageList(const QStringList& lstLang)
+void SysCfgDlg::SetLanguageList(const QList<LanguageInfo>& lstLanguages)
 {
-    ui->comboBox_lang->addItems(lstLang);
+    ui->comboBox_lang->clear();
+    for(const LanguageInfo& info : lstLanguages) {
+        ui->comboBox_lang->addItem(info.nativeName, info.code);
+    }
 }

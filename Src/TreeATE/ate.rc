@@ -6,9 +6,12 @@ IDI_ICON1 ICON DISCARDABLE "ATE.ico"
 #include <winver.h>
 #endif
 
+// 2026-11-22 版本号改由单一版本源头文件生成，避免多处写死
+#include "version.h"
+
 VS_VERSION_INFO VERSIONINFO
-    FILEVERSION 3,0,0,0
-    PRODUCTVERSION 3,0,0,0
+    FILEVERSION TREEATE_VERSION_MAJOR,TREEATE_VERSION_MINOR,TREEATE_VERSION_PATCH,0
+    PRODUCTVERSION TREEATE_VERSION_MAJOR,TREEATE_VERSION_MINOR,TREEATE_VERSION_PATCH,0
     FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
     FILEFLAGS VS_FF_DEBUG
@@ -25,8 +28,8 @@ VS_VERSION_INFO VERSIONINFO
             BEGIN
                 VALUE "CompanyName", "David Yin\0"
                 VALUE "FileDescription", "TreeATE for manufactory automatic testing\0"
-                VALUE "FileVersion", "3,0,0,0"
-                VALUE "ProductVersion", "3,0,0,0"
+                VALUE "FileVersion", TREEATE_VERSION_STR
+                VALUE "ProductVersion", TREEATE_VERSION_STR
                 VALUE "LegalCopyright", "Copyright 2026(C) David Yin\0"
                 VALUE "LegalTrademarks", "TreeATE\0"
                 VALUE "OriginalFilename", "TreeATE.exe\0"

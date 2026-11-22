@@ -1,0 +1,40 @@
+{
+    "default": "classic",
+    "themes": [
+        { "id": "classic", "name": "Classic", "qss": "classic.qss" },
+        { "id": "light",   "name": "Light",   "qss": "light.qss" },
+        { "id": "dark",    "name": "Dark",    "qss": "dark.qss" }
+    ],
+    "tokens": {
+        "classic": {
+            "mdiBackground": "#385F85",
+            "statusPassBg": "#00AA0A", "statusPassText": "#FFFFFF",
+            "statusFailBg": "#FF000A", "statusFailText": "#FFFFFF",
+            "statusExceBg": "#FFBF00", "statusExceText": "#8C0000",
+            "statusNeutralText": "#EEEEEE",
+            "progressPass": "#00FF64", "progressFail": "#FF6464", "progressExce": "#FFBF00",
+            "tabPass": "#00AA0A", "tabFail": "#FF000A", "tabExce": "#FFBF00",
+            "pendingBg": "#FFBF00", "pendingText": "#8C0000"
+        },
+        "light": {
+            "mdiBackground": "#E8EEF4",
+            "statusPassBg": "#1E7E34", "statusPassText": "#FFFFFF",
+            "statusFailBg": "#C62828", "statusFailText": "#FFFFFF",
+            "statusExceBg": "#C77700", "statusExceText": "#2A1A00",
+            "statusNeutralText": "#1B2530",
+            "progressPass": "#2E9E4F", "progressFail": "#D9534F", "progressExce": "#E0A100",
+            "tabPass": "#1E7E34", "tabFail": "#C62828", "tabExce": "#C77700",
+            "pendingBg": "#E0A100", "pendingText": "#2A1A00"
+        },
+        "dark": {
+            "mdiBackground": "#0E1726",
+            "statusPassBg": "#1E7E34", "statusPassText": "#FFFFFF",
+            "statusFailBg": "#C62828", "statusFailText": "#FFFFFF",
+            "statusExceBg": "#C77700", "statusExceText": "#2A1A00",
+            "statusNeutralText": "#E6EDF6",
+            "progressPass": "#2ECC71", "progressFail": "#F04438", "progressExce": "#F5B301",
+            "tabPass": "#1E7E34", "tabFail": "#C62828", "tabExce": "#C77700",
+            "pendingBg": "#F5B301", "pendingText": "#201600"
+        }
+    }
+}

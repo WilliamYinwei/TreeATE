@@ -21,8 +21,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>672</width>
-    <height>400</height>
+    <width>600</width>
+    <height>360</height>
    </size>
   </property>
   <property name="baseSize">
@@ -44,11 +44,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="3" column="2">
-      <widget class="QComboBox" name="comboBox_lang">
-       <property name="statusTip">
-        <string>need restart TreeATE</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="comboBox_lang"/>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_5">
@@ -59,6 +55,16 @@
         <string>Language</string>
        </property>
       </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_theme">
+       <property name="text">
+        <string>Theme:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="comboBox_theme"/>
      </item>
      <item row="0" column="2">
       <widget class="QLineEdit" name="lineEdit_Line"/>
